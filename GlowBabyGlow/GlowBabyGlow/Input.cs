@@ -11,7 +11,7 @@ namespace GlowBabyGlow
 
     class Input
     {
-        event InputChangeHandler Jump;
+        static event InputChangeHandler Jump;
         static List<GamePadState> gamepad = new List<GamePadState>();
         static List<GamePadState> prevgamepad = new List<GamePadState>();
 
@@ -25,7 +25,16 @@ namespace GlowBabyGlow
             return gamepad[index].Triggers;
         }
 
-        public void Update()
+        public static void Init()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                gamepad.Add(new GamePadState());
+                prevgamepad.Add(new GamePadState());
+            }
+        }
+
+        public static void Update()
         {
             gamepad[0] = GamePad.GetState(PlayerIndex.One);
             gamepad[1] = GamePad.GetState(PlayerIndex.Two);

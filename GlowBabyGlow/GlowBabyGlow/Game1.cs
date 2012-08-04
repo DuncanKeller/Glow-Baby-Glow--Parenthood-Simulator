@@ -14,7 +14,7 @@ namespace GlowBabyGlow
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -34,7 +34,9 @@ namespace GlowBabyGlow
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            Input.Init();
+            World.Init();
+            TextureManager.Init(Content);
             base.Initialize();
         }
 
@@ -69,7 +71,8 @@ namespace GlowBabyGlow
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            Input.Update();
+            World.Update(gameTime.ElapsedGameTime.Milliseconds);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -82,8 +85,9 @@ namespace GlowBabyGlow
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            World.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
