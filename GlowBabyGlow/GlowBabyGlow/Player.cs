@@ -13,8 +13,13 @@ namespace GlowBabyGlow
         static int height = 35;
 
         Vector2 pos;
-        float speed = 0;
+        float gravity = 50;
+        Vector2 velocity = new Vector2();
+        float jumpStrength = 900;
+        float speed = 50;
         float maxSpeed = 200;  //pixels per second
+
+        bool inAir = true;
 
         public Player(Point pos)
         {
@@ -30,19 +35,31 @@ namespace GlowBabyGlow
             rect.Y = (int)pos.Y;
         }
 
+        public void Jump()
+        {
+            inAir = true;
+            velocity.Y = -jumpStrength;
+        }
+
         public void HandleMovement(float dt)
         {
             float xInput = Input.GetLeftThumbs(0).Left.X;
             float xMax = Math.Abs(maxSpeed * xInput);
 
-            speed += xInput * 50;
+            velocity.X += xInput * speed;
 
-            if (speed > xMax)
-            { speed = xMax; }
-            else if (speed < -xMax)
-            { speed = -xMax; }
+            if (velocity.X > xMax)
+            { velocity.X = xMax; }
+            else if (velocity.X < -xMax)
+            { velocity.X = -xMax; }
 
-            pos.X += speed * (dt / 1000);
+            if (inAir)
+            {
+                velocity.Y += gravity;
+            }
+
+            pos.Y += velocity.Y * (dt / 1000);
+            pos.X += velocity.X * (dt / 1000);
         }
 
         public override void Draw(SpriteBatch sb)

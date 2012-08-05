@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GlowBabyGlow
 {
-    public delegate void InputChangeHandler(int playerIndex);
+    public delegate void InputChangeHandler();
 
     class Input
     {
@@ -46,7 +46,7 @@ namespace GlowBabyGlow
                 if (gamepad[i].Buttons.A == ButtonState.Pressed &&
                     prevgamepad[i].Buttons.A == ButtonState.Released)
                 {
-                    Jump(i);
+                    World.Players[i].Jump();
                 }
             }
 

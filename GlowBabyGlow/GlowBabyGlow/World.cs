@@ -10,6 +10,7 @@ namespace GlowBabyGlow
     static class World
     {
         static  List<Player> players = new List<Player>();
+        static List<Tile> tiles = new List<Tile>();
 
         public static List<Player> Players
         {
