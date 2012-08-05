@@ -20,6 +20,10 @@ namespace GlowBabyGlow
         public static void Init()
         {
             players.Add(new Player(new Point(500,300)));
+            for (int i = 0; i < 20; i++)
+            {
+                tiles.Add(new Tile(new Point(100 + (i * 50), 420)));
+            }
         }
 
         public static void Update(float dt)
@@ -27,7 +31,9 @@ namespace GlowBabyGlow
             foreach (Player p in players)
             {
                 p.Update(dt);
+                p.Collision(ref tiles);
             }
+
         }
 
         public static void Draw(SpriteBatch sb)
@@ -35,6 +41,11 @@ namespace GlowBabyGlow
             foreach (Player p in players)
             {
                 p.Draw(sb);
+            }
+
+            foreach (Tile tile in tiles)
+            {
+                tile.Draw(sb);
             }
         }
     }

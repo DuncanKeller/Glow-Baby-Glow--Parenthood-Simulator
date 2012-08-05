@@ -62,6 +62,23 @@ namespace GlowBabyGlow
             pos.X += velocity.X * (dt / 1000);
         }
 
+        public void Collision(ref List<Tile> tiles)
+        {
+            foreach (Tile t in tiles)
+            {
+                if (inAir)
+                {
+                    int overlappingAbove = t.OverlappingAbove(rect);
+                    if (overlappingAbove > 0)
+                    {
+                        inAir = false;
+                        velocity.Y = 0;
+                        pos.Y -= overlappingAbove;
+                    }
+                }
+            }
+        }
+
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(TextureManager.blankTexture, rect, Color.Green);
