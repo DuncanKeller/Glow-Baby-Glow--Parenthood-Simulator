@@ -9,6 +9,7 @@ namespace GlowBabyGlow
 {
     class Player : Entity
     {
+        static int index = 0;
         static int width = 20;
         static int height = 35;
 
@@ -20,6 +21,8 @@ namespace GlowBabyGlow
         float maxSpeed = 200;  //pixels per second
 
         bool inAir = true;
+        bool wallLeft = false;
+        bool wallRight = false;
 
         public Player(Point pos)
         {
@@ -43,7 +46,7 @@ namespace GlowBabyGlow
 
         public void HandleMovement(float dt)
         {
-            float xInput = Input.GetLeftThumbs(0).Left.X;
+            float xInput = Input.GetThumbs(0).Left.X;
             float xMax = Math.Abs(maxSpeed * xInput);
 
             velocity.X += xInput * speed;
@@ -52,6 +55,9 @@ namespace GlowBabyGlow
             { velocity.X = xMax; }
             else if (velocity.X < -xMax)
             { velocity.X = -xMax; }
+
+            if (wallLeft && xInput < 0)
+            { velocity.X = 0; }
 
             if (inAir)
             {
@@ -64,6 +70,10 @@ namespace GlowBabyGlow
 
         public void Collision(ref List<Tile> tiles)
         {
+            bool fall = true;
+            bool tileCollideLeft = false;
+            bool tileCollideRight = false;
+
             foreach (Tile t in tiles)
             {
                 if (inAir)
@@ -74,9 +84,52 @@ namespace GlowBabyGlow
                         inAir = false;
                         velocity.Y = 0;
                         pos.Y -= overlappingAbove;
+                        return;
+                    }
+                }
+                if (!inAir)
+                {
+                    if (t.StandingOn(rect))
+                    {
+                        fall = false;
+                    }
+                }
+                if (Input.GetThumbs(index).Left.X < 0)
+                {
+                    int overlappingRight = t.OverlappingRight(rect);
+                    if (overlappingRight > 0)
+                    {
+                        velocity.X = 0;
+
+                        if (!wallLeft)
+                        {
+                            pos.X = t.Rect.Right;
+                            tileCollideLeft = true;
+                        }
+                    }
+                }
+                if (Input.GetThumbs(index).Left.X > 0)
+                {
+                    int overlappingLeft = t.OverlappingLeft(rect);
+                    if (overlappingLeft > 0)
+                    {
+                        velocity.X = 0;
+
+                        if (!wallRight)
+                        {
+                            pos.X = t.Rect.Left - rect.Width;
+                            tileCollideRight = true;
+                        }
                     }
                 }
             }
+
+            if (fall)
+            {
+                inAir = true;
+            }
+            wallRight = tileCollideRight;
+            wallLeft = tileCollideLeft;
         }
 
         public override void Draw(SpriteBatch sb)

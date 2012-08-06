@@ -15,7 +15,7 @@ namespace GlowBabyGlow
         static List<GamePadState> gamepad = new List<GamePadState>();
         static List<GamePadState> prevgamepad = new List<GamePadState>();
 
-        public static GamePadThumbSticks GetLeftThumbs(int index)
+        public static GamePadThumbSticks GetThumbs(int index)
         {
             return gamepad[index].ThumbSticks;
         }

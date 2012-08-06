@@ -22,7 +22,15 @@ namespace GlowBabyGlow
             players.Add(new Player(new Point(500,300)));
             for (int i = 0; i < 20; i++)
             {
-                tiles.Add(new Tile(new Point(100 + (i * 50), 420)));
+                tiles.Add(new Tile(new Point(100 + (i * 30), 420)));
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles.Add(new Tile(new Point(100, 420 - (i * 30))));
+            }
+            for (int i = 0; i < 11; i++)
+            {
+                tiles.Add(new Tile(new Point(700, 420 - (i * 30))));
             }
         }
 
@@ -33,7 +41,6 @@ namespace GlowBabyGlow
                 p.Update(dt);
                 p.Collision(ref tiles);
             }
-
         }
 
         public static void Draw(SpriteBatch sb)
