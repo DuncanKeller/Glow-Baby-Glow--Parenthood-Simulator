@@ -19,6 +19,9 @@ namespace GlowBabyEditor
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public static int w = 960;
+        public static int h = 540;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,7 +37,12 @@ namespace GlowBabyEditor
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = w;
+            graphics.PreferredBackBufferHeight = h;
+            graphics.ApplyChanges();
 
+            TextureManager.Init(Content);
+            Editor.Init();
             base.Initialize();
         }
 
@@ -46,6 +54,7 @@ namespace GlowBabyEditor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -67,8 +76,7 @@ namespace GlowBabyEditor
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            Editor.Update();
 
             // TODO: Add your update logic here
 
@@ -82,8 +90,9 @@ namespace GlowBabyEditor
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            Editor.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -34,6 +34,10 @@ namespace GlowBabyGlow
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 960;
+            graphics.PreferredBackBufferHeight = 540;
+            graphics.ApplyChanges();
+
             Input.Init();
             World.Init();
             TextureManager.Init(Content);
