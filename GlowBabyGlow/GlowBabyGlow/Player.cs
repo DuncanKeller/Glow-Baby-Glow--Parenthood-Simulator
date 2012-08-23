@@ -38,7 +38,8 @@ namespace GlowBabyGlow
 
         public void HandleMovement(float dt)
         {
-            float xInput = Input.GetThumbs(0).Left.X;
+            //float xInput = Input.GetThumbs(0).Left.X;
+            float xInput = Input.GetThumbsDebugX();
             float xMax = Math.Abs(maxSpeed * xInput);
 
             velocity.X += xInput * speed;
@@ -62,7 +63,8 @@ namespace GlowBabyGlow
             // ladders
             if (!onLadder)
             {
-                if (Input.GetThumbs(index).Left.Y > 0.2)
+                //if (Input.GetThumbs(index).Left.Y > 0.2)
+                if(Input.GetThumbsDebugY() < 0)
                 {
                     foreach (Ladder l in ladders)
                     {
@@ -74,7 +76,8 @@ namespace GlowBabyGlow
                         }
                     }  
                 }
-                else if (Input.GetThumbs(index).Left.Y < -0.2)
+                //else if (Input.GetThumbs(index).Left.Y < -0.2)
+                if (Input.GetThumbsDebugY() > 0)
                 {
                     foreach (Ladder l in ladders)
                     {

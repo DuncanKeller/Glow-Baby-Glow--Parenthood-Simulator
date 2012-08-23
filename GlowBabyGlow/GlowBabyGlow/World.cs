@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,18 +22,36 @@ namespace GlowBabyGlow
         public static void Init()
         {
             players.Add(new Player(new Point(500,300)));
-            for (int i = 0; i < 20; i++)
+            Load("kerfuffle");
+        }
+
+        static void Load(string filename)
+        {
+            StreamReader sr = new StreamReader("Maps\\" + filename + ".txt");
+
+            while (!sr.EndOfStream)
             {
-                tiles.Add(new Tile(new Point(100 + (i * 30), 420)));
+                string line = sr.ReadLine();
+                string[] info = line.Split(',');
+                string type = info[0];
+                int x = Int32.Parse(info[1]);
+                int y = Int32.Parse(info[2]);
+
+                Point p = new Point(x * Tile.Size, y * Tile.Size);
+
+                switch (type)
+                {
+                    case "w":
+                        tiles.Add(new Tile(p));
+                        break;
+                    case "l":
+                        ladders.Add(new Ladder(p));
+                        break;
+                }
+
             }
-            for (int i = 0; i < 11; i++)
-            {
-                tiles.Add(new Tile(new Point(100, 420 - (i * 30))));
-            }
-            for (int i = 0; i < 11; i++)
-            {
-                tiles.Add(new Tile(new Point(700, 420 - (i * 30))));
-            }
+
+            sr.Close();
         }
 
         public static void Update(float dt)
@@ -54,6 +73,10 @@ namespace GlowBabyGlow
             foreach (Tile tile in tiles)
             {
                 tile.Draw(sb);
+            }
+            foreach (Ladder l in ladders)
+            {
+                l.Draw(sb);
             }
         }
     }

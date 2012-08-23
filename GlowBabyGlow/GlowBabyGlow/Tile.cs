@@ -9,12 +9,17 @@ namespace GlowBabyGlow
 {
     class Tile : Obj
     {
-        int size = 30;
-        Rectangle rect;
+        static int size = 30;
+        protected Rectangle rect;
 
         public Rectangle Rect
         {
             get { return rect; }
+        }
+
+        public static int Size
+        {
+            get { return size; }
         }
 
         public Tile(Point pos)

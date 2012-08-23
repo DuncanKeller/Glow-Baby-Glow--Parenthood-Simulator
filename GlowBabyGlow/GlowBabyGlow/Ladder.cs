@@ -9,8 +9,7 @@ namespace GlowBabyGlow
 {
     class Ladder : Tile
     {
-        Rectangle rect;
-
+     
         public Ladder(Point pos)
             : base(pos)
         {

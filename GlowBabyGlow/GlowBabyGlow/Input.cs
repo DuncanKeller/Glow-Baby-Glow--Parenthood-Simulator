@@ -20,10 +20,17 @@ namespace GlowBabyGlow
             return gamepad[index].ThumbSticks;
         }
 
-        public static int GetThumbsDebug()
+        public static int GetThumbsDebugX()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) { return -1; }
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) { return 1; }
+            return 0;
+        }
+
+        public static int GetThumbsDebugY()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Up)) { return -1; }
+            if (Keyboard.GetState().IsKeyDown(Keys.Down)) { return 1; }
             return 0;
         }
 
