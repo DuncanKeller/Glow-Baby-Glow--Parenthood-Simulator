@@ -24,7 +24,7 @@ namespace GlowBabyGlow
         public bool LadderBelow(Rectangle r)
         {
             Rectangle testRect = new Rectangle(
-                r.Center.X - 1, r.Center.Y, 2, (r.Height / 2) + 5);
+                r.Center.X - 1, r.Bottom + 2, 2, (r.Height / 2));
             if (testRect.Bottom > rect.Top &&
                 testRect.Top < rect.Bottom &&
                 testRect.Right > rect.Left &&

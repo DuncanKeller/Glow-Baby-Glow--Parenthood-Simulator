@@ -14,8 +14,9 @@ namespace GlowBabyGlow
         static int height = 35;
 
         float jumpStrength = 900;
-        float speed = 50;
+        float acceleration = 50;
         float maxSpeed = 200;  //pixels per second
+        float ladderSpeed = 100;
 
         public Player(Point pos)
         {
@@ -42,16 +43,40 @@ namespace GlowBabyGlow
             float xInput = Input.GetThumbsDebugX();
             float xMax = Math.Abs(maxSpeed * xInput);
 
-            velocity.X += xInput * speed;
+            float yInput = Input.GetThumbsDebugY();
+            float yMax = Math.Abs(ladderSpeed * yInput);
+
+            if (onLadder)
+            {
+                xInput = 0;
+            }
+            else
+            {
+                //consider changing to yMax
+                yInput = 0;
+            }
+
+            velocity.X += xInput * acceleration;
+
+            velocity.Y += yInput * acceleration;
 
             if (velocity.X > xMax)
             { velocity.X = xMax; }
             else if (velocity.X < -xMax)
             { velocity.X = -xMax; }
 
+            if (onLadder)
+            {
+                if (velocity.Y > ladderSpeed)
+                { velocity.Y = ladderSpeed; }
+                else if (velocity.Y < -ladderSpeed)
+                { velocity.Y = -ladderSpeed; }
+            }
+
             if (wallLeft && xInput < 0)
             { velocity.X = 0; }
-
+            if (wallRight && xInput > 0)
+            { velocity.X = 0; }
         }
 
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
@@ -70,9 +95,12 @@ namespace GlowBabyGlow
                     {
                         if (l.LadderAbove(rect))
                         {
-                            onLadder = true;
-                            velocity.X = 0;
-                            velocity.Y = 0;
+                            if (!onLadder)
+                            {
+                                onLadder = true;
+                                velocity.X = 0;
+                                velocity.Y = 0;
+                            }
                         }
                     }  
                 }
@@ -83,9 +111,12 @@ namespace GlowBabyGlow
                     {
                         if (l.LadderBelow(rect))
                         {
-                            onLadder = true;
-                            velocity.X = 0;
-                            velocity.Y = 0;
+                            if (!onLadder)
+                            {
+                                onLadder = true;
+                                velocity.X = 0;
+                                velocity.Y = 0;
+                            }
                         }
                     }
                 }
@@ -113,7 +144,12 @@ namespace GlowBabyGlow
                     {
                         inAir = false;
                         velocity.Y = 0;
-                        pos.Y -= overlappingAbove;
+                        if (!onLadder)
+                        {
+                            
+                            pos.Y -= overlappingAbove;
+                        }
+                        onLadder = false;
                         return;
                     }
                 }
