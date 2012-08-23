@@ -7,22 +7,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
-    class Player : Entity
+    class Player : Actor
     {
         static int index = 0;
         static int width = 20;
         static int height = 35;
 
-        Vector2 pos;
-        float gravity = 50;
-        Vector2 velocity = new Vector2();
         float jumpStrength = 900;
         float speed = 50;
         float maxSpeed = 200;  //pixels per second
-
-        bool inAir = true;
-        bool wallLeft = false;
-        bool wallRight = false;
 
         public Player(Point pos)
         {
@@ -34,8 +27,7 @@ namespace GlowBabyGlow
         {
             HandleMovement(dt);
 
-            rect.X = (int)pos.X;
-            rect.Y = (int)pos.Y;
+            base.Update(dt);
         }
 
         public void Jump()
@@ -59,27 +51,62 @@ namespace GlowBabyGlow
             if (wallLeft && xInput < 0)
             { velocity.X = 0; }
 
-            if (inAir)
-            {
-                velocity.Y += gravity;
-            }
-
-            pos.Y += velocity.Y * (dt / 1000);
-            pos.X += velocity.X * (dt / 1000);
         }
 
-        public void Collision(ref List<Tile> tiles)
+        public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
         {
             bool fall = true;
             bool tileCollideLeft = false;
             bool tileCollideRight = false;
 
+            // ladders
+            if (!onLadder)
+            {
+                if (Input.GetThumbs(index).Left.Y > 0.2)
+                {
+                    foreach (Ladder l in ladders)
+                    {
+                        if (l.LadderAbove(rect))
+                        {
+                            onLadder = true;
+                            velocity.X = 0;
+                            velocity.Y = 0;
+                        }
+                    }  
+                }
+                else if (Input.GetThumbs(index).Left.Y < -0.2)
+                {
+                    foreach (Ladder l in ladders)
+                    {
+                        if (l.LadderBelow(rect))
+                        {
+                            onLadder = true;
+                            velocity.X = 0;
+                            velocity.Y = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                bool stillOnLadder = false;
+                foreach (Ladder l in ladders)
+                {
+                    if (l.Rect.Intersects(rect))
+                    {
+                        stillOnLadder = true;
+                    }
+                }
+                onLadder = stillOnLadder;
+            }
+
+            // air collision, landing, walls, etc
             foreach (Tile t in tiles)
             {
                 if (inAir)
                 {
                     int overlappingAbove = t.OverlappingAbove(rect);
-                    if (overlappingAbove > 0)
+                    if (overlappingAbove > 0 && velocity.Y > 0)
                     {
                         inAir = false;
                         velocity.Y = 0;

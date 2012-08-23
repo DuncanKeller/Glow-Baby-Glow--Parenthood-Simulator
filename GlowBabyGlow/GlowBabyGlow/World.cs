@@ -11,6 +11,7 @@ namespace GlowBabyGlow
     {
         static  List<Player> players = new List<Player>();
         static List<Tile> tiles = new List<Tile>();
+        static List<Ladder> ladders = new List<Ladder>();
 
         public static List<Player> Players
         {
@@ -39,7 +40,7 @@ namespace GlowBabyGlow
             foreach (Player p in players)
             {
                 p.Update(dt);
-                p.Collision(ref tiles);
+                p.Collision(ref tiles, ref ladders);
             }
         }
 

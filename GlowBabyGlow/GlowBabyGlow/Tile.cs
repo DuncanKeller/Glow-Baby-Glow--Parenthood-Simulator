@@ -22,6 +22,11 @@ namespace GlowBabyGlow
             rect = new Rectangle(pos.X, pos.Y, size, size);
         }
 
+        /// <summary>
+        /// tile is above r
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         public int OverlappingAbove(Rectangle r)
         {
             Rectangle testRect = new Rectangle(
