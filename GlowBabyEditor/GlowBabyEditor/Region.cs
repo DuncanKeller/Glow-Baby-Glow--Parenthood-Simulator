@@ -20,6 +20,22 @@ namespace GlowBabyEditor
             rect = new Rectangle(x, y, SIZE, SIZE);
         }
 
+        public string Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        public int X
+        {
+            get { return rect.X / SIZE; }
+        }
+
+        public int Y
+        {
+            get { return rect.Y / SIZE; }
+        }
+
         public void Update(MouseState m, MouseState oldm, string symbol)
         {
             Rectangle mouseRect = new Rectangle(m.X, m.Y, 1, 1);
