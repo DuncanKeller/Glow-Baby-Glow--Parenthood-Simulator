@@ -34,8 +34,8 @@ namespace GlowBabyGlow
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            graphics.PreferredBackBufferWidth = 960;
-            graphics.PreferredBackBufferHeight = 540;
+            graphics.PreferredBackBufferWidth = Config.screenW;
+            graphics.PreferredBackBufferHeight = Config.screenH;
             graphics.ApplyChanges();
 
             Input.Init();

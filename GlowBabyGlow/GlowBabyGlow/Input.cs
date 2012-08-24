@@ -63,6 +63,11 @@ namespace GlowBabyGlow
                     World.Players[i].Jump();
                 }
             }
+            //debug only
+            if (Keyboard.GetState().IsKeyDown(Keys.Z))
+            {
+                World.Players[0].Jump();
+            }
 
             for (int i = 0; i < 4; i++)
             {

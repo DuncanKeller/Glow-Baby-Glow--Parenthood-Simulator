@@ -19,6 +19,11 @@ namespace GlowBabyGlow
 
         protected bool onLadder = false;
 
+        public Vector2 Position
+        {
+            get { return pos; }
+        }
+
         public override void Update(float dt)
         {
             if (inAir && !onLadder)
@@ -31,10 +36,23 @@ namespace GlowBabyGlow
 
             rect.X = (int)pos.X; 
             rect.Y = (int)pos.Y;
+
+            if (rect.Left > Config.screenW)
+            {
+                rect.X = -rect.Width + 1;
+            }
+            else if (rect.Right < 0)
+            {
+                rect.X = Config.screenW - 1;
+            }
         }
+
+        
 
         public override void Draw(SpriteBatch sb)
         {
+            //remember to draw things so that screen wrapping looks OK
+
             base.Draw(sb);
         }
     }

@@ -19,6 +19,11 @@ namespace GlowBabyGlow
             get { return players; }
         }
 
+        public static List<Tile> Tiles
+        {
+            get { return tiles; }
+        }
+
         public static void Init()
         {
             players.Add(new Player(new Point(500,300)));
