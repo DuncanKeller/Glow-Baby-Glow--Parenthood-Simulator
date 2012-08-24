@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
@@ -10,7 +11,7 @@ namespace GlowBabyGlow
     {
         List<Enemy> enemies = new List<Enemy>();
         float timer;
-        float enemyTime = 6; // seconds
+        float enemyTime = 2; // seconds
 
         public void Update(float dt)
         {
@@ -19,14 +20,26 @@ namespace GlowBabyGlow
             if (timer > enemyTime)
             {
                 timer = 0;
+                Spawn();
+            }
+
+            foreach (Enemy e in enemies)
+            {
+                e.Update(dt);
+            }
+        }
+
+        public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
+        {
+            foreach (Enemy e in enemies)
+            {
+                e.Collision(ref tiles, ref ladders);
             }
         }
 
         public void Spawn()
         {
-            bool spawned = false;
-
-            while (!spawned)
+            while (true)
             {
                 int index = Config.rand.Next(World.Tiles.Count());
 
@@ -51,13 +64,22 @@ namespace GlowBabyGlow
                             { break; }
                             else
                             {
-                                Enemy e = new Enemy(new Point(t.Rect.Center.X, t.Rect.Y - Enemy.height));
+                                Enemy e = new Enemy(new Point(World.Tiles[index].Rect.Center.X, 
+                                    World.Tiles[index].Rect.Y - Enemy.height));
                                 enemies.Add(e);
-                                spawned = true;
+                                return;
                             }
                         }
                     }
                 }
+            }
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            foreach (Enemy e in enemies)
+            {
+                e.Draw(sb);
             }
         }
     }

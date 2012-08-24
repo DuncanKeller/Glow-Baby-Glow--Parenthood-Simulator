@@ -18,18 +18,12 @@ namespace GlowBabyGlow
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
+            velocity.X = 50;
         }
 
         public override void Update(float dt)
         {
-            if (movingRight)
-            {
-                velocity.X = 50;
-            }
-            else
-            {
-                velocity.X = -50;
-            }
+       
 
             base.Update(dt);
         }
@@ -39,6 +33,10 @@ namespace GlowBabyGlow
             bool fall = true;
             bool tileCollideLeft = false;
             bool tileCollideRight = false;
+            bool floorBelow = false;
+            int floorPos = velocity.X > 0 ? rect.Width : -rect.Width;
+            Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 1, 1);
+
 
             // air collision, landing, walls, etc
             foreach (Tile t in tiles)
@@ -64,6 +62,11 @@ namespace GlowBabyGlow
                     if (t.StandingOn(rect))
                     {
                         fall = false;
+                    }
+
+                    if (checkFloor.Intersects(t.Rect))
+                    {
+                        floorBelow = true;
                     }
                 }
                 if (velocity.X < 0)
@@ -102,13 +105,22 @@ namespace GlowBabyGlow
             {
                 inAir = true;
             }
+            if (!floorBelow)
+            {
+                velocity.X = -velocity.X;
+            }
+
             wallRight = tileCollideRight;
             wallLeft = tileCollideLeft;
         }
 
         public override void Draw(SpriteBatch sb)
         {
+            int floorPos = velocity.X > 0 ? rect.Width : -rect.Width;
+            Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 3, 3);
+
             sb.Draw(TextureManager.blankTexture, rect, Color.DarkGoldenrod);
+            //sb.Draw(TextureManager.blankTexture, checkFloor, Color.Red);
         }
     }
 }

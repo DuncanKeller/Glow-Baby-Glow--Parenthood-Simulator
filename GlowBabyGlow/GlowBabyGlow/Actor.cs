@@ -37,17 +37,15 @@ namespace GlowBabyGlow
             rect.X = (int)pos.X; 
             rect.Y = (int)pos.Y;
 
-            if (rect.Left > Config.screenW)
+            if (rect.Center.X > Config.screenW)
             {
-                rect.X = -rect.Width + 1;
+                pos.X = -rect.Width + rect.Width / 2;
             }
-            else if (rect.Right < 0)
+            else if (rect.Center.X < 0)
             {
-                rect.X = Config.screenW - 1;
+                pos.X = Config.screenW - rect.Width / 2;
             }
         }
-
-        
 
         public override void Draw(SpriteBatch sb)
         {
