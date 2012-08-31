@@ -55,13 +55,30 @@ namespace GlowBabyGlow
             gamepad[2] = GamePad.GetState(PlayerIndex.Three);
             gamepad[3] = GamePad.GetState(PlayerIndex.Four);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < World.Players.Count; i++)
             {
                 if (gamepad[i].Buttons.A == ButtonState.Pressed &&
                     prevgamepad[i].Buttons.A == ButtonState.Released)
                 {
                     World.Players[i].Jump();
                 }
+
+                if (World.Players[i].HoldingBaby)
+                {
+                    if (gamepad[i].Buttons.X == ButtonState.Pressed)
+                    {
+                        World.Players[i].ReadyToThrow = true;
+                    }
+                    else
+                    {
+                        if (prevgamepad[i].Buttons.X == ButtonState.Pressed)
+                        {
+                            World.Players[i].Throw();
+                        }
+                        World.Players[i].ReadyToThrow = false;
+                    }
+                }
+                
             }
             //debug only
             if (Keyboard.GetState().IsKeyDown(Keys.Z))

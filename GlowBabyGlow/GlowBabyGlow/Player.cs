@@ -9,14 +9,30 @@ namespace GlowBabyGlow
 {
     class Player : Actor
     {
-        static int index = 0;
+        int index = 0;
         static int width = 20;
         static int height = 35;
 
-        float jumpStrength = 900;
+        float jumpStrength = 700;
         float acceleration = 50;
-        float maxSpeed = 200;  //pixels per second
-        float ladderSpeed = 100;
+        float maxSpeed = 150;  //pixels per second
+        float ladderSpeed = 150;
+
+        bool holdingBaby = true;
+        bool readyToThrow = false;
+        float throwVelocity = 0;
+        Baby baby = null;
+
+        public bool HoldingBaby
+        {
+            get { return holdingBaby; }
+        }
+
+        public bool ReadyToThrow
+        {
+            get { return readyToThrow; }
+            set { readyToThrow = value; }
+        }
 
         public Player(Point pos)
         {
@@ -26,6 +42,11 @@ namespace GlowBabyGlow
 
         public override void Update(float dt)
         {
+            if (baby != null)
+            {
+                baby.Update(dt);
+            }
+
             HandleMovement(dt);
 
             base.Update(dt);
@@ -33,20 +54,28 @@ namespace GlowBabyGlow
 
         public void Jump()
         {
-            inAir = true;
-            velocity.Y = -jumpStrength;
+            if (!inAir && !readyToThrow)
+            {
+                inAir = true;
+                velocity.Y = -jumpStrength;
+            }
+        }
+
+        public void Throw()
+        {
+            if (baby == null)
+            {
+                baby = new Baby(pos, throwVelocity, index);
+                holdingBaby = false;
+            }
         }
 
         public void HandleMovement(float dt)
         {
-            //float xInput = Input.GetThumbs(0).Left.X;
-            float xInput = Input.GetThumbsDebugX();
-            float xMax = Math.Abs(maxSpeed * xInput);
+            float xInput = Input.GetThumbs(0).Left.X;
+            float yInput = Input.GetThumbs(0).Left.Y;
 
-            float yInput = Input.GetThumbsDebugY();
-            float yMax = Math.Abs(ladderSpeed * yInput);
-
-            if (onLadder)
+            if (onLadder || readyToThrow)
             {
                 xInput = 0;
             }
@@ -56,9 +85,11 @@ namespace GlowBabyGlow
                 yInput = 0;
             }
 
-            velocity.X += xInput * acceleration;
+            float xMax = Math.Abs(maxSpeed * xInput);
+            float yMax = Math.Abs(ladderSpeed * yInput);
 
-            velocity.Y += yInput * acceleration;
+            velocity.X += xInput * acceleration;
+            velocity.Y += -yInput * acceleration;
 
             if (velocity.X > xMax)
             { velocity.X = xMax; }
@@ -67,10 +98,10 @@ namespace GlowBabyGlow
 
             if (onLadder)
             {
-                if (velocity.Y > ladderSpeed)
-                { velocity.Y = ladderSpeed; }
-                else if (velocity.Y < -ladderSpeed)
-                { velocity.Y = -ladderSpeed; }
+                if (velocity.Y > yMax)
+                { velocity.Y = yMax; }
+                else if (velocity.Y < -yMax)
+                { velocity.Y = -yMax; }
             }
 
             if (wallLeft && xInput < 0)
@@ -81,6 +112,18 @@ namespace GlowBabyGlow
 
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
         {
+            if (baby != null)
+            {
+                baby.Collision(ref tiles);
+
+                if (baby.Rect.Intersects(rect)
+                    && baby.ReadyToCatch)
+                {
+                    baby = null;
+                    holdingBaby = true;
+                }
+            }
+
             bool fall = true;
             bool tileCollideLeft = false;
             bool tileCollideRight = false;
@@ -89,7 +132,7 @@ namespace GlowBabyGlow
             if (!onLadder)
             {
                 //if (Input.GetThumbs(index).Left.Y > 0.2)
-                if(Input.GetThumbsDebugY() < 0)
+                if(Input.GetThumbs(index).Left.Y > 0)
                 {
                     foreach (Ladder l in ladders)
                     {
@@ -105,7 +148,7 @@ namespace GlowBabyGlow
                     }  
                 }
                 //else if (Input.GetThumbs(index).Left.Y < -0.2)
-                if (Input.GetThumbsDebugY() > 0)
+                if (Input.GetThumbs(index).Left.Y < 0)
                 {
                     foreach (Ladder l in ladders)
                     {
@@ -200,6 +243,11 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb)
         {
+            if (baby != null)
+            {
+                baby.Draw(sb);
+            }
+
             sb.Draw(TextureManager.blankTexture, rect, Color.Green);
         }
     }

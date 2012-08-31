@@ -11,7 +11,7 @@ namespace GlowBabyGlow
     {
         List<Enemy> enemies = new List<Enemy>();
         float timer;
-        float enemyTime = 2; // seconds
+        float enemyTime = 5; // seconds
 
         public void Update(float dt)
         {
@@ -52,7 +52,7 @@ namespace GlowBabyGlow
                             bool tooClose = false;
                             foreach (Player p in World.Players)
                             {
-                                Vector2 v = new Vector2(t.Rect.Center.X, t.Rect.Center.Y);
+                                Vector2 v = new Vector2(World.Tiles[index].Rect.Center.X, World.Tiles[index].Rect.Center.Y);
                                 float dist = Vector2.Distance(v, p.Position);
                                 if (dist < 100)
                                 {

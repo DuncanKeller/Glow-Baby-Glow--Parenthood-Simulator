@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actor.cs" />
+    <Compile Include="Baby.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemyManager.cs" />
