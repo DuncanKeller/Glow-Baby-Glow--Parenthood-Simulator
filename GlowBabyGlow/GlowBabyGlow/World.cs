@@ -58,6 +58,11 @@ namespace GlowBabyGlow
 
             }
 
+            tiles.Add(new Tile(new Point(-Tile.Size, Config.screenH - Tile.Size)));
+            tiles.Add(new Tile(new Point(-Tile.Size * 2, Config.screenH - Tile.Size)));
+            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size, Config.screenH - Tile.Size)));
+            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size * 2, Config.screenH - Tile.Size)));
+
             sr.Close();
         }
 

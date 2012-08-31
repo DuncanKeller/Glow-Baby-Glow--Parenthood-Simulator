@@ -20,7 +20,7 @@ namespace GlowBabyGlow
 
         bool holdingBaby = true;
         bool readyToThrow = false;
-        float throwVelocity = 0;
+        float throwStrength = 100;
         Baby baby = null;
 
         public bool HoldingBaby
@@ -65,7 +65,7 @@ namespace GlowBabyGlow
         {
             if (baby == null)
             {
-                baby = new Baby(pos, throwVelocity, index);
+                baby = new Baby(pos, throwStrength * Input.GetThumbs(index).Left.X, index);
                 holdingBaby = false;
             }
         }
@@ -180,7 +180,7 @@ namespace GlowBabyGlow
             // air collision, landing, walls, etc
             foreach (Tile t in tiles)
             {
-                if (inAir)
+                if (inAir && !onLadder)
                 {
                     int overlappingAbove = t.OverlappingAbove(rect);
                     if (overlappingAbove > 0 && velocity.Y > 0)
@@ -189,7 +189,6 @@ namespace GlowBabyGlow
                         velocity.Y = 0;
                         if (!onLadder)
                         {
-                            
                             pos.Y -= overlappingAbove;
                         }
                         onLadder = false;
