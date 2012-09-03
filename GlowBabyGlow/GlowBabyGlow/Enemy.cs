@@ -14,6 +14,13 @@ namespace GlowBabyGlow
         public static int width = 20;
         public static int height = 35;
 
+        int health = 3;
+
+        public Rectangle Rect
+        {
+            get { return rect; }
+        }
+
         public Enemy(Point pos)
         {
             this.pos = new Vector2(pos.X, pos.Y);
@@ -23,9 +30,17 @@ namespace GlowBabyGlow
 
         public override void Update(float dt)
         {
-       
-
             base.Update(dt);
+        }
+
+        public void Hit(Bullet b)
+        {
+            health--;
+        }
+
+        public void Die()
+        {
+
         }
 
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
@@ -36,7 +51,6 @@ namespace GlowBabyGlow
             bool floorBelow = false;
             int floorPos = velocity.X > 0 ? rect.Width : -rect.Width;
             Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 1, 1);
-
 
             // air collision, landing, walls, etc
             foreach (Tile t in tiles)
@@ -50,7 +64,6 @@ namespace GlowBabyGlow
                         velocity.Y = 0;
                         if (!onLadder)
                         {
-
                             pos.Y -= overlappingAbove;
                         }
                         onLadder = false;

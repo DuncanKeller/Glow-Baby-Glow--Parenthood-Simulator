@@ -16,6 +16,11 @@ namespace GlowBabyGlow
 
         static EnemyManager enemies = new EnemyManager();
 
+        public static EnemyManager EnemyManager
+        {
+            get { return enemies; }
+        }
+
         public static List<Player> Players
         {
             get { return players; }

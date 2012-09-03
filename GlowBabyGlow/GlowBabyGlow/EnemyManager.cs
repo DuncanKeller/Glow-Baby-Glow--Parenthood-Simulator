@@ -13,6 +13,16 @@ namespace GlowBabyGlow
         float timer;
         float enemyTime = 5; // seconds
 
+        public List<Enemy> Enemies
+        {
+            get { return enemies; }
+        }
+
+        public void ClearEnemies()
+        {
+            enemies.Clear();
+        }
+
         public void Update(float dt)
         {
             timer += dt / 1000;

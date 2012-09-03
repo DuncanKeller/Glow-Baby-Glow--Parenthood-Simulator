@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="Baby.cs" />
+    <Compile Include="Bullet.cs" />
+    <Compile Include="BulletManager.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemyManager.cs" />

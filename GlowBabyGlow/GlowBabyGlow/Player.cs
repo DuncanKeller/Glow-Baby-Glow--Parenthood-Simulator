@@ -12,6 +12,7 @@ namespace GlowBabyGlow
         int index = 0;
         static int width = 20;
         static int height = 35;
+        bool facingRight = true;
 
         float jumpStrength = 700;
         float acceleration = 50;
@@ -22,6 +23,11 @@ namespace GlowBabyGlow
         bool readyToThrow = false;
         float throwStrength = 100;
         Baby baby = null;
+
+        bool alive = true;
+        float respawnTimer = 0;
+        float respawnTime = 1.4f;
+        int lives = 3;
 
         public bool HoldingBaby
         {
@@ -42,12 +48,24 @@ namespace GlowBabyGlow
 
         public override void Update(float dt)
         {
-            if (baby != null)
+            if (alive)
             {
-                baby.Update(dt);
-            }
+                if (baby != null)
+                {
+                    baby.Update(dt);
+                }
 
-            HandleMovement(dt);
+                HandleMovement(dt);
+            }
+            else
+            {
+                respawnTimer -= dt / 1000;
+
+                if (respawnTimer <= 0)
+                {
+                    Respawn();
+                }
+            }
 
             base.Update(dt);
         }
@@ -70,10 +88,44 @@ namespace GlowBabyGlow
             }
         }
 
+        public void Die()
+        {
+            alive = false;
+            respawnTimer = respawnTime;
+            baby = null;
+            pos.Y = Config.screenH + 200;
+            lives--;
+        }
+
+        public void Respawn()
+        {
+            pos.X = Config.screenW / 2;
+            pos.Y = Config.screenH - Tile.Size - rect.Height - 5;
+            alive = true;
+            World.EnemyManager.ClearEnemies();
+        }
+
+        public void Shoot()
+        {
+            int direction = facingRight ? 1 : -1;
+            Vector2 shootPoint = new Vector2(rect.X + (facingRight ? width : 0), rect.Center.Y);
+            Bullet b = new Bullet(shootPoint, direction);
+
+        }
+
         public void HandleMovement(float dt)
         {
             float xInput = Input.GetThumbs(0).Left.X;
             float yInput = Input.GetThumbs(0).Left.Y;
+
+            if (xInput > 0)
+            {
+                facingRight = true;
+            }
+            if (xInput < 0)
+            {
+                facingRight = false;
+            }
 
             if (onLadder || readyToThrow)
             {
@@ -121,6 +173,16 @@ namespace GlowBabyGlow
                 {
                     baby = null;
                     holdingBaby = true;
+                }
+            }
+            if (alive)
+            {
+                foreach (Enemy e in World.EnemyManager.Enemies)
+                {
+                    if (e.Rect.Intersects(rect))
+                    {
+                        Die();
+                    }
                 }
             }
 
