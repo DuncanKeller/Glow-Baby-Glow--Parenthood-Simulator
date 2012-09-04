@@ -10,6 +10,7 @@ namespace GlowBabyGlow
     class BulletManager
     {
         List<Bullet> bullets = new List<Bullet>();
+        List<Bullet> toRemove = new List<Bullet>();
 
         public List<Bullet> Bullets
         {
@@ -21,8 +22,18 @@ namespace GlowBabyGlow
             bullets.Clear();
         }
 
+        public void RemoveBullet(Bullet b)
+        {
+            toRemove.Add(b);
+        }
+
         public void Update(float dt)
         {
+            foreach (Bullet b in toRemove)
+            {
+                bullets.Remove(b);
+            }
+
             foreach (Bullet b in bullets)
             {
                 b.Update(dt);

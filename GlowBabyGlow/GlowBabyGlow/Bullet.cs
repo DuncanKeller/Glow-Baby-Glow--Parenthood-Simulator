@@ -12,9 +12,8 @@ namespace GlowBabyGlow
         static int width = 6;
         static int height = 4;
 
-        float speed;
+        float speed = 10;
         Vector2 velocity;
-        Rectangle rect;
 
         public Vector2 Velocity
         {
@@ -39,12 +38,14 @@ namespace GlowBabyGlow
                 if (rect.Intersects(e.Rect))
                 {
                     e.Hit(this);
+                    World.BulletManager.RemoveBullet(this);
                 }
             }
         }
 
         public override void Draw(SpriteBatch sb)
         {
+            sb.Draw(TextureManager.blankTexture, rect, Color.White);
             base.Draw(sb);
         }
     }

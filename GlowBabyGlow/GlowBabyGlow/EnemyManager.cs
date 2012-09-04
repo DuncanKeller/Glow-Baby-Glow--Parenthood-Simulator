@@ -10,6 +10,7 @@ namespace GlowBabyGlow
     class EnemyManager
     {
         List<Enemy> enemies = new List<Enemy>();
+        List<Enemy> toRemove = new List<Enemy>();
         float timer;
         float enemyTime = 5; // seconds
 
@@ -23,6 +24,11 @@ namespace GlowBabyGlow
             enemies.Clear();
         }
 
+        public void Remove(Enemy e)
+        {
+            toRemove.Add(e);
+        }
+
         public void Update(float dt)
         {
             timer += dt / 1000;
@@ -31,6 +37,11 @@ namespace GlowBabyGlow
             {
                 timer = 0;
                 Spawn();
+            }
+
+            foreach (Enemy e in toRemove)
+            {
+                enemies.Remove(e);
             }
 
             foreach (Enemy e in enemies)

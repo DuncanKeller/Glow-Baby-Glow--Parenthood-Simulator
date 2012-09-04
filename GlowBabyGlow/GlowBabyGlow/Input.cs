@@ -78,6 +78,14 @@ namespace GlowBabyGlow
                         World.Players[i].ReadyToThrow = false;
                     }
                 }
+                else
+                {
+                    if (gamepad[i].Buttons.X == ButtonState.Pressed && 
+                        prevgamepad[i].Buttons.X == ButtonState.Released)
+                    {
+                        World.Players[i].Shoot();
+                    }
+                }
                 
             }
             //debug only

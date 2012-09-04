@@ -29,6 +29,13 @@ namespace GlowBabyGlow
         float respawnTime = 1.4f;
         int lives = 3;
 
+        int bullets = 6;
+        int maxBullets = 6;
+        float reloadTimer;
+        float reloadTime = 1.9f; // seconds
+        float recoilTimer;
+        float recoilTime = 0.3f;
+
         public bool HoldingBaby
         {
             get { return holdingBaby; }
@@ -50,6 +57,14 @@ namespace GlowBabyGlow
         {
             if (alive)
             {
+                if (reloadTimer > 0)
+                { reloadTimer -= dt / 1000; }
+                else if (reloadTimer < 0) { reloadTimer = 0; bullets = maxBullets; }
+
+                if (recoilTimer > 0)
+                { recoilTimer -= dt / 1000; }
+                else { recoilTimer = 0; }
+
                 if (baby != null)
                 {
                     baby.Update(dt);
@@ -107,10 +122,21 @@ namespace GlowBabyGlow
 
         public void Shoot()
         {
-            int direction = facingRight ? 1 : -1;
-            Vector2 shootPoint = new Vector2(rect.X + (facingRight ? width : 0), rect.Center.Y);
-            Bullet b = new Bullet(shootPoint, direction);
+            if (reloadTimer == 0)
+            {
+                int direction = facingRight ? 1 : -1;
+                Vector2 shootPoint = new Vector2(rect.X + (facingRight ? width : 0), rect.Center.Y);
+                Bullet b = new Bullet(shootPoint, direction);
 
+                recoilTimer = recoilTime;
+                bullets--;
+                World.BulletManager.Bullets.Add(b);
+
+                if (bullets == 0)
+                {
+                    reloadTimer = reloadTime;
+                }
+            }
         }
 
         public void HandleMovement(float dt)
@@ -127,7 +153,7 @@ namespace GlowBabyGlow
                 facingRight = false;
             }
 
-            if (onLadder || readyToThrow)
+            if (onLadder || readyToThrow || recoilTimer > 0)
             {
                 xInput = 0;
             }

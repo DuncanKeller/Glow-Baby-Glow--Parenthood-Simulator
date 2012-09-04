@@ -31,6 +31,11 @@ namespace GlowBabyGlow
         public override void Update(float dt)
         {
             base.Update(dt);
+
+            if (health <= 0)
+            {
+                World.EnemyManager.Remove(this);
+            }
         }
 
         public void Hit(Bullet b)

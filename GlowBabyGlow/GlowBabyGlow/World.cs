@@ -15,10 +15,16 @@ namespace GlowBabyGlow
         static List<Ladder> ladders = new List<Ladder>();
 
         static EnemyManager enemies = new EnemyManager();
+        static BulletManager bullets = new BulletManager();
 
         public static EnemyManager EnemyManager
         {
             get { return enemies; }
+        }
+
+        public static BulletManager BulletManager
+        {
+            get { return bullets; }
         }
 
         public static List<Player> Players
@@ -80,6 +86,8 @@ namespace GlowBabyGlow
             }
             enemies.Update(dt);
             enemies.Collision(ref tiles, ref ladders);
+            bullets.Update(dt);
+            bullets.Collision(ref tiles, ref ladders);
         }
 
         public static void Draw(SpriteBatch sb)
@@ -90,6 +98,7 @@ namespace GlowBabyGlow
             }
 
             enemies.Draw(sb);
+            bullets.Draw(sb);
 
             foreach (Tile tile in tiles)
             {
