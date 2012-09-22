@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Duncanimation;
 
 namespace GlowBabyGlow
 {
     class Player : Actor
     {
         int index = 0;
-        static int width = 20;
+        static int width = 35;
         static int height = 35;
         bool facingRight = true;
 
@@ -21,7 +22,7 @@ namespace GlowBabyGlow
 
         bool holdingBaby = true;
         bool readyToThrow = false;
-        float throwStrength = 100;
+        float throwStrength = 75;
         Baby baby = null;
 
         bool alive = true;
@@ -35,6 +36,9 @@ namespace GlowBabyGlow
         float reloadTime = 1.9f; // seconds
         float recoilTimer;
         float recoilTime = 0.3f;
+
+        Animator testAnim;
+
 
         public bool HoldingBaby
         {
@@ -51,6 +55,13 @@ namespace GlowBabyGlow
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
+            testAnim = new Animator(TextureManager.testRun, 8, 6);
+            testAnim.AddAnimation("run", 0, 17, 16.5f, true);
+            testAnim.AddAnimation("idle", 18, 0, 0, true);
+            testAnim.AddAnimation("jump", 24, 3, 15, true, 26);
+            testAnim.AddAnimation("fall", 42, 3, 24, true, 44);
+            testAnim.AddAnimation("shoot", 30, 10, 24, true, 40);
+            testAnim.Play("idle");
         }
 
         public override void Update(float dt)
@@ -63,7 +74,12 @@ namespace GlowBabyGlow
 
                 if (recoilTimer > 0)
                 { recoilTimer -= dt / 1000; }
-                else { recoilTimer = 0; }
+                else
+                {
+                    recoilTimer = 0; 
+                    if(testAnim.CurrentAnimation == "shoot")
+                    { testAnim.Play("idle"); }
+                }
 
                 if (baby != null)
                 {
@@ -82,6 +98,7 @@ namespace GlowBabyGlow
                 }
             }
 
+            testAnim.Update(dt);
             base.Update(dt);
         }
 
@@ -91,6 +108,7 @@ namespace GlowBabyGlow
             {
                 inAir = true;
                 velocity.Y = -jumpStrength;
+                testAnim.Play("jump");
             }
         }
 
@@ -122,7 +140,7 @@ namespace GlowBabyGlow
 
         public void Shoot()
         {
-            if (reloadTimer == 0)
+            if (reloadTimer == 0 && !onLadder && !inAir && !holdingBaby)
             {
                 int direction = facingRight ? 1 : -1;
                 Vector2 shootPoint = new Vector2(rect.X + (facingRight ? width : 0), rect.Center.Y);
@@ -131,6 +149,8 @@ namespace GlowBabyGlow
                 recoilTimer = recoilTime;
                 bullets--;
                 World.BulletManager.Bullets.Add(b);
+
+                testAnim.Play("shoot"); 
 
                 if (bullets == 0)
                 {
@@ -180,6 +200,30 @@ namespace GlowBabyGlow
                 { velocity.Y = yMax; }
                 else if (velocity.Y < -yMax)
                 { velocity.Y = -yMax; }
+            }
+            else
+            {
+                if (inAir && velocity.Y > 500 &&
+                     testAnim.CurrentAnimation != "fall")
+                {
+                    testAnim.Play("fall");
+                }
+                else if (Math.Abs(velocity.X) > 0.1)
+                {
+                    if (testAnim.CurrentAnimation != "run" &&
+                        testAnim.CurrentAnimation != "jump" &&
+                        testAnim.CurrentAnimation != "shoot" &&
+                        testAnim.CurrentAnimation != "fall")
+                    { testAnim.Play("run"); }
+                }
+                else
+                {
+                    if (testAnim.CurrentAnimation != "idle" &&
+                        testAnim.CurrentAnimation != "jump" &&
+                        testAnim.CurrentAnimation != "shoot" &&
+                        testAnim.CurrentAnimation != "fall")
+                    { testAnim.Play("idle"); }
+                }
             }
 
             if (wallLeft && xInput < 0)
@@ -277,6 +321,7 @@ namespace GlowBabyGlow
                         velocity.Y = 0;
                         if (!onLadder)
                         {
+                            testAnim.Play("idle"); 
                             pos.Y -= overlappingAbove;
                         }
                         onLadder = false;
@@ -290,31 +335,34 @@ namespace GlowBabyGlow
                         fall = false;
                     }
                 }
-                if (Input.GetThumbs(index).Left.X < 0)
+                if (!onLadder)
                 {
-                    int overlappingRight = t.OverlappingRight(rect);
-                    if (overlappingRight > 0)
+                    if (Input.GetThumbs(index).Left.X < 0)
                     {
-                        velocity.X = 0;
-
-                        if (!wallLeft)
+                        int overlappingRight = t.OverlappingRight(rect);
+                        if (overlappingRight > 0)
                         {
-                            pos.X = t.Rect.Right;
-                            tileCollideLeft = true;
+                            velocity.X = 0;
+
+                            if (!wallLeft)
+                            {
+                                pos.X = t.Rect.Right;
+                                tileCollideLeft = true;
+                            }
                         }
                     }
-                }
-                if (Input.GetThumbs(index).Left.X > 0)
-                {
-                    int overlappingLeft = t.OverlappingLeft(rect);
-                    if (overlappingLeft > 0)
+                    if (Input.GetThumbs(index).Left.X > 0)
                     {
-                        velocity.X = 0;
-
-                        if (!wallRight)
+                        int overlappingLeft = t.OverlappingLeft(rect);
+                        if (overlappingLeft > 0)
                         {
-                            pos.X = t.Rect.Left - rect.Width;
-                            tileCollideRight = true;
+                            velocity.X = 0;
+
+                            if (!wallRight)
+                            {
+                                pos.X = t.Rect.Left - rect.Width;
+                                tileCollideRight = true;
+                            }
                         }
                     }
                 }
@@ -335,7 +383,9 @@ namespace GlowBabyGlow
                 baby.Draw(sb);
             }
 
-            sb.Draw(TextureManager.blankTexture, rect, Color.Green);
+            SpriteEffects effect = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            testAnim.Draw(sb, rect, Color.White, 0, Vector2.Zero, effect);
+            //sb.Draw(TextureManager.blankTexture, rect, Color.Green);
         }
     }
 }

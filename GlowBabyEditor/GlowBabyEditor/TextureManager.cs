@@ -12,6 +12,8 @@ namespace GlowBabyEditor
         static ContentManager c;
         public static Texture2D blankTexture;
 
+        public static Texture2D testRun;
+
         public static void Init(ContentManager content)
         {
             c = content;

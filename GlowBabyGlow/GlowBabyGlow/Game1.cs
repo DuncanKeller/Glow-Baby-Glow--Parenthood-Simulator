@@ -38,9 +38,10 @@ namespace GlowBabyGlow
             graphics.PreferredBackBufferHeight = Config.screenH;
             graphics.ApplyChanges();
 
+            TextureManager.Init(Content);
             Input.Init();
             World.Init();
-            TextureManager.Init(Content);
+            
             base.Initialize();
         }
 

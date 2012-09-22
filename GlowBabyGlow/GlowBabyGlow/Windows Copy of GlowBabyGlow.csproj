@@ -60,6 +60,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Documents\Visual Studio 2010\Projects\Duncanimation\Duncanimation\Duncanimation.csproj">
+      <Project>{3CA874B3-7644-4B06-A0D1-0D5388997F48}</Project>
+      <Name>Duncanimation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GlowBabyGlowContent\GlowBabyGlowContent.contentproj">
       <Name>GlowBabyGlowContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

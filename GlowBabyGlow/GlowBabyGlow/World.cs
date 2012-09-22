@@ -92,14 +92,6 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
-            foreach (Player p in players)
-            {
-                p.Draw(sb);
-            }
-
-            enemies.Draw(sb);
-            bullets.Draw(sb);
-
             foreach (Tile tile in tiles)
             {
                 tile.Draw(sb);
@@ -108,6 +100,14 @@ namespace GlowBabyGlow
             {
                 l.Draw(sb);
             }
+
+            foreach (Player p in players)
+            {
+                p.Draw(sb);
+            }
+
+            enemies.Draw(sb);
+            bullets.Draw(sb);
         }
     }
 }
