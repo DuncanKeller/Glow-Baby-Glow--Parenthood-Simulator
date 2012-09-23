@@ -24,6 +24,7 @@ namespace GlowBabyGlow
         bool readyToThrow = false;
         float throwStrength = 75;
         Baby baby = null;
+        float prevAngle = 0;
 
         bool alive = true;
         float respawnTimer = 0;
@@ -55,12 +56,16 @@ namespace GlowBabyGlow
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
-            testAnim = new Animator(TextureManager.testRun, 8, 6);
+            testAnim = new Animator(TextureManager.testRun, 13, 6);
             testAnim.AddAnimation("run", 0, 17, 16.5f, true);
             testAnim.AddAnimation("idle", 18, 0, 0, true);
             testAnim.AddAnimation("jump", 24, 3, 15, true, 26);
             testAnim.AddAnimation("fall", 42, 3, 24, true, 44);
             testAnim.AddAnimation("shoot", 30, 10, 24, true, 40);
+            testAnim.AddAnimation("climb", 48, 9, 15, true, 40);
+            testAnim.AddAnimation("shake", 60, 18, 24, true, 40);
+            
+    
             testAnim.Play("idle");
         }
 
@@ -157,6 +162,12 @@ namespace GlowBabyGlow
                     reloadTimer = reloadTime;
                 }
             }
+        }
+
+        public void Shake(float angle)
+        {
+            float dAngle = angle - prevAgnle;
+            // animation speed = somenum * dAngle
         }
 
         public void HandleMovement(float dt)
@@ -275,6 +286,7 @@ namespace GlowBabyGlow
                                 onLadder = true;
                                 velocity.X = 0;
                                 velocity.Y = 0;
+                                testAnim.Play("climb");
                             }
                         }
                     }  
@@ -291,6 +303,7 @@ namespace GlowBabyGlow
                                 onLadder = true;
                                 velocity.X = 0;
                                 velocity.Y = 0;
+                                testAnim.Play("climb");
                             }
                         }
                     }
@@ -306,6 +319,11 @@ namespace GlowBabyGlow
                         stillOnLadder = true;
                     }
                 }
+                if (!stillOnLadder)
+                {
+                    testAnim.Play("idle");
+                }
+
                 onLadder = stillOnLadder;
             }
 
