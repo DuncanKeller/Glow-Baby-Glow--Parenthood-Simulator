@@ -16,6 +16,7 @@ namespace GlowBabyGlow
 
         static EnemyManager enemies = new EnemyManager();
         static BulletManager bullets = new BulletManager();
+        static CoinManager coins = new CoinManager();
 
         public static EnemyManager EnemyManager
         {
@@ -25,6 +26,11 @@ namespace GlowBabyGlow
         public static BulletManager BulletManager
         {
             get { return bullets; }
+        }
+
+        public static CoinManager CoinManager
+        {
+            get { return coins; }
         }
 
         public static List<Player> Players
@@ -88,10 +94,13 @@ namespace GlowBabyGlow
             enemies.Collision(ref tiles, ref ladders);
             bullets.Update(dt);
             bullets.Collision(ref tiles, ref ladders);
+            coins.Update(dt);
         }
 
         public static void Draw(SpriteBatch sb)
         {
+            sb.Draw(TextureManager.bPark, new Rectangle(0, 0, Config.screenW, Config.screenH), Color.White);
+
             foreach (Tile tile in tiles)
             {
                 tile.Draw(sb);
@@ -108,6 +117,7 @@ namespace GlowBabyGlow
 
             enemies.Draw(sb);
             bullets.Draw(sb);
+            coins.Draw(sb);
         }
     }
 }

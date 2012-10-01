@@ -18,7 +18,7 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb) 
         {
-            sb.Draw(TextureManager.blankTexture, rect, Color.Yellow);
+            sb.Draw(TextureManager.ladder, rect, Color.White);
         }
 
         public bool LadderBelow(Rectangle r)

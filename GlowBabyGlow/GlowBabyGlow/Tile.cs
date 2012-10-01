@@ -86,7 +86,7 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(TextureManager.blankTexture, rect, Color.Purple);
+            sb.Draw(TextureManager.tile, rect, Color.White);
         }
     }
 }

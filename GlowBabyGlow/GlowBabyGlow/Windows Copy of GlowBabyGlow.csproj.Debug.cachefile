@@ -1,4 +1,10 @@
 Content\blank.xnb
 Content\runsheet.xnb
+Content\runsheet-baby.xnb
+Content\Backdrops\testBackground.xnb
+Content\Tiles\tile.xnb
+Content\Objects\ladder.xnb
+Content\Objects\coin.xnb
+Content\Actors\zombie-sheet.xnb
 Animation.cs
 Animator.cs

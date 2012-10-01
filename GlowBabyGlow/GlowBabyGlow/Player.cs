@@ -12,7 +12,7 @@ namespace GlowBabyGlow
     {
         int index = 0;
         static int width = 35;
-        static int height = 35;
+        static int height = 38;
         bool facingRight = true;
 
         float jumpStrength = 700;
@@ -22,9 +22,11 @@ namespace GlowBabyGlow
 
         bool holdingBaby = true;
         bool readyToThrow = false;
+        bool shaking = false;
         float throwStrength = 75;
         Baby baby = null;
         float prevAngle = 0;
+        float shakeSpeed = 0;
 
         bool alive = true;
         float respawnTimer = 0;
@@ -40,7 +42,6 @@ namespace GlowBabyGlow
 
         Animator testAnim;
 
-
         public bool HoldingBaby
         {
             get { return holdingBaby; }
@@ -52,19 +53,25 @@ namespace GlowBabyGlow
             set { readyToThrow = value; }
         }
 
+        public bool InAir
+        {
+            get { return inAir; }
+        }
+
         public Player(Point pos)
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
+            hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
+            hitOffset = new Point(rect.Width / 4, 0);
             testAnim = new Animator(TextureManager.testRun, 13, 6);
             testAnim.AddAnimation("run", 0, 17, 16.5f, true);
             testAnim.AddAnimation("idle", 18, 0, 0, true);
             testAnim.AddAnimation("jump", 24, 3, 15, true, 26);
             testAnim.AddAnimation("fall", 42, 3, 24, true, 44);
-            testAnim.AddAnimation("shoot", 30, 10, 24, true, 40);
-            testAnim.AddAnimation("climb", 48, 9, 15, true, 40);
-            testAnim.AddAnimation("shake", 60, 18, 24, true, 40);
-            
+            testAnim.AddAnimation("shoot", 30, 10, 24, true);
+            testAnim.AddAnimation("climb", 48, 8, 30, true);
+            testAnim.AddAnimation("shake", 60, 17, 200, true);
     
             testAnim.Play("idle");
         }
@@ -75,7 +82,8 @@ namespace GlowBabyGlow
             {
                 if (reloadTimer > 0)
                 { reloadTimer -= dt / 1000; }
-                else if (reloadTimer < 0) { reloadTimer = 0; bullets = maxBullets; }
+                else if (reloadTimer < 0) 
+                { reloadTimer = 0; bullets = maxBullets; }
 
                 if (recoilTimer > 0)
                 { recoilTimer -= dt / 1000; }
@@ -89,6 +97,15 @@ namespace GlowBabyGlow
                 if (baby != null)
                 {
                     baby.Update(dt);
+                }
+
+                if (holdingBaby)
+                {
+                    testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                }
+                else
+                {
+                    testAnim.SwapSpriteSheet(TextureManager.testRun);
                 }
 
                 HandleMovement(dt);
@@ -109,7 +126,7 @@ namespace GlowBabyGlow
 
         public void Jump()
         {
-            if (!inAir && !readyToThrow)
+            if (!inAir && !readyToThrow && !shaking)
             {
                 inAir = true;
                 velocity.Y = -jumpStrength;
@@ -121,7 +138,7 @@ namespace GlowBabyGlow
         {
             if (baby == null)
             {
-                baby = new Baby(pos, throwStrength * Input.GetThumbs(index).Left.X, index);
+                baby = new Baby(pos, throwStrength * Input.GetThumbs(index).X, index);
                 holdingBaby = false;
             }
         }
@@ -155,7 +172,14 @@ namespace GlowBabyGlow
                 bullets--;
                 World.BulletManager.Bullets.Add(b);
 
-                testAnim.Play("shoot"); 
+                if (testAnim.CurrentAnimation == "shoot")
+                {
+                    testAnim.Reset();
+                }
+                else
+                {
+                    testAnim.Play("shoot");
+                }
 
                 if (bullets == 0)
                 {
@@ -164,33 +188,81 @@ namespace GlowBabyGlow
             }
         }
 
+        public void StopShaking()
+        {
+            if (shaking)
+            {
+                shakeSpeed = 0;
+                shaking = false;
+                testAnim.Play("idle");
+            }
+        }
+
+        public void KeyShake(float key)
+        {
+            shakeSpeed += 25;
+            if (shakeSpeed > 100)
+            { shakeSpeed = 100; }   
+        }
+
+        public void StartShake()
+        {
+            testAnim.Play("shake");
+            shaking = true;
+            if (shakeSpeed > 0)
+            { shakeSpeed -= 3; }
+            else
+            { shakeSpeed = 0; }
+
+            if (Input.keys)
+            {
+                testAnim.SetSpeed(shakeSpeed);
+            }
+        }
+
         public void Shake(float angle)
         {
-            float dAngle = angle - prevAgnle;
-            // animation speed = somenum * dAngle
+            shaking = true;
+            float dAngle = angle - prevAngle;
+            testAnim.Play("shake");
+            testAnim.SetSpeed(dAngle * 120);
+            prevAngle = angle;
         }
 
         public void HandleMovement(float dt)
         {
-            float xInput = Input.GetThumbs(0).Left.X;
-            float yInput = Input.GetThumbs(0).Left.Y;
+            float xInput = Input.GetThumbs(index).X;
+            float yInput = Input.GetThumbs(index).Y;
 
-            if (xInput > 0)
+            if (!shaking)
             {
-                facingRight = true;
-            }
-            if (xInput < 0)
-            {
-                facingRight = false;
+                if (xInput > 0)
+                {
+                    facingRight = true;
+                }
+                if (xInput < 0)
+                {
+                    facingRight = false;
+                }
             }
 
             if (onLadder || readyToThrow || recoilTimer > 0)
             {
                 xInput = 0;
+                if (onLadder && testAnim.CurrentAnimation == "climb")
+                {
+                    testAnim.SetSpeed(velocity.Y / 10);
+                }
             }
             else
             {
                 //consider changing to yMax
+                yInput = 0;
+            }
+
+            if (shaking || readyToThrow)
+            {
+                xInput = 0;
                 yInput = 0;
             }
 
@@ -232,7 +304,8 @@ namespace GlowBabyGlow
                     if (testAnim.CurrentAnimation != "idle" &&
                         testAnim.CurrentAnimation != "jump" &&
                         testAnim.CurrentAnimation != "shoot" &&
-                        testAnim.CurrentAnimation != "fall")
+                        testAnim.CurrentAnimation != "fall" &&
+                        testAnim.CurrentAnimation != "shake")
                     { testAnim.Play("idle"); }
                 }
             }
@@ -249,7 +322,7 @@ namespace GlowBabyGlow
             {
                 baby.Collision(ref tiles);
 
-                if (baby.Rect.Intersects(rect)
+                if (baby.Rect.Intersects(hitRect)
                     && baby.ReadyToCatch)
                 {
                     baby = null;
@@ -260,7 +333,7 @@ namespace GlowBabyGlow
             {
                 foreach (Enemy e in World.EnemyManager.Enemies)
                 {
-                    if (e.Rect.Intersects(rect))
+                    if (e.HitRect.Intersects(hitRect))
                     {
                         Die();
                     }
@@ -275,11 +348,11 @@ namespace GlowBabyGlow
             if (!onLadder)
             {
                 //if (Input.GetThumbs(index).Left.Y > 0.2)
-                if(Input.GetThumbs(index).Left.Y > 0)
+                if(Input.GetThumbs(index).Y > 0)
                 {
                     foreach (Ladder l in ladders)
                     {
-                        if (l.LadderAbove(rect))
+                        if (l.LadderAbove(hitRect))
                         {
                             if (!onLadder)
                             {
@@ -292,11 +365,11 @@ namespace GlowBabyGlow
                     }  
                 }
                 //else if (Input.GetThumbs(index).Left.Y < -0.2)
-                if (Input.GetThumbs(index).Left.Y < 0)
+                if (Input.GetThumbs(index).Y < 0)
                 {
                     foreach (Ladder l in ladders)
                     {
-                        if (l.LadderBelow(rect))
+                        if (l.LadderBelow(hitRect))
                         {
                             if (!onLadder)
                             {
@@ -314,7 +387,7 @@ namespace GlowBabyGlow
                 bool stillOnLadder = false;
                 foreach (Ladder l in ladders)
                 {
-                    if (l.Rect.Intersects(rect))
+                    if (l.Rect.Intersects(hitRect))
                     {
                         stillOnLadder = true;
                     }
@@ -330,9 +403,30 @@ namespace GlowBabyGlow
             // air collision, landing, walls, etc
             foreach (Tile t in tiles)
             {
+                if (onLadder)
+                {
+                    if (t.OverlappingAbove(hitRect) > 0 && velocity.Y > 0)
+                    {
+
+                        bool intersectingLadder = false;
+                        foreach (Ladder l in ladders)
+                        {
+                            if (l.Rect.Intersects(t.Rect))
+                            {
+                                intersectingLadder = true;
+                            }
+                            
+                        }
+                        if (!intersectingLadder)
+                        {
+                            onLadder = false;
+                            testAnim.Play("idle");
+                        }
+                    }
+                }
                 if (inAir && !onLadder)
                 {
-                    int overlappingAbove = t.OverlappingAbove(rect);
+                    int overlappingAbove = t.OverlappingAbove(hitRect);
                     if (overlappingAbove > 0 && velocity.Y > 0)
                     {
                         inAir = false;
@@ -348,16 +442,16 @@ namespace GlowBabyGlow
                 }
                 if (!inAir)
                 {
-                    if (t.StandingOn(rect))
+                    if (t.StandingOn(hitRect))
                     {
                         fall = false;
                     }
                 }
                 if (!onLadder)
                 {
-                    if (Input.GetThumbs(index).Left.X < 0)
+                    if (Input.GetThumbs(index).X < 0)
                     {
-                        int overlappingRight = t.OverlappingRight(rect);
+                        int overlappingRight = t.OverlappingRight(hitRect);
                         if (overlappingRight > 0)
                         {
                             velocity.X = 0;
@@ -369,16 +463,16 @@ namespace GlowBabyGlow
                             }
                         }
                     }
-                    if (Input.GetThumbs(index).Left.X > 0)
+                    if (Input.GetThumbs(index).X > 0)
                     {
-                        int overlappingLeft = t.OverlappingLeft(rect);
+                        int overlappingLeft = t.OverlappingLeft(hitRect);
                         if (overlappingLeft > 0)
                         {
                             velocity.X = 0;
 
                             if (!wallRight)
                             {
-                                pos.X = t.Rect.Left - rect.Width;
+                                pos.X = t.Rect.Left - hitRect.Width;
                                 tileCollideRight = true;
                             }
                         }

@@ -19,9 +19,17 @@ namespace GlowBabyGlow
 
         protected bool onLadder = false;
 
+        protected Rectangle hitRect;
+        protected Point hitOffset;
+
         public Vector2 Position
         {
             get { return pos; }
+        }
+
+        public Rectangle HitRect
+        {
+            get { return hitRect; }
         }
 
         public override void Update(float dt)
@@ -45,6 +53,9 @@ namespace GlowBabyGlow
             {
                 pos.X = Config.screenW - rect.Width / 2;
             }
+
+            hitRect.X = rect.X + hitOffset.X;
+            hitRect.Y = rect.Y + hitOffset.Y;
         }
 
         public override void Draw(SpriteBatch sb)

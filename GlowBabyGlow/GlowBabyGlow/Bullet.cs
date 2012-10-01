@@ -12,7 +12,7 @@ namespace GlowBabyGlow
         static int width = 6;
         static int height = 4;
 
-        float speed = 10;
+        float speed = 450;
         Vector2 velocity;
 
         public Vector2 Velocity
@@ -28,7 +28,7 @@ namespace GlowBabyGlow
 
         public override void Update(float dt)
         {
-            rect.X += (int)velocity.X;
+            rect.X += (int)(velocity.X * (dt / 1000));
         }
 
         public void Collision(ref List<Tile> tiles)
