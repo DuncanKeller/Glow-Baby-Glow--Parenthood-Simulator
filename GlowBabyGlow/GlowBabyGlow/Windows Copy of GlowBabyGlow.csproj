@@ -72,23 +72,34 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="Baby.cs" />
+    <Compile Include="Backdrop.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="BulletManager.cs" />
+    <Compile Include="Cloud.cs" />
     <Compile Include="Coin.cs" />
     <Compile Include="CoinManager.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="GFont.cs" />
+    <Compile Include="Hud.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Ladder.cs" />
+    <Compile Include="LineBatch.cs" />
     <Compile Include="Obj.cs" />
+    <Compile Include="Particles\BloodParticle.cs" />
+    <Compile Include="Particles\DeathParticle.cs" />
+    <Compile Include="Particles\GoldParticle.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Tutorial.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>

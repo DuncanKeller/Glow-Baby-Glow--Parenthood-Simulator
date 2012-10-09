@@ -6,5 +6,15 @@ Content\Tiles\tile.xnb
 Content\Objects\ladder.xnb
 Content\Objects\coin.xnb
 Content\Actors\zombie-sheet.xnb
+Content\Actors\baby.xnb
+Content\Actors\glow.xnb
+Content\circle.xnb
+Content\Backdrops\cloud1.xnb
+Content\Backdrops\cloud2.xnb
+Content\Backdrops\cloud3.xnb
+Content\Backdrops\cloud4.xnb
+Content\Fonts\font.xnb
+Content\Hud\face.xnb
+Content\Backdrops\tutorial.xnb
 Animation.cs
 Animator.cs

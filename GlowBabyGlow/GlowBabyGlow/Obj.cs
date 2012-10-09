@@ -8,6 +8,6 @@ namespace GlowBabyGlow
 {
     abstract class Obj
     {
-        public abstract void Draw(SpriteBatch sb);
+        public abstract void Draw(SpriteBatch sb, SpriteEffects effect);
     }
 }

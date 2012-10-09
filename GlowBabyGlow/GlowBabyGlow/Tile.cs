@@ -7,10 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
-    class Tile : Obj
+    class Tile : Entity
     {
         static int size = 30;
-        protected Rectangle rect;
 
         public Rectangle Rect
         {
@@ -25,6 +24,11 @@ namespace GlowBabyGlow
         public Tile(Point pos)
         {
             rect = new Rectangle(pos.X, pos.Y, size, size);
+        }
+
+        public override void Update(float dt)
+        {
+            base.Update(dt);
         }
 
         /// <summary>
@@ -84,7 +88,7 @@ namespace GlowBabyGlow
             return 0;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             sb.Draw(TextureManager.tile, rect, Color.White);
         }

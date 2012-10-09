@@ -52,7 +52,7 @@ namespace GlowBabyGlow
         {
             foreach (Bullet b in bullets)
             {
-                b.Draw(sb);
+                b.Draw(sb, SpriteEffects.None);
             }
         }
     }

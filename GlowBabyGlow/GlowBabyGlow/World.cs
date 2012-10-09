@@ -17,6 +17,28 @@ namespace GlowBabyGlow
         static EnemyManager enemies = new EnemyManager();
         static BulletManager bullets = new BulletManager();
         static CoinManager coins = new CoinManager();
+        static ParticleManager particles = new ParticleManager();
+
+        static bool exploded = false;
+        static float explodeTime = 0;
+        static float dtMod = 0;
+
+        #region Properties
+
+        public static float ExplodeTimer
+        {
+            get { return explodeTime; }
+        }
+
+        public static bool Exploding
+        {
+            get { return exploded; }
+        }
+
+        public static ParticleManager ParticleManager
+        {
+            get { return particles; }
+        }
 
         public static EnemyManager EnemyManager
         {
@@ -43,14 +65,20 @@ namespace GlowBabyGlow
             get { return tiles; }
         }
 
+        #endregion
+
         public static void Init()
         {
+            Hud.Init();    
+
             players.Add(new Player(new Point(500,300)));
-            Load("kerfuffle");
+            Load("tutorial");
+            
         }
 
         static void Load(string filename)
         {
+            Backdrop.SetStage(filename);
             StreamReader sr = new StreamReader("Maps\\" + filename + ".txt");
 
             while (!sr.EndOfStream)
@@ -72,7 +100,6 @@ namespace GlowBabyGlow
                         ladders.Add(new Ladder(p));
                         break;
                 }
-
             }
 
             tiles.Add(new Tile(new Point(-Tile.Size, Config.screenH - Tile.Size)));
@@ -85,39 +112,129 @@ namespace GlowBabyGlow
 
         public static void Update(float dt)
         {
+            if (exploded)
+            {
+                UpdateExplosion(dt);
+            }
+            //dt = 5;
+            if (dtMod != 0)
+            {
+                dt = dtMod;
+            }
+
+            if (Players[0].Baby != null)
+            {
+                if (!exploded)
+                {
+                    if (Players[0].Baby.ClosestTile < 65 &&
+                        Players[0].Baby.Velocity.Y > 0)
+                    {
+                        dt = Players[0].Baby.ClosestTile / 15;
+                    }
+                }
+            }
+
             foreach (Player p in players)
             {
                 p.Update(dt);
                 p.Collision(ref tiles, ref ladders);
             }
+
+            foreach (Tile t in tiles)
+            {
+                t.Update(dt);
+            }
+
+            foreach (Ladder l in ladders)
+            {
+                l.Update(dt);
+            }
+
             enemies.Update(dt);
             enemies.Collision(ref tiles, ref ladders);
             bullets.Update(dt);
             bullets.Collision(ref tiles, ref ladders);
             coins.Update(dt);
+            particles.Update(dt);
+
+            if (Backdrop.Stage == "tutorial")
+            {
+                Tutorial.Update(dt, Players[0]);
+            }
+            Backdrop.Update(dt);
+            Hud.Update(dt);
+        }
+
+        public static void UpdateExplosion(float dt)
+        {
+            explodeTime += dt / 1000;
+
+            if (explodeTime < 1)
+            {
+                dtMod = 0.0001f;
+            }
+            else if (explodeTime < 5)
+            {
+                if (dtMod < dt)
+                {
+                    dtMod += dt / 20;
+                }
+                else
+                {
+                    dtMod = dt;
+                }
+            }
+            else
+            {
+                dtMod = 0;
+            }
+        }
+
+        public static void Explode()
+        {
+            exploded = true;
+            foreach (Tile t in tiles)
+            {
+                (t as Entity).Explode();
+            }
+            foreach (Ladder l in ladders)
+            {
+                (l as Entity).Explode();
+            }
+
+            enemies.ClearEnemies();
+            bullets.ClearBullets();
+            coins.ClearCoins();
         }
 
         public static void Draw(SpriteBatch sb)
         {
-            sb.Draw(TextureManager.bPark, new Rectangle(0, 0, Config.screenW, Config.screenH), Color.White);
+            Backdrop.Draw(sb);
 
             foreach (Tile tile in tiles)
             {
-                tile.Draw(sb);
+                tile.Draw(sb, SpriteEffects.None);
             }
             foreach (Ladder l in ladders)
             {
-                l.Draw(sb);
+                l.Draw(sb, SpriteEffects.None);
             }
 
             foreach (Player p in players)
             {
-                p.Draw(sb);
+                p.Draw(sb, SpriteEffects.None); 
             }
 
             enemies.Draw(sb);
             bullets.Draw(sb);
             coins.Draw(sb);
+            particles.Draw(sb);
+
+            Hud.Draw(sb);
+            if (Backdrop.Stage == "tutorial")
+            {
+                Tutorial.Draw(sb);
+            }
         }
     }
 }

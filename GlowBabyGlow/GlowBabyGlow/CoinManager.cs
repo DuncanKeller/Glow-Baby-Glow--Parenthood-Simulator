@@ -12,7 +12,7 @@ namespace GlowBabyGlow
         List<Coin> coins = new List<Coin>();
         List<Coin> toRemove = new List<Coin>();
         float timer;
-        float coinTime = 2; // seconds
+        float coinTime = 6; // seconds
         int offset = 10;
 
         public List<Coin> Coins
@@ -20,7 +20,7 @@ namespace GlowBabyGlow
             get { return coins; }
         }
 
-        public void Clearcoins()
+        public void ClearCoins()
         {
             coins.Clear();
         }
@@ -61,7 +61,7 @@ namespace GlowBabyGlow
 
         public void Spawn()
         {
-            while (true)
+            while (coins.Count < 2)
             {
                 int index = Config.rand.Next(World.Tiles.Count());
 
@@ -69,27 +69,31 @@ namespace GlowBabyGlow
                 {
                     if (t != World.Tiles[index])
                     {
-                        if (!t.StandingOn(World.Tiles[index].Rect))
+                        if (World.Tiles[index].Rect.Right > 0 &&
+                            World.Tiles[index].Rect.Left < Config.screenW)
                         {
-                            bool tooClose = false;
-                            foreach (Player p in World.Players)
+                            if (!t.StandingOn(World.Tiles[index].Rect))
                             {
-                                Vector2 v = new Vector2(World.Tiles[index].Rect.Center.X, World.Tiles[index].Rect.Center.Y);
-                                float dist = Vector2.Distance(v, p.Position);
-                                if (dist < 100)
+                                bool tooClose = false;
+                                foreach (Player p in World.Players)
                                 {
-                                    tooClose = true;
-                                    break;
+                                    Vector2 v = new Vector2(World.Tiles[index].Rect.Center.X, World.Tiles[index].Rect.Center.Y);
+                                    float dist = Vector2.Distance(v, p.Position);
+                                    if (dist < 150)
+                                    {
+                                        tooClose = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (tooClose)
-                            { break; }
-                            else
-                            {
-                                Coin e = new Coin(World.Tiles[index].Rect.Center.X,
-                                    World.Tiles[index].Rect.Y - Coin.size - offset);
-                                coins.Add(e);
-                                return;
+                                if (tooClose)
+                                { break; }
+                                else
+                                {
+                                    Coin e = new Coin(World.Tiles[index].Rect.Center.X,
+                                        World.Tiles[index].Rect.Y - Coin.size - offset);
+                                    coins.Add(e);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -101,7 +105,7 @@ namespace GlowBabyGlow
         {
             foreach (Coin e in coins)
             {
-                e.Draw(sb);
+                e.Draw(sb, SpriteEffects.None);
             }
         }
     }

@@ -14,9 +14,7 @@ namespace GlowBabyGlow
         public static int width = 35;
         public static int height = 37;
 
-        int health = 3;
-
-        Animator animation;
+        int health = 2;
 
         Vector2 idealVelocity = new Vector2();
 
@@ -32,9 +30,9 @@ namespace GlowBabyGlow
             hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
             hitOffset = new Point(rect.Width / 4, 0);
             
-            animation = new Animator(TextureManager.zombieSheet, 2, 6);
-            animation.AddAnimation("default", 0, 11, 15, true);
-            animation.Play("default");
+            testAnim = new Animator(TextureManager.zombieSheet, 2, 6);
+            testAnim.AddAnimation("default", 0, 11, 15, true);
+            testAnim.Play("default");
             velocity.X = -50;
             idealVelocity.X = -50;
         }
@@ -43,7 +41,7 @@ namespace GlowBabyGlow
         {
             base.Update(dt);
             
-            animation.Update(dt);
+            testAnim.Update(dt);
 
             if (health <= 0)
             {
@@ -59,16 +57,36 @@ namespace GlowBabyGlow
                 velocity.X += (idealVelocity.X - velocity.X) / 8;
             }
         }
-
+                    
         public void Hit(Bullet b)
         {
             health--;
             velocity.X += b.Velocity.X / 3.5f;
+
+            if (health > 0)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    float dir = b.Velocity.X > 0 ? -1 : 1;
+                    BloodParticle bp = new BloodParticle(b.Pos, dir);
+                    World.ParticleManager.AddParticle(bp);
+                }
+            }
+            else
+            {
+                Die(b);
+            }
         }
 
-        public void Die()
+        public void Die(Bullet b)
         {
-
+            b.Player.Score += 100;
+            Vector2 center = new Vector2(hitRect.Center.X, hitRect.Center.Y);
+            for (int i = 0; i < 8; i++)
+            {
+                DeathParticle dp = new DeathParticle(center);
+                World.ParticleManager.AddParticle(dp);
+            }
         }
 
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
@@ -159,13 +177,14 @@ namespace GlowBabyGlow
             wallLeft = tileCollideLeft;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             int floorPos = velocity.X > 0 ? rect.Width : -rect.Width;
             Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 3, 3);
 
-            SpriteEffects effect = idealVelocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            animation.Draw(sb, rect, Color.White, 0, Vector2.Zero, effect);
+            effect = idealVelocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            base.Draw(sb, effect);
             //sb.Draw(TextureManager.blankTexture, checkFloor, Color.Red);
         }
     }

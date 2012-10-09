@@ -11,8 +11,10 @@ namespace GlowBabyGlow
     {
         List<Enemy> enemies = new List<Enemy>();
         List<Enemy> toRemove = new List<Enemy>();
+        List<Enemy> toAdd = new List<Enemy>();
         float timer;
         float enemyTime = 5; // seconds
+        int spawnDistance = 175;
 
         public List<Enemy> Enemies
         {
@@ -29,20 +31,36 @@ namespace GlowBabyGlow
             toRemove.Add(e);
         }
 
+        public void Add(Enemy e)
+        {
+            toAdd.Add(e);
+        }
+
         public void Update(float dt)
         {
             timer += dt / 1000;
 
             if (timer > enemyTime)
             {
-                timer = 0;
-                Spawn();
+                if (Backdrop.Stage != "tutorial")
+                {
+                    timer = 0;
+                    Spawn();
+                }
             }
 
             foreach (Enemy e in toRemove)
             {
                 enemies.Remove(e);
             }
+
+            foreach (Enemy e in toAdd)
+            {
+                enemies.Add(e);
+            }
+
+            toRemove.Clear();
+            toAdd.Clear();
 
             foreach (Enemy e in enemies)
             {
@@ -75,7 +93,7 @@ namespace GlowBabyGlow
                             {
                                 Vector2 v = new Vector2(World.Tiles[index].Rect.Center.X, World.Tiles[index].Rect.Center.Y);
                                 float dist = Vector2.Distance(v, p.Position);
-                                if (dist < 100)
+                                if (dist < spawnDistance)
                                 {
                                     tooClose = true;
                                     break;
@@ -100,7 +118,7 @@ namespace GlowBabyGlow
         {
             foreach (Enemy e in enemies)
             {
-                e.Draw(sb);
+                e.Draw(sb, SpriteEffects.None);
             }
         }
     }

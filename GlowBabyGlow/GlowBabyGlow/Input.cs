@@ -133,6 +133,11 @@ namespace GlowBabyGlow
 
             for (int i = 0; i < World.Players.Count; i++)
             {
+                if (keyboard.IsKeyDown(Keys.T))
+                {
+                    World.Explode();
+                }
+
                 if (World.Players[i].HoldingBaby)
                 {
                     if (!World.Players[i].InAir)

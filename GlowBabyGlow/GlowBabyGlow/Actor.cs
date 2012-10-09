@@ -10,7 +10,7 @@ namespace GlowBabyGlow
     abstract class Actor : Entity
     {
         protected Vector2 pos;
-        protected float gravity = 50;
+        protected float gravity = 2000;
         protected Vector2 velocity = new Vector2();
 
         protected bool inAir = true;
@@ -36,7 +36,7 @@ namespace GlowBabyGlow
         {
             if (inAir && !onLadder)
             {
-                velocity.Y += gravity;
+                velocity.Y += gravity * (dt / 1000);
             }
 
             pos.Y += velocity.Y * (dt / 1000);
@@ -58,11 +58,18 @@ namespace GlowBabyGlow
             hitRect.Y = rect.Y + hitOffset.Y;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             //remember to draw things so that screen wrapping looks OK
-
-            base.Draw(sb);
+            if (testAnim != null)
+            {
+                testAnim.Draw(sb, rect, Color.White, 0, Vector2.Zero, effect);
+                Rectangle wrapLeft = new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height);
+                Rectangle wrapRight = new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height);
+                testAnim.Draw(sb, wrapLeft, Color.White, 0, Vector2.Zero, effect);
+                testAnim.Draw(sb, wrapRight, Color.White, 0, Vector2.Zero, effect);
+            }
+            base.Draw(sb, effect);
         }
     }
 }
