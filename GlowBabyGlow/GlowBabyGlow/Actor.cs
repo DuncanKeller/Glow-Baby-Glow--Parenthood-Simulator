@@ -22,6 +22,12 @@ namespace GlowBabyGlow
         protected Rectangle hitRect;
         protected Point hitOffset;
 
+        public Actor(World w)
+            : base(w)
+        {
+
+        }
+
         public Vector2 Position
         {
             get { return pos; }

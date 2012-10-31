@@ -12,8 +12,8 @@ namespace GlowBabyGlow
         Texture2D fontSheet;
         int rows;
         int columns;
-        int width = 45;
-        int height = 53;
+        public static int width = 45;
+        public static int height = 53;
 
         Color[] colorBank = new Color[255];
         Dictionary<char, Point> fontMap = new Dictionary<char, Point>();

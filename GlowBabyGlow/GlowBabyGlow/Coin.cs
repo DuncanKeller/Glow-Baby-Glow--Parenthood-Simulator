@@ -21,8 +21,8 @@ namespace GlowBabyGlow
             get { return rect; }
         }
 
-        public Coin(int x, int y)
-            : base()
+        public Coin(int x, int y, World w)
+            : base(w)
         {
             rect = new Rectangle(x, y, size, size);
             startingHeight = y;

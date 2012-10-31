@@ -9,11 +9,17 @@ namespace GlowBabyGlow
 {
     class CoinManager
     {
+        World world;
         List<Coin> coins = new List<Coin>();
         List<Coin> toRemove = new List<Coin>();
         float timer;
         float coinTime = 6; // seconds
         int offset = 10;
+
+        public CoinManager(World w)
+        {
+            world = w;
+        }
 
         public List<Coin> Coins
         {
@@ -22,6 +28,7 @@ namespace GlowBabyGlow
 
         public void ClearCoins()
         {
+            timer = 0;
             coins.Clear();
         }
 
@@ -63,21 +70,41 @@ namespace GlowBabyGlow
         {
             while (coins.Count < 2)
             {
-                int index = Config.rand.Next(World.Tiles.Count());
+                int index = Config.rand.Next(world.Tiles.Count());
+                bool colliding = false;
 
-                foreach (Tile t in World.Tiles)
+                foreach (Tile t in world.Tiles)
                 {
-                    if (t != World.Tiles[index])
+                    if (t != world.Tiles[index])
                     {
-                        if (World.Tiles[index].Rect.Right > 0 &&
-                            World.Tiles[index].Rect.Left < Config.screenW)
+                        if (world.Tiles[index].Rect.Right > 0 &&
+                            world.Tiles[index].Rect.Left < Config.screenW)
                         {
-                            if (!t.StandingOn(World.Tiles[index].Rect))
+                            Rectangle testRect = new Rectangle(world.Tiles[index].Rect.X + 5,
+                            world.Tiles[index].Rect.Y + 5 - Tile.Size,
+                            world.Tiles[index].Rect.Width - 10,
+                            world.Tiles[index].Rect.Height - 10);
+                            Rectangle testRect2 = testRect;
+                            Rectangle testRect3 = testRect;
+                            testRect2.X -= Tile.Size;
+                            testRect3.X += Tile.Size;
+
+                            if (t.Rect.Intersects(testRect) ||
+                             t.Rect.Intersects(testRect2) ||
+                             t.Rect.Intersects(testRect3))
                             {
-                                bool tooClose = false;
-                                foreach (Player p in World.Players)
+                                colliding = true;
+                            }
+                        }
+                    }
+                }
+
+                if(!colliding)
+                {
+                     bool tooClose = false;
+                                foreach (Player p in world.Players)
                                 {
-                                    Vector2 v = new Vector2(World.Tiles[index].Rect.Center.X, World.Tiles[index].Rect.Center.Y);
+                                    Vector2 v = new Vector2(world.Tiles[index].Rect.Center.X, world.Tiles[index].Rect.Center.Y);
                                     float dist = Vector2.Distance(v, p.Position);
                                     if (dist < 150)
                                     {
@@ -89,14 +116,11 @@ namespace GlowBabyGlow
                                 { break; }
                                 else
                                 {
-                                    Coin e = new Coin(World.Tiles[index].Rect.Center.X,
-                                        World.Tiles[index].Rect.Y - Coin.size - offset);
+                                    Coin e = new Coin(world.Tiles[index].Rect.Center.X,
+                                        world.Tiles[index].Rect.Y - Coin.size - offset, world);
                                     coins.Add(e);
                                     return;
                                 }
-                            }
-                        }
-                    }
                 }
             }
         }

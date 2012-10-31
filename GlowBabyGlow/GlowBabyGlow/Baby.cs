@@ -44,7 +44,7 @@ namespace GlowBabyGlow
 
         #endregion
 
-        public Baby(Vector2 pos, float xVel, int index) : base()
+        public Baby(Vector2 pos, float xVel, int index, World w) : base(w)
         {
             gravity = 175;
             this.pos = pos;
@@ -86,16 +86,16 @@ namespace GlowBabyGlow
                 }
 
                 if (Rect.Intersects(t.Rect))
-                {
-                    World.Explode();
+                {    
+                    w.Explode();
                 }
             }
 
-            foreach (Bullet b in World.BulletManager.Bullets)
+            foreach (Bullet b in w.BulletManager.Bullets)
             {
                 if (hitRect.Intersects(b.Rect))
                 {
-                    World.Explode();
+                    w.Explode();
                 }
             }
         }
@@ -103,9 +103,9 @@ namespace GlowBabyGlow
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
 
-            if (World.Exploding)
+            if (w.Exploding)
             {
-                if (World.ExplodeTimer < 1)
+                if (w.ExplodeTimer < 1)
                 {
                     Rectangle srcRect = new Rectangle((int)rect.Center.X - 75, (int)rect.Center.Y - 75, 150, 150);
                     sb.Draw(TextureManager.blackCircle, srcRect, Color.White);
@@ -119,7 +119,7 @@ namespace GlowBabyGlow
             Rectangle wrapLeft = new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height);
             Rectangle wrapRight = new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height);
 
-            if (World.ExplodeTimer < 1)
+            if (w.ExplodeTimer < 1)
             {
                 sb.Draw(TextureManager.baby, rect, new Rectangle(0, 0, TextureManager.baby.Width, TextureManager.baby.Height),
                    Color.White, angle, new Vector2(TextureManager.baby.Width / 2, TextureManager.baby.Height / 2),

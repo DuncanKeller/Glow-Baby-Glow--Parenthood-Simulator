@@ -23,6 +23,7 @@ namespace GlowBabyGlow
         static Keys primary = Keys.Space;
         static Keys secondary = Keys.LeftShift;
 
+        static World world;
 
         public static Vector2 GetThumbs(int index)
         {
@@ -62,8 +63,9 @@ namespace GlowBabyGlow
             return gamepad[index].Triggers;
         }
 
-        public static void Init()
+        public static void Init(World w)
         {
+            world = w;
             for (int i = 0; i < 4; i++)
             {
                 gamepad.Add(new GamePadState());
@@ -131,61 +133,61 @@ namespace GlowBabyGlow
             gamepad[3] = GamePad.GetState(PlayerIndex.Four);
             keyboard = Keyboard.GetState();
 
-            for (int i = 0; i < World.Players.Count; i++)
+            for (int i = 0; i < world.Players.Count; i++)
             {
                 if (keyboard.IsKeyDown(Keys.T))
                 {
-                    World.Explode();
+                    world.Explode();
                 }
 
-                if (World.Players[i].HoldingBaby)
+                if (world.Players[i].HoldingBaby)
                 {
-                    if (!World.Players[i].InAir)
+                    if (!world.Players[i].InAir)
                     {
                         if (HoldingPrimary(i))
                         {
-                            World.Players[i].ReadyToThrow = true;
+                            world.Players[i].ReadyToThrow = true;
                         }
                         else
                         {
                             if (HoldingPrimaryPrev(i))
                             {
-                                World.Players[i].Throw();
+                                world.Players[i].Throw();
                             }
-                            World.Players[i].ReadyToThrow = false;
+                            world.Players[i].ReadyToThrow = false;
                         }
                     }
 
-                    if (!World.Players[i].ReadyToThrow)
+                    if (!world.Players[i].ReadyToThrow)
                     {
                         if (HoldingSecondary(i))
                         {
-                            if (!World.Players[i].InAir)
+                            if (!world.Players[i].InAir)
                             {
                                 float x = GetThumbs(i).X;
                                 float y = GetThumbs(i).Y;
                                 float angle = 0;
                                 if (keys)
                                 {
-                                    World.Players[i].StartShake();
+                                    world.Players[i].StartShake();
                                     if (keyboard.IsKeyDown(Keys.Right) &&
                                         prevkeyboard.IsKeyUp(Keys.Right) ||
                                         keyboard.IsKeyDown(Keys.Left) &&
                                         prevkeyboard.IsKeyUp(Keys.Left))
                                     {
-                                        World.Players[i].KeyShake(x);
+                                        world.Players[i].KeyShake(x);
                                     }
                                 }
                                 else
                                 {
                                     angle = (float)Math.Atan2(x, y);
-                                    World.Players[i].Shake(angle);
+                                    world.Players[i].Shake(angle);
                                 }
                             }
                         }
                         else
                         {
-                            World.Players[i].StopShaking();
+                            world.Players[i].StopShaking();
                         }
                     }
                 }
@@ -194,13 +196,13 @@ namespace GlowBabyGlow
                     if (HoldingPrimary(i) &&
                     !HoldingPrimaryPrev(i))
                     {
-                        World.Players[i].Jump();
+                        world.Players[i].Jump();
                     }
 
                     if (HoldingSecondary(i) &&
                         !HoldingSecondaryPrev(i))
                     {
-                        World.Players[i].Shoot();
+                        world.Players[i].Shoot();
                     }
                 }
 

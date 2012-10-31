@@ -17,6 +17,12 @@ namespace GlowBabyGlow
         Vector2 explodeVelocity = new Vector2();
         Vector2 newPos = new Vector2();
 
+        public Entity(World w)
+            : base(w)
+        {
+
+        }
+
         public void Explode()
         {
             if (!sploded)

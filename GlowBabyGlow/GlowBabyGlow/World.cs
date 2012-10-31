@@ -8,77 +8,104 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
-    static class World
+    class World
     {
-        static  List<Player> players = new List<Player>();
-        static List<Tile> tiles = new List<Tile>();
-        static List<Ladder> ladders = new List<Ladder>();
+        List<Player> players = new List<Player>();
+        List<Tile> tiles = new List<Tile>();
+        List<Ladder> ladders = new List<Ladder>();
 
-        static EnemyManager enemies = new EnemyManager();
-        static BulletManager bullets = new BulletManager();
-        static CoinManager coins = new CoinManager();
-        static ParticleManager particles = new ParticleManager();
+        EnemyManager enemies;
+        BulletManager bullets = new BulletManager();
+        CoinManager coins;
+        ParticleManager particles = new ParticleManager();
 
-        static bool exploded = false;
-        static float explodeTime = 0;
-        static float dtMod = 0;
+        Backdrop backdrop = new Backdrop();
+        Hud hud = new Hud();
+        Camera cam = new Camera();
+
+        bool exploded = false;
+        float explodeTime = 0;
+        float dtMod = 0;
+        string levelName;
 
         #region Properties
 
-        public static float ExplodeTimer
+        public Camera Cam
+        {
+            get { return cam; }
+        }
+
+        public string LevelName
+        {
+            get { return levelName; }
+        }
+
+        public float ExplodeTimer
         {
             get { return explodeTime; }
         }
 
-        public static bool Exploding
+        public Backdrop Backdrop
+        {
+            get { return backdrop; }
+        }
+
+        public bool Exploding
         {
             get { return exploded; }
         }
 
-        public static ParticleManager ParticleManager
+        public ParticleManager ParticleManager
         {
             get { return particles; }
         }
 
-        public static EnemyManager EnemyManager
+        public EnemyManager EnemyManager
         {
             get { return enemies; }
         }
 
-        public static BulletManager BulletManager
+        public BulletManager BulletManager
         {
             get { return bullets; }
         }
 
-        public static CoinManager CoinManager
+        public CoinManager CoinManager
         {
             get { return coins; }
         }
 
-        public static List<Player> Players
+        public List<Player> Players
         {
             get { return players; }
         }
 
-        public static List<Tile> Tiles
+        public List<Tile> Tiles
         {
             get { return tiles; }
         }
 
         #endregion
 
-        public static void Init()
+        public void Init(string level)
         {
-            Hud.Init();    
+            Tutorial.Init(this);
+            backdrop.Init(this);
+            hud.Init(this);
+            coins = new CoinManager(this);
+            enemies = new EnemyManager(this);
 
-            players.Add(new Player(new Point(500,300)));
-            Load("tutorial");
+            players.Add(new Player(new Point(100,400), this));
+            Load(level);
+            cam = new Camera();
+            cam.Pos = new Vector2(Config.screenW / 2, Config.screenH / 2);
             
         }
 
-        static void Load(string filename)
+        void Load(string filename)
         {
-            Backdrop.SetStage(filename);
+            levelName = filename;
+            backdrop.SetStage(filename);
             StreamReader sr = new StreamReader("Maps\\" + filename + ".txt");
 
             while (!sr.EndOfStream)
@@ -94,24 +121,32 @@ namespace GlowBabyGlow
                 switch (type)
                 {
                     case "w":
-                        tiles.Add(new Tile(p));
+                        tiles.Add(new Tile(p, this));
                         break;
                     case "l":
-                        ladders.Add(new Ladder(p));
+                        ladders.Add(new Ladder(p, this));
                         break;
                 }
             }
 
-            tiles.Add(new Tile(new Point(-Tile.Size, Config.screenH - Tile.Size)));
-            tiles.Add(new Tile(new Point(-Tile.Size * 2, Config.screenH - Tile.Size)));
-            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size, Config.screenH - Tile.Size)));
-            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size * 2, Config.screenH - Tile.Size)));
+            tiles.Add(new Tile(new Point(-Tile.Size, Config.screenH - Tile.Size), this));
+            tiles.Add(new Tile(new Point(-Tile.Size * 2, Config.screenH - Tile.Size), this));
+            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size, Config.screenH - Tile.Size), this));
+            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size * 2, Config.screenH - Tile.Size), this));
 
             sr.Close();
         }
 
-        public static void Update(float dt)
+        public void Update(float dt)
         {
+            if (players.Count == 0)
+            {
+                if (!GameOver.Initialized)
+                {
+                    GameOver.Init(this);
+                }
+                GameOver.Update(dt);
+            }
             if (exploded)
             {
                 UpdateExplosion(dt);
@@ -122,22 +157,38 @@ namespace GlowBabyGlow
                 dt = dtMod;
             }
 
-            if (Players[0].Baby != null)
+            if (!exploded)
             {
-                if (!exploded)
+                foreach (Player p in players)
                 {
-                    if (Players[0].Baby.ClosestTile < 65 &&
-                        Players[0].Baby.Velocity.Y > 0)
+                    if (p.Baby != null)
                     {
-                        dt = Players[0].Baby.ClosestTile / 15;
+
+                        if (p.Baby.ClosestTile < 65 &&
+                            p.Baby.Velocity.Y > 0)
+                        {
+                            dt = p.Baby.ClosestTile / 15;
+                        }
                     }
                 }
             }
+
+            List<Player> toRemove = new List<Player>();
 
             foreach (Player p in players)
             {
                 p.Update(dt);
                 p.Collision(ref tiles, ref ladders);
+
+                if (p.Lives == 0)
+                {
+                    toRemove.Add(p);
+                }
+            }
+
+            foreach (Player p in toRemove)
+            {
+                players.Remove(p);
             }
 
             foreach (Tile t in tiles)
@@ -162,10 +213,22 @@ namespace GlowBabyGlow
                 Tutorial.Update(dt, Players[0]);
             }
             Backdrop.Update(dt);
-            Hud.Update(dt);
+            hud.Update(dt);
         }
 
-        public static void UpdateExplosion(float dt)
+        public void Reset()
+        {
+            exploded = false;
+            //dtMod = 0;
+            enemies.ClearEnemies();
+            bullets.ClearBullets();
+            coins.ClearCoins();
+            tiles.Clear();
+            backdrop = new Backdrop();
+            GameOver.Reset();
+        }
+
+        public void UpdateExplosion(float dt)
         {
             explodeTime += dt / 1000;
 
@@ -190,9 +253,13 @@ namespace GlowBabyGlow
             }
         }
 
-        public static void Explode()
+        public void Explode()
         {
             exploded = true;
+            foreach (Player p in players)
+            {
+                p.Explode();
+            }
             foreach (Tile t in tiles)
             {
                 (t as Entity).Explode();
@@ -207,9 +274,9 @@ namespace GlowBabyGlow
             coins.ClearCoins();
         }
 
-        public static void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb)
         {
-            Backdrop.Draw(sb);
+            backdrop.Draw(sb);
 
             foreach (Tile tile in tiles)
             {
@@ -219,7 +286,6 @@ namespace GlowBabyGlow
             {
                 l.Draw(sb, SpriteEffects.None);
             }
-
             foreach (Player p in players)
             {
                 p.Draw(sb, SpriteEffects.None); 
@@ -230,11 +296,13 @@ namespace GlowBabyGlow
             coins.Draw(sb);
             particles.Draw(sb);
 
-            Hud.Draw(sb);
+            hud.Draw(sb);
             if (Backdrop.Stage == "tutorial")
             {
                 Tutorial.Draw(sb);
             }
+
+            GameOver.Draw(sb);
         }
     }
 }

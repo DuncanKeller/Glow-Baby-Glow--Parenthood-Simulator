@@ -23,7 +23,7 @@ namespace GlowBabyGlow
             get { return rect; }
         }
 
-        public Enemy(Point pos)
+        public Enemy(Point pos, World w) : base(w)
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
@@ -45,7 +45,7 @@ namespace GlowBabyGlow
 
             if (health <= 0)
             {
-                World.EnemyManager.Remove(this);
+                w.EnemyManager.Remove(this);
             }
 
             if (velocity.X > idealVelocity.X)
@@ -69,7 +69,7 @@ namespace GlowBabyGlow
                 {
                     float dir = b.Velocity.X > 0 ? -1 : 1;
                     BloodParticle bp = new BloodParticle(b.Pos, dir);
-                    World.ParticleManager.AddParticle(bp);
+                    w.ParticleManager.AddParticle(bp);
                 }
             }
             else
@@ -85,7 +85,7 @@ namespace GlowBabyGlow
             for (int i = 0; i < 8; i++)
             {
                 DeathParticle dp = new DeathParticle(center);
-                World.ParticleManager.AddParticle(dp);
+                w.ParticleManager.AddParticle(dp);
             }
         }
 

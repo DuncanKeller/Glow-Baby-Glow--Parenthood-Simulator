@@ -10,8 +10,8 @@ namespace GlowBabyGlow
     class Ladder : Tile
     {
      
-        public Ladder(Point pos)
-            : base(pos)
+        public Ladder(Point pos, World w)
+            : base(pos, w)
         {
 
         }
@@ -23,6 +23,7 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect) 
         {
+            //sb.Draw(TextureManager.ladder, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width, rect.Height), new Color(0, 0, 0, 100));
             sb.Draw(TextureManager.ladder, rect, Color.White);
             Rectangle wrapLeft = new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height);
             Rectangle wrapRight = new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height);

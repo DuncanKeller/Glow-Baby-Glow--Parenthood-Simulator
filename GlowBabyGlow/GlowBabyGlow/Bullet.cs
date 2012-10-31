@@ -38,7 +38,7 @@ namespace GlowBabyGlow
             get { return velocity; }
         }
 
-        public Bullet(Vector2 pos, int direction, Player p) : base()
+        public Bullet(Vector2 pos, int direction, Player p) : base(p.World)
         {
             player = p;
             this.pos = pos;
@@ -54,12 +54,12 @@ namespace GlowBabyGlow
 
         public void Collision(ref List<Tile> tiles)
         {
-            foreach (Enemy e in World.EnemyManager.Enemies)
+            foreach (Enemy e in w.EnemyManager.Enemies)
             {
                 if (rect.Intersects(e.Rect))
                 {
                     e.Hit(this);
-                    World.BulletManager.RemoveBullet(this);
+                    w.BulletManager.RemoveBullet(this);
                 }
             }
         }

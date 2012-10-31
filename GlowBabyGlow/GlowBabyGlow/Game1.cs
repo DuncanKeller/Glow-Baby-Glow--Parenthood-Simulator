@@ -18,6 +18,8 @@ namespace GlowBabyGlow
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        World world = new World();
+        bool inMenu = true;
 
         public Game1()
         {
@@ -40,10 +42,17 @@ namespace GlowBabyGlow
 
             LineBatch.Init(graphics.GraphicsDevice);
             TextureManager.Init(Content);
-            Input.Init();
-            World.Init();
+            Input.Init(world);
+            //world.Init();
+            MenuSystem.Init(this);
             
             base.Initialize();
+        }
+
+        public void ChangeLevel(string name)
+        {
+            //world.Init(name);
+            inMenu = false;
         }
 
         /// <summary>
@@ -77,8 +86,18 @@ namespace GlowBabyGlow
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
             Input.Update();
-            World.Update(gameTime.ElapsedGameTime.Milliseconds);
+            if (!inMenu)
+            {
+                world.Update(gameTime.ElapsedGameTime.Milliseconds);
+            }
+            else
+            {
+                world = MenuSystem.GetCurrentLevel();
+                MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
+            }
+           
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -91,9 +110,23 @@ namespace GlowBabyGlow
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            World.Draw(spriteBatch);
-            spriteBatch.End();
+
+            // menu draw
+            if (inMenu)
+            {
+                MenuSystem.Draw(spriteBatch, graphics.GraphicsDevice);
+            }
+            else
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                 DepthStencilState.Default, RasterizerState.CullNone, null,
+                 world.Cam.get_transformation(graphics.GraphicsDevice));
+
+                world.Draw(spriteBatch);
+
+                spriteBatch.End();
+                
+            }
 
             base.Draw(gameTime);
         }

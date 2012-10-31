@@ -46,6 +46,16 @@ namespace GlowBabyGlow
         float recoilTimer;
         float recoilTime = 0.3f;
 
+        bool automateRight = false;
+        bool automateLeft = false;
+        float automateBullet;
+        float automateShake;
+        bool automateUpLadder = false;
+        bool automateDownLadder = false;
+        float automateLadderTimer;
+
+        #region Properties
+
         public Baby Baby
         {
             get { return baby; }
@@ -56,6 +66,11 @@ namespace GlowBabyGlow
         {
             get { return babyLife; }
             set { babyLife = value; }
+        }
+
+        public World World
+        {
+            get { return w; }
         }
 
         public float MaxBabyLife
@@ -96,7 +111,9 @@ namespace GlowBabyGlow
             get { return lives; }
         }
 
-        public Player(Point pos)
+        #endregion
+
+        public Player(Point pos, World w) : base(w)
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
@@ -119,6 +136,11 @@ namespace GlowBabyGlow
         {
             if (alive)
             {
+                if (automateBullet > 0)
+                { automateBullet -= dt / 1000; }
+                else
+                { automateBullet = 0; }
+
                 if (reloadTimer > 0)
                 { reloadTimer -= dt / 1000; }
                 else if (reloadTimer < 0) 
@@ -135,6 +157,7 @@ namespace GlowBabyGlow
 
                 if (babyLife <= 0)
                 {
+                    lives = 0;
                     World.Explode();
                 }
 
@@ -191,7 +214,7 @@ namespace GlowBabyGlow
             if (baby == null)
             {
                 Vector2 throwPos = new Vector2(pos.X + rect.Width / 2, pos.Y + rect.Height / 2);
-                baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index);
+                baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
                 holdingBaby = false;
             }
         }
@@ -204,6 +227,11 @@ namespace GlowBabyGlow
             baby = null;
             pos.Y = Config.screenH + 200;
             lives--;
+        }
+
+        public void Explode()
+        {
+            lives = 0;
         }
 
         public void Respawn()
@@ -245,6 +273,7 @@ namespace GlowBabyGlow
                 {
                     reloadTimer = reloadTime;
                 }
+                automateBullet = 0.25f;
             }
         }
 
@@ -290,6 +319,124 @@ namespace GlowBabyGlow
             testAnim.Play("shake");
             testAnim.SetSpeed(dAngle * 120);
             prevAngle = angle;
+
+            babyLife += shakePower * Math.Abs(dAngle);
+        }
+
+        public void Automate(float dt)
+        {
+            automateShake += dt / 80;
+            automateLeft = false;
+            automateRight = false;
+
+            if (automateLadderTimer > 0)
+            {
+                automateLadderTimer -= dt / 1000;
+            }
+            else
+            {
+                automateLadderTimer = 0;
+            }
+
+            Rectangle senseEnemyRight = new Rectangle(hitRect.Right, hitRect.Top,
+                hitRect.Width * 20, hitRect.Width);
+            Rectangle senseEnemyLeft = new Rectangle(hitRect.Left - (hitRect.Width * 20), hitRect.Top,
+                hitRect.Width * 20, hitRect.Width);
+
+            if (baby != null)
+            {
+                if (hitRect.Center.X > baby.HitRect.Right)
+                {
+                    automateLeft = true;
+                    facingRight = false;
+                }
+                else if (hitRect.Center.X < baby.HitRect.Left)
+                {
+                    automateRight = true;
+                    facingRight = true;
+                }
+
+                foreach (Enemy e in w.EnemyManager.Enemies)
+                {
+                    if (automateBullet == 0)
+                    {
+                        if (e.HitRect.Intersects(senseEnemyRight))
+                        {
+                            facingRight = true;
+                            Shoot();
+                        }
+                        else if (e.HitRect.Intersects(senseEnemyLeft))
+                        {
+                            facingRight = false;
+                            Shoot();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (onLadder)
+                {
+
+                }
+                else
+                {
+                    foreach (Enemy e in w.EnemyManager.Enemies)
+                    {
+                        if (!onLadder)
+                        {
+                            if (e.HitRect.Intersects(senseEnemyRight))
+                            {
+                                Throw();
+                                break;
+                            }
+                            else if (e.HitRect.Intersects(senseEnemyLeft))
+                            {
+                                Throw();
+                                break;
+                            }
+                        }
+                    }
+
+                    if (babyLife < maxBabyLife / 2)
+                    {
+                        Shake((float)Math.Sin(automateShake));
+                    }
+                    else
+                    {
+                        shaking = false;
+                        if (automateLadderTimer == 0)
+                        {
+                            if (automateUpLadder)
+                            {
+                                onLadder = true;
+                                velocity.X = 0;
+                                velocity.Y = 0;
+                                testAnim.Play("climb");
+                                automateLadderTimer = 2;
+                            }
+                            else if (automateDownLadder)
+                            {
+                                onLadder = true;
+                                velocity.X = 0;
+                                velocity.Y = 0;
+                                testAnim.Play("climb");
+                                automateLadderTimer = 2;
+                            }
+                            else
+                            {
+                                automateRight = true;
+                                facingRight = true;
+                            }
+                        }
+                        else
+                        {
+                            automateRight = true;
+                            facingRight = true;
+                        }
+                    }
+                }
+            }
         }
 
         public void HandleMovement(float dt)
@@ -306,6 +453,29 @@ namespace GlowBabyGlow
                 if (xInput < 0)
                 {
                     facingRight = false;
+                }
+            }
+
+            //Automate(dt);
+
+            if (automateLeft)
+            {
+                xInput = -1;
+            }
+            else if (automateRight)
+            {
+                xInput = 1;
+            }
+
+            if (onLadder)
+            {
+                if (automateUpLadder)
+                {
+                    yInput = 1;
+                }
+                else if (automateDownLadder)
+                {
+                    yInput = -1;
                 }
             }
 
@@ -426,44 +596,54 @@ namespace GlowBabyGlow
             bool fall = true;
             bool tileCollideLeft = false;
             bool tileCollideRight = false;
+            
 
             // ladders
             if (!onLadder)
             {
+                automateDownLadder = false;
+                automateUpLadder = false;
                 //if (Input.GetThumbs(index).Left.Y > 0.2)
-                if(Input.GetThumbs(index).Y > 0)
+
+                foreach (Ladder l in ladders)
                 {
-                    foreach (Ladder l in ladders)
+                    if (l.LadderAbove(hitRect))
                     {
-                        if (l.LadderAbove(hitRect))
+                        if (!onLadder)
                         {
-                            if (!onLadder)
+                            if (Input.GetThumbs(index).Y > 0)
                             {
                                 onLadder = true;
                                 velocity.X = 0;
                                 velocity.Y = 0;
                                 testAnim.Play("climb");
                             }
-                        }
-                    }  
-                }
-                //else if (Input.GetThumbs(index).Left.Y < -0.2)
-                if (Input.GetThumbs(index).Y < 0)
-                {
-                    foreach (Ladder l in ladders)
-                    {
-                        if (l.LadderBelow(hitRect))
-                        {
-                            if (!onLadder)
-                            {
-                                onLadder = true;
-                                velocity.X = 0;
-                                velocity.Y = 0;
-                                testAnim.Play("climb");
-                            }
+                            automateUpLadder = true;
                         }
                     }
                 }
+
+                //else if (Input.GetThumbs(index).Left.Y < -0.2)
+
+                foreach (Ladder l in ladders)
+                {
+                    if (l.LadderBelow(hitRect))
+                    {
+                        if (!onLadder)
+                        {
+                            if (Input.GetThumbs(index).Y < 0)
+                            {
+                                onLadder = true;
+                                velocity.X = 0;
+                                velocity.Y = 0;
+                                testAnim.Play("climb");
+                            }
+
+                            automateDownLadder = true;
+                        }
+                    }
+                }
+
             }
             else
             {
@@ -481,6 +661,11 @@ namespace GlowBabyGlow
                 }
 
                 onLadder = stillOnLadder;
+                if (!stillOnLadder)
+                {
+                    automateDownLadder = false;
+                    automateUpLadder = false;
+                }
             }
 
             // air collision, landing, walls, etc
@@ -503,6 +688,8 @@ namespace GlowBabyGlow
                         if (!intersectingLadder)
                         {
                             onLadder = false;
+                            automateDownLadder = false;
+                            automateUpLadder = false;
                             testAnim.Play("idle");
                         }
                     }
@@ -520,6 +707,8 @@ namespace GlowBabyGlow
                             pos.Y -= overlappingAbove;
                         }
                         onLadder = false;
+                        automateDownLadder = false;
+                        automateUpLadder = false;
                         return;
                     }
                 }

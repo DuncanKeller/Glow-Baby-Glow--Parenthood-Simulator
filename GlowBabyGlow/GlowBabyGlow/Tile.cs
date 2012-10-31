@@ -21,7 +21,7 @@ namespace GlowBabyGlow
             get { return size; }
         }
 
-        public Tile(Point pos)
+        public Tile(Point pos, World w) : base(w)
         {
             rect = new Rectangle(pos.X, pos.Y, size, size);
         }
@@ -90,6 +90,7 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
+            //sb.Draw(TextureManager.tile, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width, rect.Height), new Color(0,0,0,100)); 
             sb.Draw(TextureManager.tile, rect, Color.White);
         }
     }

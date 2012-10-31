@@ -7,29 +7,37 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
-    static class Hud
+    class Hud
     {
-        static GFont font;
+        GFont font;
+        World world;
 
-        public static void Init()
+        public void Init(World w)
         {
+            world = w;
             font = new GFont(TextureManager.font, 4, 10);
         }
 
-        public static void Update(float dt)
+        public void Update(float dt)
         {
 
         }
 
-        public static void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb)
         {
-            if (Backdrop.Stage != "tutorial")
+            if (world.Backdrop.Stage != "tutorial")
             {
-                font.Draw(sb, new Vector2(10, 10), "score: " + World.Players[0].Score);
-                Rectangle rect = new Rectangle(Config.screenW - 10 - (font.Size.X * 3), 10,
-                    TextureManager.face.Width / 2, TextureManager.face.Height / 2);
-                font.Draw(sb, new Vector2(rect.Right, 10), "x" + (World.Players[0].Lives - 1));
-                sb.Draw(TextureManager.face, rect, Color.White);
+                if (world.Players.Count > 0)
+                {
+                    font.Draw(sb, new Vector2(10, 10), "score: " + world.Players[0].Score);
+                    Rectangle rect = new Rectangle(Config.screenW - 10 - (font.Size.X * 3), 10,
+                        TextureManager.face.Width / 2, TextureManager.face.Height / 2);
+                    if (world.Players[0].Lives > 0)
+                    {
+                        font.Draw(sb, new Vector2(rect.Right, 10), "x" + (world.Players[0].Lives - 1));
+                    }
+                    sb.Draw(TextureManager.face, rect, Color.White);
+                }
             }
         }
     }
