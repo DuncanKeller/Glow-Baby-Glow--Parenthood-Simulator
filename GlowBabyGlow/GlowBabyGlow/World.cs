@@ -175,7 +175,6 @@ namespace GlowBabyGlow
                 {
                     if (p.Baby != null)
                     {
-
                         if (p.Baby.ClosestTile < 65 &&
                             p.Baby.Velocity.Y > 0)
                         {
@@ -194,7 +193,7 @@ namespace GlowBabyGlow
 
                 if (p.Lives == 0)
                 {
-                    //toRemove.Add(p);
+                    toRemove.Add(p);
                 }
             }
 
@@ -315,6 +314,7 @@ namespace GlowBabyGlow
             {
                 (l as Entity).Explode();
             }
+            powerups.ClearPowerups();
             particles.ClearParticles();
             enemies.ClearEnemies();
             bullets.ClearBullets();

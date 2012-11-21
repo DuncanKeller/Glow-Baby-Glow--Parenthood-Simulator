@@ -31,7 +31,7 @@ namespace GlowBabyGlow
             get { return powerups; }
         }
 
-        public void ClearEnemies()
+        public void ClearPowerups()
         {
             powerups.Clear();
         }
@@ -216,7 +216,6 @@ namespace GlowBabyGlow
                     yoffset = Config.screenW / 65;
                     font.Draw(sb, new Vector2((charge - width) + xoffset, yoffset), p.Powerup.Description,
                         new Color(240, 240, 240), true);
-
                 }
             }
         }

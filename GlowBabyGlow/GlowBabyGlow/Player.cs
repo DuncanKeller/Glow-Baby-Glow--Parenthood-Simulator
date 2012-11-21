@@ -230,6 +230,11 @@ namespace GlowBabyGlow
                 }
             }
 
+            if (hitRect.Top > Config.screenH)
+            {
+                Die();
+            }
+
             testAnim.Update(dt);
             base.Update(dt);
         }
