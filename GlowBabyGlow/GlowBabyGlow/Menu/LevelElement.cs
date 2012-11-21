@@ -131,8 +131,8 @@ namespace GlowBabyGlow
 
             if (Selected)
             {
-                font.Draw(sb, new Vector2((Config.screenW / 2) - ((font.Size.X * Text.Length) / 2), 
-                    Config.screenH - 15 - font.Size.Y), Text);
+                font.Draw(sb, new Vector2((Config.screenW / 2) - ((font.Size.X * Text.Length) / 2),
+                    Config.screenH - 15 - font.Size.Y), Text, Color.White);
             }
 
             sb.End();

@@ -38,6 +38,13 @@ namespace GlowBabyGlow
 
         public static Texture2D font;
         public static Texture2D face;
+        public static Texture2D smallFont;
+
+        public static Texture2D pupBackdrop;
+        public static Texture2D pupIconSpeedshoes;
+        public static Texture2D pupIconSpringshoes;
+        public static Texture2D pupIconArrow;
+        public static Texture2D pupIconPacifier;
 
         public static void Init(ContentManager content)
         {
@@ -57,6 +64,13 @@ namespace GlowBabyGlow
             ladder = c.Load<Texture2D>("Objects\\ladder");
             coin = c.Load<Texture2D>("Objects\\coin");
             arrow = c.Load<Texture2D>("Objects\\arrow");
+
+            // powerups
+            pupBackdrop = c.Load<Texture2D>("Powerups\\powerup-backdrop");
+            pupIconSpeedshoes = c.Load<Texture2D>("Powerups\\sprintshoes");
+            pupIconSpringshoes = c.Load<Texture2D>("Powerups\\springshoes");
+            pupIconArrow = c.Load<Texture2D>("Powerups\\pup-arrow");
+            pupIconPacifier = c.Load<Texture2D>("Powerups\\springshoes");
 
             // enemies
             zombieSheet = c.Load<Texture2D>("Actors\\zombie-sheet");
@@ -83,6 +97,7 @@ namespace GlowBabyGlow
             // fonts
             font = c.Load<Texture2D>("Fonts\\font");
             face = c.Load<Texture2D>("Hud\\face");
+            smallFont = c.Load<Texture2D>("Fonts\\small-font");
         }
     }
 }

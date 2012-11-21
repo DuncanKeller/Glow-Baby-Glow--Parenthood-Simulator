@@ -52,7 +52,7 @@ namespace GlowBabyGlow
                 }
                 else if (rect.Bottom > Config.screenH)
                 {
-                    velocity = -(velocity - (velocity / 3.5f));
+                    velocity = -(velocity - (velocity / 4f));
                 }
                 else
                 {
@@ -73,9 +73,13 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
-            sb.Draw(TextureManager.blankTexture, rect, Color.Black);
+            sb.Draw(TextureManager.blankTexture, rect, new Color(25,25,25));
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 0, 0, Config.screenW, rect.Top), Color.Black);
+            Vector2 pos = new Vector2(
+                (Config.screenW / 2) - ((font.Size.X * "game over".Length) / 2),
+                (Config.screenH / 2) - (Config.screenH / 6) + position);
+            font.Draw(sb, pos, "game over", Color.Red);
         }
 
     }

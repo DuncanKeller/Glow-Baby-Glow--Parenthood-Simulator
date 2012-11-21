@@ -56,7 +56,7 @@ namespace GlowBabyGlow
                        SpriteEffects.None, Layer);
         }
 
-        public static void DrawCircle(SpriteBatch sb, Vector2 pos, int radius)
+        public static void DrawCircle(SpriteBatch sb, Vector2 pos, int radius, Color c)
         {
             List<Vector2> points = new List<Vector2>();
             int cRad = radius - 1;
@@ -72,11 +72,11 @@ namespace GlowBabyGlow
                     (int)(pos.Y + Math.Sin(angle) * radius)));
             }
 
-            sb.Draw(TextureManager.babyGlow, rect, new Color(0, 50, 0, 20));
-            sb.Draw(TextureManager.babyGlow, new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height)
-                , new Color(0, 50, 0, 20));
-            sb.Draw(TextureManager.babyGlow, new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height)
-                , new Color(0, 50, 0, 20));
+            sb.Draw(TextureManager.babyGlow, rect, c);
+            sb.Draw(TextureManager.babyGlow, new Rectangle(rect.X + Config.screenW, 
+                rect.Y, rect.Width, rect.Height), c);
+            sb.Draw(TextureManager.babyGlow, new Rectangle(rect.X - Config.screenW, 
+                rect.Y, rect.Width, rect.Height), c);
 
             for (int i = 0; i < points.Count; i++)
             {

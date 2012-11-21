@@ -89,10 +89,19 @@ namespace GlowBabyGlow
 
         #endregion
 
-        public void Draw(SpriteBatch sb, Vector2 pos, string word)
+        public void Draw(SpriteBatch sb, Vector2 pos, string word, Color c, bool small = false)
         {
             int offset = 5;
             int spacing = 1;
+
+            int w = width;
+            int h = height;
+
+            if (small)
+            {
+                w /= 2;
+                h /= 2;
+            }
 
             word = word.ToLower();
 
@@ -102,17 +111,18 @@ namespace GlowBabyGlow
                     (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
                     (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
                     fontSheet.Width / columns, fontSheet.Height / rows);
-                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (width * i) - offset, (int)pos.Y + offset, width, height), 
+                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (w * i) - offset, (int)pos.Y + offset, w, h), 
                     rect, new Color(0,0,0,50));
             }
-
+           
             for (int i = 0; i < word.Length; i++)
             {
+                Color color = c == Color.White ? colorBank[i] : c;
                 Rectangle rect = new Rectangle(
                     (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
                     (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
                     fontSheet.Width / columns, fontSheet.Height / rows);
-                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (width * i), (int)pos.Y, width, height), rect, colorBank[i]);
+                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (w * i), (int)pos.Y, w, h), rect, color);
             }
         }
     }

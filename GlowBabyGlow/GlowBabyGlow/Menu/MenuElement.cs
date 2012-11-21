@@ -77,7 +77,7 @@ namespace GlowBabyGlow
             {
                 sb.Draw(texture, new Rectangle((int)(pos.X + m.Position.X), (int)(pos.Y + m.Position.Y), width, height), Color.White);
             }
-            font.Draw(sb, pos + m.Position, text);
+            font.Draw(sb, pos + m.Position, text, Color.White);
 
             sb.End();
         }

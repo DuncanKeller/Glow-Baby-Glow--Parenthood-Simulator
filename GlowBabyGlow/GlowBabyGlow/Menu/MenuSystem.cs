@@ -12,9 +12,11 @@ namespace GlowBabyGlow
         static Dictionary<string, Menu> menus = new Dictionary<string, Menu>();
         static float inputTimer;
         static Menu currentMenu;
+        static Game1 g;
 
         public static void Init(Game1 game)
         {
+            g = game;
             TitleMenu tm = new TitleMenu(game);
             menus.Add("title", tm);
             menus.Add("single-multi", new SingleMultiMenu(game));
@@ -29,6 +31,12 @@ namespace GlowBabyGlow
             World w = (menus["level"] as levelMenu).GetCurrentWorld();
             Input.Init(w);
             return w;
+        }
+
+        public static void Reset()
+        {
+            (menus["level"] as levelMenu).Unlock();
+            g.Reset();
         }
 
         public static void Update(float dt)
@@ -67,13 +75,13 @@ namespace GlowBabyGlow
                         inputTimer == 0)
                     {
                         currentMenu.CurrentItem++;
-                        inputTimer = 0.4f;
+                        inputTimer = 0.2f;
                     }
                     if (Input.GetThumbs(0).X < -0.2 &&
                         inputTimer == 0)
                     {
                         currentMenu.CurrentItem--;
-                        inputTimer = 0.4f;
+                        inputTimer = 0.2f;
                     }
                 }
             }

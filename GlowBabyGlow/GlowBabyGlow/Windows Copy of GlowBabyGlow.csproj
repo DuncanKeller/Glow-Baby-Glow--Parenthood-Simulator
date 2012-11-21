@@ -106,8 +106,17 @@
     <Compile Include="Particles\GooParticle.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleManager.cs" />
+    <Compile Include="Particles\PowerupParticle.cs" />
+    <Compile Include="Particles\SparkParticle.cs" />
+    <Compile Include="Particles\SpringParticle.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PowerupManager.cs" />
+    <Compile Include="Powerups\SpeedShoes.cs" />
+    <Compile Include="Powerups\SpringShoes.cs" />
+    <Compile Include="Powerups\Pacifier.cs" />
+    <Compile Include="Powerups\PiercingShot.cs" />
+    <Compile Include="Powerups\Powerup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

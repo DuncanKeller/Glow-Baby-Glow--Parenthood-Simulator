@@ -189,7 +189,7 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
-            font.Draw(sb, new Vector2(10, 10), text);
+            font.Draw(sb, new Vector2(10, 10), text, Color.White);
             int width = 60;
             int height = 80;
             Rectangle arrowRect = new Rectangle(destination.Center.X - (width / 2), destination.Top - height + (int)wave,

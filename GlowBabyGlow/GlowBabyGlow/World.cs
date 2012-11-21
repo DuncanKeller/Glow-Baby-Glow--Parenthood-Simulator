@@ -18,6 +18,7 @@ namespace GlowBabyGlow
         BulletManager bullets = new BulletManager();
         CoinManager coins;
         ParticleManager particles = new ParticleManager();
+        PowerupManager powerups;
 
         Backdrop backdrop = new Backdrop();
         Hud hud = new Hud();
@@ -29,6 +30,19 @@ namespace GlowBabyGlow
         string levelName;
 
         #region Properties
+
+        public int PlayersAlive
+        {
+            get
+            {
+                int alive = 0;
+                foreach (Player p in players)
+                {
+                    if (p.Alive) { alive++; }
+                }
+                return alive;
+            }
+        }
 
         public Camera Cam
         {
@@ -65,6 +79,11 @@ namespace GlowBabyGlow
             get { return enemies; }
         }
 
+        public PowerupManager PowerupManager
+        {
+            get { return powerups; }
+        }
+
         public BulletManager BulletManager
         {
             get { return bullets; }
@@ -94,6 +113,7 @@ namespace GlowBabyGlow
             hud.Init(this);
             coins = new CoinManager(this);
             enemies = new EnemyManager(this);
+            powerups = new PowerupManager(this);
 
             players.Add(new Player(new Point(100,400), this));
             Load(level);
@@ -139,14 +159,6 @@ namespace GlowBabyGlow
 
         public void Update(float dt)
         {
-            if (players.Count == 0)
-            {
-                if (!GameOver.Initialized)
-                {
-                    GameOver.Init(this);
-                }
-                GameOver.Update(dt);
-            }
             if (exploded)
             {
                 UpdateExplosion(dt);
@@ -182,7 +194,7 @@ namespace GlowBabyGlow
 
                 if (p.Lives == 0)
                 {
-                    toRemove.Add(p);
+                    //toRemove.Add(p);
                 }
             }
 
@@ -206,6 +218,8 @@ namespace GlowBabyGlow
             bullets.Update(dt);
             bullets.Collision(ref tiles, ref ladders);
             coins.Update(dt);
+            powerups.Update(dt);
+            powerups.Collision(ref players);
             particles.Update(dt);
 
             if (Backdrop.Stage == "tutorial")
@@ -214,15 +228,48 @@ namespace GlowBabyGlow
             }
             Backdrop.Update(dt);
             hud.Update(dt);
+            UpdateGameOverScreen(dt);
+        }
+
+        public void UpdateGameOverScreen(float dt)
+        {
+            if (PlayersAlive == 0)
+            {
+                if (!GameOver.Initialized)
+                {
+                    GameOver.Init(this);
+                }
+                GameOver.Update(dt);
+            }
+
+            if (GameOver.Initialized)
+            {
+                if (Input.HoldingPrimary(0))
+                {
+                    GameOver.Reset();
+                    Reset();
+                    Init(levelName);
+                }
+                else if (Input.HoldingSecondary(0))
+                {
+                    GameOver.Reset();
+                    Reset();
+                    Init(levelName);
+                    MenuSystem.Reset();
+                }
+            }
         }
 
         public void Reset()
         {
+            explodeTime = 0;
             exploded = false;
-            //dtMod = 0;
+            dtMod = 0;
             enemies.ClearEnemies();
             bullets.ClearBullets();
             coins.ClearCoins();
+            ladders.Clear();
+            particles.ClearParticles();
             tiles.Clear();
             backdrop = new Backdrop();
             GameOver.Reset();
@@ -268,7 +315,7 @@ namespace GlowBabyGlow
             {
                 (l as Entity).Explode();
             }
-
+            particles.ClearParticles();
             enemies.ClearEnemies();
             bullets.ClearBullets();
             coins.ClearCoins();
@@ -292,17 +339,23 @@ namespace GlowBabyGlow
             }
 
             enemies.Draw(sb);
+            powerups.Draw(sb);
             bullets.Draw(sb);
             coins.Draw(sb);
             particles.Draw(sb);
 
             hud.Draw(sb);
+
+            
+
             if (Backdrop.Stage == "tutorial")
             {
                 Tutorial.Draw(sb);
             }
-
-            GameOver.Draw(sb);
+            if (GameOver.Initialized)
+            {
+                GameOver.Draw(sb);
+            }
         }
     }
 }

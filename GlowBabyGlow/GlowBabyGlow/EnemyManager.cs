@@ -14,7 +14,7 @@ namespace GlowBabyGlow
         List<Enemy> toRemove = new List<Enemy>();
         List<Enemy> toAdd = new List<Enemy>();
         float timer;
-        float enemyTime = 5; // seconds
+        float enemyTime = 3; // seconds
         int spawnDistance = 175;
 
         public EnemyManager(World w)
@@ -44,6 +44,7 @@ namespace GlowBabyGlow
 
         public void Update(float dt)
         {
+            //enemyTime -= (dt / 1000) * 0.05f;
             timer += dt / 1000;
 
             if (timer > enemyTime)

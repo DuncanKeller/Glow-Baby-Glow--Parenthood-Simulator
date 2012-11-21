@@ -88,6 +88,28 @@ namespace GlowBabyGlow
             return 0;
         }
 
+        public bool HasBlockToTheLeft(Rectangle r)
+        {
+            if (r.Bottom > rect.Top &&
+              r.Top < rect.Bottom &&
+              r.Right == rect.Left)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool HasBlockToTheRight(Rectangle r)
+        {
+            if (r.Bottom > rect.Top &&
+              r.Top < rect.Bottom &&
+              r.Left == rect.Right )
+            {
+                return true;
+            }
+            return false;
+        }
+
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             //sb.Draw(TextureManager.tile, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width, rect.Height), new Color(0,0,0,100)); 

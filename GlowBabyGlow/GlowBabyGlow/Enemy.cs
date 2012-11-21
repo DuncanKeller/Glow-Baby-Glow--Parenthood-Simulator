@@ -18,11 +18,13 @@ namespace GlowBabyGlow
 
         Vector2 idealVelocity = new Vector2();
 
+        List<Bullet> alreadyHit = new List<Bullet>();
+
         public Rectangle Rect
         {
             get { return rect; }
         }
-
+        
         public Enemy(Point pos, World w) : base(w)
         {
             this.pos = new Vector2(pos.X, pos.Y);
@@ -60,22 +62,27 @@ namespace GlowBabyGlow
                     
         public void Hit(Bullet b)
         {
-            health--;
-            velocity.X += b.Velocity.X / 3.5f;
+            if (!alreadyHit.Contains(b))
+            {
+                health--;
+                velocity.X += b.Velocity.X / 3.5f;
 
-            if (health > 0)
-            {
-                for (int i = 0; i < 6; i++)
+                if (health > 0)
                 {
-                    float dir = b.Velocity.X > 0 ? -1 : 1;
-                    BloodParticle bp = new BloodParticle(b.Pos, dir);
-                    w.ParticleManager.AddParticle(bp);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        float dir = b.Velocity.X > 0 ? -1 : 1;
+                        BloodParticle bp = new BloodParticle(b.Pos, dir);
+                        w.ParticleManager.AddParticle(bp);
+                    }
                 }
+                else
+                {
+                    Die(b);
+                }
+                alreadyHit.Add(b);
             }
-            else
-            {
-                Die(b);
-            }
+            
         }
 
         public void Die(Bullet b)

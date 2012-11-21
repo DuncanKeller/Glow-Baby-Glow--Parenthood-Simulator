@@ -21,6 +21,7 @@ namespace GlowBabyGlow
 
         #region Properties
 
+
         public float ClosestTile
         {
             get { return closestTile; }

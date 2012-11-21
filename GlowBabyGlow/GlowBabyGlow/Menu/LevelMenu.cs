@@ -40,6 +40,23 @@ namespace GlowBabyGlow
             elements[0].Selected = true;
         }
 
+        public void Unlock()
+        {
+            locked = false;
+
+            foreach (MenuElement e in elements)
+            {
+                if (e.Selected)
+                {
+                    e.ChangePosition(new Vector2(1, 0));
+                }
+                else
+                {
+                    e.ChangePosition(Vector2.Zero);
+                }
+            }
+        }
+
         public World GetCurrentWorld()
         {
             if (elements[CurrentItem] is LevelElement)

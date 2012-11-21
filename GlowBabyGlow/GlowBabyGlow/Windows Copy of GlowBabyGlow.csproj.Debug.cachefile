@@ -31,5 +31,10 @@ Content\Backdrops\small-plane.xnb
 Content\Backdrops\powerplant.xnb
 Content\Backdrops\alley.xnb
 Content\Backdrops\jungle.xnb
+Content\Fonts\small-font.xnb
+Content\Powerups\powerup-backdrop.xnb
+Content\Powerups\pup-arrow.xnb
+Content\Powerups\springshoes.xnb
+Content\Powerups\sprintshoes.xnb
 Animation.cs
 Animator.cs

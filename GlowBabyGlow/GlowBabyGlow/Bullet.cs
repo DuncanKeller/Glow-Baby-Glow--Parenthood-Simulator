@@ -59,7 +59,10 @@ namespace GlowBabyGlow
                 if (rect.Intersects(e.Rect))
                 {
                     e.Hit(this);
-                    w.BulletManager.RemoveBullet(this);
+                    if (!(player.Powerup is PiercingShot))
+                    {
+                        w.BulletManager.RemoveBullet(this);
+                    }
                 }
             }
         }

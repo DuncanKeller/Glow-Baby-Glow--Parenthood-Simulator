@@ -18,7 +18,7 @@ namespace GlowBabyGlow
 
         float jumpStrength = 500;
         float acceleration = 50;
-        float maxSpeed = 175;  //pixels per second
+        float maxSpeed = 175;   //pixels per second
         float ladderSpeed = 175;
 
         bool holdingBaby = true;
@@ -54,7 +54,20 @@ namespace GlowBabyGlow
         bool automateDownLadder = false;
         float automateLadderTimer;
 
+        Powerup currentPowerup = null;
+
         #region Properties
+
+        public Powerup Powerup
+        {
+            get { return currentPowerup; }
+            set { currentPowerup = value; }
+        }
+
+        public bool Alive
+        {
+            get { return alive; }
+        }
 
         public Baby Baby
         {
@@ -130,6 +143,12 @@ namespace GlowBabyGlow
             testAnim.AddAnimation("shake", 60, 17, 200, true);
     
             testAnim.Play("idle");
+
+            //test
+            if (currentPowerup != null)
+            {
+                currentPowerup.Activate(this);
+            }
         }
 
         public override void Update(float dt)
@@ -179,7 +198,23 @@ namespace GlowBabyGlow
                 {
                     if (babyLife > 0)
                     {
-                        babyLife -= (dt / 1000) * babyDecay;
+                        if (Powerup is Pacifier)
+                        {
+                            babyLife -= (dt / 1000) * (babyDecay / 2.5f);
+                        }
+                        else
+                        {
+                            babyLife -= (dt / 1000) * babyDecay;
+                        }
+                    }
+                }
+
+                if (currentPowerup != null)
+                {
+                    currentPowerup.Update(dt);
+                    if (!currentPowerup.Active)
+                    {
+                        currentPowerup = null;
                     }
                 }
 
@@ -201,11 +236,28 @@ namespace GlowBabyGlow
 
         public void Jump()
         {
-            if (!inAir && !readyToThrow && !shaking)
+            if (!(Powerup is SpringShoes))
             {
-                inAir = true;
-                velocity.Y = -jumpStrength;
-                testAnim.Play("jump");
+                if (!inAir && !readyToThrow && !shaking)
+                {
+                    inAir = true;
+                    velocity.Y = -jumpStrength;
+                    testAnim.Play("jump");
+                }
+            }
+            else
+            {
+                if (!inAir && !readyToThrow && !shaking)
+                {
+                    inAir = true;
+                    velocity.Y = -jumpStrength * 1.75f;
+                    testAnim.Play("jump");
+                    for (int i = 0; i < 50; i++)
+                    {
+                        w.ParticleManager.AddParticle(new SpringParticle(new Vector2(
+                            hitRect.Center.X, hitRect.Bottom)));
+                    }
+                }
             }
         }
 
@@ -221,6 +273,7 @@ namespace GlowBabyGlow
 
         public void Die()
         {
+            currentPowerup = null;
             alive = false;
             respawnTimer = respawnTime;
             babyLife = maxBabyLife;
@@ -499,10 +552,18 @@ namespace GlowBabyGlow
                 yInput = 0;
             }
 
-            float xMax = Math.Abs(maxSpeed * xInput);
+            float speedMod = 1;
+            float accMod = 1;
+            if (Powerup is SpeedShoes)
+            {
+                speedMod = 3f;
+                accMod = 1.5f;
+            }
+
+            float xMax = Math.Abs(maxSpeed * xInput * speedMod);
             float yMax = Math.Abs(ladderSpeed * yInput);
 
-            velocity.X += xInput * acceleration;
+            velocity.X += xInput * acceleration * accMod;
             velocity.Y += -yInput * acceleration;
 
             if (velocity.X > xMax)
@@ -703,7 +764,7 @@ namespace GlowBabyGlow
                         velocity.Y = 0;
                         if (!onLadder)
                         {
-                            testAnim.Play("idle"); 
+                            testAnim.Play("idle");
                             pos.Y -= overlappingAbove;
                         }
                         onLadder = false;
@@ -723,15 +784,28 @@ namespace GlowBabyGlow
                 {
                     if (Input.GetThumbs(index).X < 0)
                     {
+                        
                         int overlappingRight = t.OverlappingRight(hitRect);
                         if (overlappingRight > 0)
                         {
-                            velocity.X = 0;
-
-                            if (!wallLeft)
+                            bool through = false;
+                            foreach (Tile t2 in tiles)
                             {
-                                pos.X = t.Rect.Right;
-                                tileCollideLeft = true;
+                                if (t.HasBlockToTheRight(t2.Rect)
+                                    && t != t2)
+                                {
+                                    through = true;
+                                }
+                            }
+                            if (!through)
+                            {
+                                velocity.X = 0;
+
+                                if (!wallLeft)
+                                {
+                                    pos.X = t.Rect.Right - hitRect.Width;
+                                    tileCollideLeft = true;
+                                }
                             }
                         }
                     }
@@ -740,12 +814,24 @@ namespace GlowBabyGlow
                         int overlappingLeft = t.OverlappingLeft(hitRect);
                         if (overlappingLeft > 0)
                         {
-                            velocity.X = 0;
-
-                            if (!wallRight)
+                            bool through = false;
+                            foreach (Tile t2 in tiles)
                             {
-                                pos.X = t.Rect.Left - hitRect.Width;
-                                tileCollideRight = true;
+                                if (t.HasBlockToTheLeft(t2.Rect)
+                                    && t != t2)
+                                {
+                                    through = true;
+                                }
+                            }
+                            if (!through)
+                            {
+                                velocity.X = 0;
+
+                                if (!wallRight)
+                                {
+                                    pos.X = t.Rect.Left - hitRect.Width;
+                                    tileCollideRight = true;
+                                }
                             }
                         }
                     }
@@ -754,6 +840,10 @@ namespace GlowBabyGlow
 
             if (fall)
             {
+                if (!inAir && currentPowerup is SpeedShoes)
+                {
+                    velocity.Y = -(jumpStrength / 4);
+                }
                 inAir = true;
             }
             wallRight = tileCollideRight;
@@ -764,12 +854,49 @@ namespace GlowBabyGlow
         {
             if (alive)
             {
+                if (currentPowerup is SpeedShoes)
+                {
+                    float dir = 0;
+                    if(velocity.X > 0)
+                    { dir = 1; } 
+                    else if(velocity.X < 0)
+                    { dir = -1; }
+
+                    if (dir != 0)
+                    {
+                        for (int i = 0; i < 6; i++)
+                        {
+                            w.ParticleManager.AddParticle(new SparkParticle(new Vector2(
+                                hitRect.Center.X, hitRect.Bottom), dir));
+                        }
+                    }
+                }
+
+                Color c = new Color(0, 50, 0, 20);
+                switch (index)
+                {
+                    case 1:
+                        c = new Color(50, 0, 0, 20);
+                        break;
+                    case 2:
+                        c = new Color(0, 50, 50, 20);
+                        break;
+                    case 3:
+                        c = new Color(0, 0, 50, 20);
+                        break;
+                }
+
+                if (currentPowerup is Pacifier)
+                {
+                    c = new Color(25, 25, 25, 100);
+                }
+
                 if (baby != null)
                 {
                     baby.Draw(sb, SpriteEffects.None);
                     if (!World.Exploding)
                     {
-                        LineBatch.DrawCircle(sb, new Vector2(baby.Rect.Center.X, baby.Rect.Center.Y), (int)babyLife);
+                        LineBatch.DrawCircle(sb, new Vector2(baby.Rect.Center.X, baby.Rect.Center.Y), (int)babyLife, c);
                     }
                 }
                 else
@@ -778,7 +905,7 @@ namespace GlowBabyGlow
                     {
                         if (holdingBaby)
                         {
-                            LineBatch.DrawCircle(sb, new Vector2(hitRect.Center.X, hitRect.Center.Y), (int)babyLife);
+                            LineBatch.DrawCircle(sb, new Vector2(hitRect.Center.X, hitRect.Center.Y), (int)babyLife, c );
                         }
                     }
                 }
