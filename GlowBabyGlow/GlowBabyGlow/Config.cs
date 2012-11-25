@@ -10,5 +10,6 @@ namespace GlowBabyGlow
         public static int screenW = 960;
         public static int screenH = 540;
         public static Random rand = new Random();
+        public static Dictionary<string, int> highScore = new Dictionary<string, int>();
     }
 }

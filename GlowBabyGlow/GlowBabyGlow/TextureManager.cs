@@ -17,6 +17,9 @@ namespace GlowBabyGlow
         public static Texture2D babyGlow;
         public static Texture2D blackCircle;
 
+        public static Texture2D padlockClosed;
+        public static Texture2D padlockOpen;
+
         public static Texture2D tile;
 
         public static Texture2D bPark;
@@ -56,6 +59,10 @@ namespace GlowBabyGlow
             baby = c.Load<Texture2D>("Actors\\baby");
             babyGlow = c.Load<Texture2D>("Actors\\glow");
             blackCircle = c.Load<Texture2D>("circle");
+
+            //menu
+            padlockClosed = c.Load<Texture2D>("Menu\\padlock1");
+            padlockOpen = c.Load<Texture2D>("Menu\\padlock2");
 
             // tiles
             tile = c.Load<Texture2D>("Tiles\\tile");

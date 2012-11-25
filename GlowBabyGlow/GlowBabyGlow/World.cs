@@ -38,7 +38,7 @@ namespace GlowBabyGlow
                 int alive = 0;
                 foreach (Player p in players)
                 {
-                    if (p.Alive) { alive++; }
+                    if (p.Lives > 0) { alive++; }
                 }
                 return alive;
             }
@@ -119,7 +119,6 @@ namespace GlowBabyGlow
             Load(level);
             cam = new Camera();
             cam.Pos = new Vector2(Config.screenW / 2, Config.screenH / 2);
-            
         }
 
         void Load(string filename)

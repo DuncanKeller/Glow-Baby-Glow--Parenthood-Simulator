@@ -36,5 +36,7 @@ Content\Powerups\powerup-backdrop.xnb
 Content\Powerups\pup-arrow.xnb
 Content\Powerups\springshoes.xnb
 Content\Powerups\sprintshoes.xnb
+Content\Menu\padlock1.xnb
+Content\Menu\padlock2.xnb
 Animation.cs
 Animator.cs

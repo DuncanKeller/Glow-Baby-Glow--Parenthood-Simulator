@@ -17,6 +17,9 @@ namespace GlowBabyGlow
         static bool initialized = false;
         static float startTimer;
 
+        static int score;
+        static bool newScore;
+
         public static bool Initialized
         {
             get { return initialized; }
@@ -24,12 +27,24 @@ namespace GlowBabyGlow
 
         public static void Init(World w)
         {
+            newScore = false;
             startTimer = 1.5f;
             initialized = true;
             font = new GFont(TextureManager.font, 4, 10);
             position = -Config.screenH;
             rect = new Rectangle(0, -Config.screenH, Config.screenW, Config.screenH);
             world = w;
+
+            if (w.Players.Count == 1)
+            {
+                int score = w.Players[0].Score;
+
+                if (Config.highScore[w.LevelName] < score)
+                {
+                    Config.highScore[w.LevelName] = score;
+                    newScore = true;
+                }
+            }
         }
 
         public static void Reset()

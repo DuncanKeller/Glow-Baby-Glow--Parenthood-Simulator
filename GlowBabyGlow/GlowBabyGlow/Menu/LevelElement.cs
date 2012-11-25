@@ -23,9 +23,15 @@ namespace GlowBabyGlow
         World world;
         Viewport vp;
 
+        bool unlocked = false;
+
+        GFont smallfont;
+
         public LevelElement(string text, Texture2D texture, Vector2 pos, bool selectable, Menu m, MenuAction a, string levelname) : 
             base(text, texture, pos, selectable,m, a)
         {
+            if (levelname == "alley")
+            { unlocked = true; }
             topLeft = pos;
             bottomRight = new Vector2(pos.X + smallWidth, pos.Y + smallHeight);
 
@@ -36,6 +42,8 @@ namespace GlowBabyGlow
             world.Init(levelname);
 
             vp = new Viewport();
+
+            smallfont = new GFont(TextureManager.smallFont, 4, 10);
         }
 
         public World GetWorld()
@@ -125,14 +133,57 @@ namespace GlowBabyGlow
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 drawRect.Right - 2, drawRect.Y - 2, 4, drawRect.Height + 4), Color.Black);
 
+            if (!unlocked)
+            {
+
+                sb.Draw(TextureManager.blankTexture, new Rectangle(
+                    drawRect.X, drawRect.Y, drawRect.Width, drawRect.Height), new Color(100,100,100,220));
+
+                float factor = drawRect.Width / (largeWidth * 2.0f);
+                int w = (int)(TextureManager.padlockClosed.Width * factor);
+                int h = (int)(TextureManager.padlockClosed.Height * factor);
+                sb.Draw(TextureManager.padlockClosed, new Rectangle(drawRect.Center.X - (w / 2), drawRect.Center.Y - (h / 2),
+                    w, h), Color.White);
+            }
+
             //sb.Draw(TextureManager.blankTexture, new Rectangle(
             //    drawRect.X + drawRect.Width / 8, drawRect.Y + drawRect.Width / 8,
             //    drawRect.Width / 2, drawRect.Height / 2), new Color(50, 50, 50, 50));
 
             if (Selected)
             {
-                font.Draw(sb, new Vector2((Config.screenW / 2) - ((font.Size.X * Text.Length) / 2),
-                    Config.screenH - 15 - font.Size.Y), Text, Color.White);
+                if (!unlocked)
+                {
+                    string t = "";
+                    switch (Text)
+                    {
+                        case "Alley":
+                            break;
+                        case "Landing Strip":
+                            t = "The Alley";
+                            break;
+                        case "The Outskirts":
+                            t = "The Landing Strip";
+                            break;
+                        case "Ruined City":
+                            t = "The Outskirts";
+                            break;
+                        case "Powerplant":
+                            t = "The Ruined City";
+                            break;
+                    }
+                    string text1 = "score 18000 points on";
+                    string text2 = t + " to unlock";
+                    smallfont.Draw(sb, new Vector2((Config.screenW / 2) - (((smallfont.Size.X / 2) * text1.Length) / 2),
+                        Config.screenH - 15 - (smallfont.Size.Y)), text1, Color.Black, true);
+                    smallfont.Draw(sb, new Vector2((Config.screenW / 2) - (((smallfont.Size.X / 2) * text2.Length) / 2),
+                        Config.screenH - 15 - (smallfont.Size.Y / 2)), text2, Color.Black, true);
+                }
+                else
+                {
+                    font.Draw(sb, new Vector2((Config.screenW / 2) - ((font.Size.X * Text.Length) / 2),
+                        Config.screenH - 15 - font.Size.Y), Text, Color.White);
+                }
             }
 
             sb.End();
