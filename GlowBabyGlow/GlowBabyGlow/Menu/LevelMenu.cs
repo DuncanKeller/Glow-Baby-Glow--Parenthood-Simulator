@@ -32,7 +32,7 @@ namespace GlowBabyGlow
                 new Vector2(200, 50), true, this, delegate() { }, "airport"));
             elements.Add(new LevelElement("The Outskirts", TextureManager.blankTexture,
                 new Vector2(300, 50), true, this, delegate() { }, "jungle"));
-            //elements.Add(new LevelElement("Ghost Town", TextureManager.blankTexture,
+            //elements.Add(new LevelElement("Ruined City", TextureManager.blankTexture,
             //    new Vector2(400, 50), true, this, delegate() { }, "city"));
             elements.Add(new LevelElement("Powerplant", TextureManager.blankTexture,
                 new Vector2(500, 50), true, this, delegate() { }, "powerplant"));

@@ -34,14 +34,19 @@ namespace GlowBabyGlow
             position = -Config.screenH;
             rect = new Rectangle(0, -Config.screenH, Config.screenW, Config.screenH);
             world = w;
+            CheckHighScore();
+           
+        }
 
-            if (w.Players.Count == 1)
+        public static void CheckHighScore()
+        {
+            if (world.Players.Count == 1)
             {
-                int score = w.Players[0].Score;
+                int score = world.Players[0].Score;
 
-                if (Config.highScore[w.LevelName] < score)
+                if (Config.highScore[world.LevelName] < score)
                 {
-                    Config.highScore[w.LevelName] = score;
+                    Config.highScore[world.LevelName] = score;
                     newScore = true;
                 }
             }
@@ -53,6 +58,7 @@ namespace GlowBabyGlow
             rect.Y = (int)position;
             initialized = false;
             velocity = 0;
+            CheckHighScore();
         }
 
         public static void Update(float dt)

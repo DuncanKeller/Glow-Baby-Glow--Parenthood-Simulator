@@ -14,9 +14,9 @@ namespace GlowBabyGlow
         List<Powerup> toRemove = new List<Powerup>();
         List<Powerup> toAdd = new List<Powerup>();
         float timer;
-        //float powerupTime = 30; // seconds
+        float powerupTime = 30; // seconds
         int spawnDistance = 175;
-        float powerupTime = 0; // seconds
+        //float powerupTime = 0; // seconds
 
         GFont font;
 

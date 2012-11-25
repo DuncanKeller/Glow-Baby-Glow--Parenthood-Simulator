@@ -192,7 +192,7 @@ namespace GlowBabyGlow
 
                 if (p.Lives == 0)
                 {
-                    toRemove.Add(p);
+                    //toRemove.Add(p);
                 }
             }
 
@@ -271,6 +271,7 @@ namespace GlowBabyGlow
             tiles.Clear();
             backdrop = new Backdrop();
             GameOver.Reset();
+            players.Clear();
         }
 
         public void UpdateExplosion(float dt)

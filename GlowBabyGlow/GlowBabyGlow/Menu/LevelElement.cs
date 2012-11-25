@@ -24,8 +24,21 @@ namespace GlowBabyGlow
         Viewport vp;
 
         bool unlocked = false;
+        bool recentlyUnlocked = false;
+        float unlockTimer = 0.5f;
+        float rot;
+        float veloc = 0;
+        float ypos;
+        Dictionary<string, string> levelThatUnlocks = new Dictionary<string, string>();
 
+        string levelname;
         GFont smallfont;
+        int neededScore = 18;
+
+        public bool Unlocked
+        {
+            get { return unlocked; }
+        }
 
         public LevelElement(string text, Texture2D texture, Vector2 pos, bool selectable, Menu m, MenuAction a, string levelname) : 
             base(text, texture, pos, selectable,m, a)
@@ -42,8 +55,13 @@ namespace GlowBabyGlow
             world.Init(levelname);
 
             vp = new Viewport();
-
+            this.levelname = levelname;
             smallfont = new GFont(TextureManager.smallFont, 4, 10);
+
+            levelThatUnlocks.Add("airport", "alley");
+            levelThatUnlocks.Add("jungle", "airport");
+            levelThatUnlocks.Add("city", "jungle");
+            levelThatUnlocks.Add("powerplant", "city");
         }
 
         public World GetWorld()
@@ -70,6 +88,20 @@ namespace GlowBabyGlow
             {
                 world.Update(dt);
             }
+
+            if (recentlyUnlocked)
+            {
+                if (unlockTimer > 0)
+                {
+                    unlockTimer -= dt / 1000;
+                }
+                else
+                {
+                    veloc += 10 * (dt / 1000);
+                    ypos += veloc;
+                    rot += (float)(Math.PI / 4) * (dt / 1000);
+                }
+            }
         }
         
         public override void ChangePosition(Vector2 newPos)
@@ -84,11 +116,23 @@ namespace GlowBabyGlow
                 topLeftDest = new Vector2((Config.screenW / 2) - (largeWidth / 2),
                     (Config.screenH / 2) - (largeHeight / 2));
                 bottomRightDest = new Vector2(topLeftDest.X + largeWidth, topLeftDest.Y + largeHeight);
+
+                if (!unlocked)
+                {
+                    if (Config.highScore[levelThatUnlocks[levelname]] >= neededScore)
+                    {
+                        unlocked = true;
+                        recentlyUnlocked = true;
+                    }
+                }
             }
             else
             {
-                topLeftDest = new Vector2(0, 0);
-                bottomRightDest = new Vector2(Config.screenW, Config.screenH);
+                if (unlocked)
+                {
+                    topLeftDest = new Vector2(0, 0);
+                    bottomRightDest = new Vector2(Config.screenW, Config.screenH);
+                }
             }
         }
 
@@ -133,7 +177,7 @@ namespace GlowBabyGlow
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 drawRect.Right - 2, drawRect.Y - 2, 4, drawRect.Height + 4), Color.Black);
 
-            if (!unlocked)
+            if (!unlocked || (unlockTimer > 0 && recentlyUnlocked))
             {
 
                 sb.Draw(TextureManager.blankTexture, new Rectangle(
@@ -144,6 +188,16 @@ namespace GlowBabyGlow
                 int h = (int)(TextureManager.padlockClosed.Height * factor);
                 sb.Draw(TextureManager.padlockClosed, new Rectangle(drawRect.Center.X - (w / 2), drawRect.Center.Y - (h / 2),
                     w, h), Color.White);
+            }
+            else if (recentlyUnlocked)
+            {
+                float factor = drawRect.Width / (largeWidth * 2.0f);
+                int w = (int)(TextureManager.padlockClosed.Width * factor);
+                int h = (int)(TextureManager.padlockClosed.Height * factor);
+                int diff = TextureManager.padlockOpen.Height - TextureManager.padlockClosed.Height;
+                sb.Draw(TextureManager.padlockOpen, new Rectangle(drawRect.Center.X, (drawRect.Center.Y - (h / 2) + (int)ypos) ,
+                    w, h), new Rectangle(0,0,TextureManager.padlockOpen.Width, TextureManager.padlockOpen.Height), Color.White,
+                    rot, new Vector2(TextureManager.padlockOpen.Width / 2, TextureManager.padlockOpen.Height / 6), SpriteEffects.None, 0);
             }
 
             //sb.Draw(TextureManager.blankTexture, new Rectangle(
@@ -172,7 +226,7 @@ namespace GlowBabyGlow
                             t = "The Ruined City";
                             break;
                     }
-                    string text1 = "score 18000 points on";
+                    string text1 = "score " + neededScore + " points on";
                     string text2 = t + " to unlock";
                     smallfont.Draw(sb, new Vector2((Config.screenW / 2) - (((smallfont.Size.X / 2) * text1.Length) / 2),
                         Config.screenH - 15 - (smallfont.Size.Y)), text1, Color.Black, true);
