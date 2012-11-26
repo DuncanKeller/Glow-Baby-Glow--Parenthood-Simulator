@@ -115,10 +115,15 @@ namespace GlowBabyGlow
             enemies = new EnemyManager(this);
             powerups = new PowerupManager(this);
 
-            players.Add(new Player(new Point(100,400), this));
+            players.Add(new Player(new Point(100,400), this, 0));
             Load(level);
             cam = new Camera();
             cam.Pos = new Vector2(Config.screenW / 2, Config.screenH / 2);
+        }
+
+        public void AddPlayer(int index)
+        {
+            players.Add(new Player(new Point(100, 400), this, index));
         }
 
         void Load(string filename)

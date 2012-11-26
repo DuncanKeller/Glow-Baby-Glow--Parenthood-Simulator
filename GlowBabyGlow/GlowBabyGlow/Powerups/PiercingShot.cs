@@ -14,7 +14,7 @@ namespace GlowBabyGlow
         {
             texture = TextureManager.pupIconArrow;
             icon = TextureManager.pupIconArrow;
-            description = "piercing shots";
+            description = "piercing";
         }
 
         public override void Update(float dt)

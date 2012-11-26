@@ -32,7 +32,8 @@ namespace GlowBabyGlow
         float maxBabyLife = 175;
         float babyLife;
         float babyDecay = 8.5f;
-        float shakePower = 5;
+        float keyshakePower = 5;
+        float joyshakePower = 2;
 
         bool alive = true;
         float respawnTimer = 0;
@@ -126,7 +127,7 @@ namespace GlowBabyGlow
 
         #endregion
 
-        public Player(Point pos, World w) : base(w)
+        public Player(Point pos, World w, int i) : base(w)
         {
             this.pos = new Vector2(pos.X, pos.Y);
             rect = new Rectangle(pos.X, pos.Y, width, height);
@@ -149,6 +150,7 @@ namespace GlowBabyGlow
             {
                 currentPowerup.Activate(this);
             }
+            index = i;
         }
 
         public override void Update(float dt)
@@ -350,7 +352,7 @@ namespace GlowBabyGlow
             shakeSpeed += 25;
             if (shakeSpeed > 100)
             { shakeSpeed = 100; }
-            babyLife += shakePower;
+            babyLife += keyshakePower;
             if (babyLife > maxBabyLife)
             { babyLife = maxBabyLife; }
         }
@@ -378,7 +380,9 @@ namespace GlowBabyGlow
             testAnim.SetSpeed(dAngle * 120);
             prevAngle = angle;
 
-            babyLife += shakePower * Math.Abs(dAngle);
+            babyLife += joyshakePower * Math.Abs(dAngle);
+            if (babyLife > maxBabyLife)
+            { babyLife = maxBabyLife; }
         }
 
         public void Automate(float dt)

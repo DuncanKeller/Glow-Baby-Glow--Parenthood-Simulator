@@ -16,10 +16,16 @@ namespace GlowBabyGlow
             get { return locked; }
         }
 
-        public levelMenu(Game1 g)
+        public levelMenu(Game1 g, bool multi)
             : base(g)
         {
             pos = new Vector2(Config.screenW, Config.screenH);
+
+            if (multi)
+            {
+                pos = new Vector2(-Config.screenW * 2, Config.screenH);
+            }
+
             backdrop = TextureManager.blankTexture;
 
             c = Color.Green;
@@ -95,7 +101,8 @@ namespace GlowBabyGlow
                 }
             }
 
-            if (Input.HoldingPrimary(0))
+            if (Input.HoldingPrimary(0) &&
+                !Input.HoldingPrimaryPrev(0))
             {
                 if (!locked)
                 {

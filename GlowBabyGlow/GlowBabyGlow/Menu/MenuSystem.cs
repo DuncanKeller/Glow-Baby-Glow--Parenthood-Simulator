@@ -20,15 +20,24 @@ namespace GlowBabyGlow
             TitleMenu tm = new TitleMenu(game);
             menus.Add("title", tm);
             menus.Add("single-multi", new SingleMultiMenu(game));
-            menus.Add("level", new levelMenu(game));
+            menus.Add("level", new levelMenu(game, false));
             menus.Add("multi", new MultiMenu(game));
+            menus.Add("multi-level", new levelMenu(game, true));
 
             currentMenu = tm;
         }
 
         public static World GetCurrentLevel()
         {
-            World w = (menus["level"] as levelMenu).GetCurrentWorld();
+            World w = null;
+            if (currentMenu == menus["multi-level"])
+            {
+                w = (menus["multi-level"] as levelMenu).GetCurrentWorld();
+            }
+            else
+            {
+                w = (menus["level"] as levelMenu).GetCurrentWorld();
+            }
             Input.Init(w);
             return w;
         }
@@ -36,6 +45,7 @@ namespace GlowBabyGlow
         public static void Reset()
         {
             (menus["level"] as levelMenu).Unlock();
+            (menus["multi-level"] as levelMenu).Unlock();
             g.Reset();
         }
 
@@ -52,7 +62,7 @@ namespace GlowBabyGlow
             //}
             currentMenu.Update(dt);
 
-            if (currentMenu != menus["level"])
+            if (currentMenu != menus["level"] && currentMenu != menus["multi-level"])
             {
                 if (Input.GetThumbs(0).Y > 0.2 &&
                     inputTimer == 0)
@@ -69,7 +79,8 @@ namespace GlowBabyGlow
             }
             else
             {
-                if (!(menus["level"] as levelMenu).Locked)
+                if (!(menus["level"] as levelMenu).Locked
+                    && !(menus["multi-level"] as levelMenu).Locked)
                 {
                     if (Input.GetThumbs(0).X > 0.2 &&
                         inputTimer == 0)

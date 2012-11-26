@@ -103,7 +103,7 @@ namespace GlowBabyGlow
                 world = MenuSystem.GetCurrentLevel();
                 MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
             }
-           
+            Input.LateUpdate();
             // TODO: Add your update logic here
 
             base.Update(gameTime);

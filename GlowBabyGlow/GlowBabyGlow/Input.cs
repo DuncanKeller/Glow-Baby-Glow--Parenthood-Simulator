@@ -11,7 +11,7 @@ namespace GlowBabyGlow
 
     class Input
     {
-        public static bool keys = true;
+        public static bool keys = false;
         static event InputChangeHandler Jump;
         
         static List<GamePadState> gamepad = new List<GamePadState>();
@@ -127,6 +127,7 @@ namespace GlowBabyGlow
 
         public static void Update()
         {
+
             gamepad[0] = GamePad.GetState(PlayerIndex.One);
             gamepad[1] = GamePad.GetState(PlayerIndex.Two);
             gamepad[2] = GamePad.GetState(PlayerIndex.Three);
@@ -201,13 +202,16 @@ namespace GlowBabyGlow
                         world.Players[i].Shoot();
                     }
                 }
-
             }
+        }
 
+        public static void LateUpdate()
+        {
             for (int i = 0; i < 4; i++)
             {
                 prevgamepad[i] = gamepad[i];
             }
+
             prevkeyboard = keyboard;
         }
 

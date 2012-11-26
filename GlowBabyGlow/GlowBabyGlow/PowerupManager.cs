@@ -193,6 +193,8 @@ namespace GlowBabyGlow
             { return; }
             foreach (Player p in world.Players)
             {
+                int alpha = 254;
+                
                 if (p.Powerup != null)
                 {
                     int width = TextureManager.pupBackdrop.Width / 2;
@@ -205,17 +207,25 @@ namespace GlowBabyGlow
                         charge = width - (width / ((newMax - charge) + 1));
                         
                     }
+
+                    // check for player overlapping 
+                    if (p.HitRect.Intersects(new Rectangle(charge - width, 0, width, height)))
+                    {
+                        alpha = 100;
+                    }
+
                     sb.Draw(TextureManager.pupBackdrop, new Rectangle(charge - width, 0, width, height),
-                        Color.White);
+                        new Color(alpha,alpha,alpha,alpha));
                     int xoffset = Config.screenW / 25;
                     int yoffset = Config.screenW / 30;
                     // change width to p.Powerup.Icon.width
                     sb.Draw(p.Powerup.Icon, new Rectangle((charge - width) + xoffset, yoffset,
-                        p.Powerup.Icon.Width / 2, p.Powerup.Icon.Height / 2), Color.White);
+                        p.Powerup.Icon.Width / 2, p.Powerup.Icon.Height / 2), 
+                        new Color(alpha, alpha, alpha, alpha));
                     xoffset = (Config.screenW / 25);
                     yoffset = Config.screenW / 65;
                     font.Draw(sb, new Vector2((charge - width) + xoffset, yoffset), p.Powerup.Description,
-                        new Color(240, 240, 240), true);
+                         new Color(alpha, alpha, alpha, alpha), true);
                 }
             }
         }
