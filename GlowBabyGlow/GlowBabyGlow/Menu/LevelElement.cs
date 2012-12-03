@@ -62,6 +62,14 @@ namespace GlowBabyGlow
             levelThatUnlocks.Add("jungle", "airport");
             levelThatUnlocks.Add("city", "jungle");
             levelThatUnlocks.Add("powerplant", "city");
+
+            if (levelThatUnlocks.ContainsKey(levelname))
+            {
+                if (Config.highScore[levelThatUnlocks[levelname]] >= neededScore)
+                {
+                    unlocked = true;
+                }
+            }
         }
 
         public World GetWorld()

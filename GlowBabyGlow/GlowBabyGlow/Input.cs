@@ -11,7 +11,7 @@ namespace GlowBabyGlow
 
     class Input
     {
-        public static bool keys = false;
+        public static bool keys = true;
         static event InputChangeHandler Jump;
         
         static List<GamePadState> gamepad = new List<GamePadState>();

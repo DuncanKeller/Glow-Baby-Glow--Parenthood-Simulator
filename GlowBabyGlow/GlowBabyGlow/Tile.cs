@@ -113,6 +113,8 @@ namespace GlowBabyGlow
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             //sb.Draw(TextureManager.tile, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width, rect.Height), new Color(0,0,0,100)); 
+            
+            sb.Draw(TextureManager.blankTexture, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width + 4, rect.Height + 4), Color.Black);
             sb.Draw(TextureManager.tile, rect, Color.White);
         }
     }

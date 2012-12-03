@@ -23,7 +23,7 @@ namespace GlowBabyGlow
 
         }
 
-        public void Explode()
+        public virtual void Explode()
         {
             if (!sploded)
             {

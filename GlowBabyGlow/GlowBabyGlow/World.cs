@@ -13,6 +13,7 @@ namespace GlowBabyGlow
         List<Player> players = new List<Player>();
         List<Tile> tiles = new List<Tile>();
         List<Ladder> ladders = new List<Ladder>();
+        Dictionary<Player, Baby> babies = new Dictionary<Player, Baby>();
 
         EnemyManager enemies;
         BulletManager bullets = new BulletManager();
@@ -41,6 +42,18 @@ namespace GlowBabyGlow
                     if (p.Lives > 0) { alive++; }
                 }
                 return alive;
+            }
+        }
+
+        public Dictionary<Player, Baby> Babies
+        {
+            get
+            {
+                return babies;
+            }
+            set
+            {
+                babies = value;
             }
         }
 

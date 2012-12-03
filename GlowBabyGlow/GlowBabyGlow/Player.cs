@@ -25,7 +25,6 @@ namespace GlowBabyGlow
         bool readyToThrow = false;
         bool shaking = false;
         float throwStrength = 75;
-        Baby baby = null;
         float prevAngle = 0;
         float shakeSpeed = 0;
 
@@ -72,8 +71,28 @@ namespace GlowBabyGlow
 
         public Baby Baby
         {
-            get { return baby; }
-            set { baby = value; }
+            get
+            {
+                if (w.Babies.ContainsKey(this))
+                {
+                    return w.Babies[this];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (w.Babies.ContainsKey(this))
+                {
+                    w.Babies[this] = value;
+                }
+                else
+                {
+                    w.Babies.Add(this, value);
+                }
+            }
         }
 
         public float BabyLife
@@ -182,9 +201,9 @@ namespace GlowBabyGlow
                     World.Explode();
                 }
 
-                if (baby != null)
+                if (Baby != null)
                 {
-                    baby.Update(dt);
+                    Baby.Update(dt);
                 }
 
                 if (holdingBaby)
@@ -261,8 +280,8 @@ namespace GlowBabyGlow
                     testAnim.Play("jump");
                     for (int i = 0; i < 50; i++)
                     {
-                        w.ParticleManager.AddParticle(new SpringParticle(new Vector2(
-                            hitRect.Center.X, hitRect.Bottom)));
+                        w.ParticleManager.AddParticle( new SpringParticle(new Vector2(
+                            hitRect.Center.X, hitRect.Bottom )));
                     }
                 }
             }
@@ -270,10 +289,10 @@ namespace GlowBabyGlow
 
         public void Throw()
         {
-            if (baby == null)
+            if (Baby == null)
             {
                 Vector2 throwPos = new Vector2(pos.X + rect.Width / 2, pos.Y + rect.Height / 2);
-                baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
+                Baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
                 holdingBaby = false;
             }
         }
@@ -284,19 +303,20 @@ namespace GlowBabyGlow
             alive = false;
             respawnTimer = respawnTime;
             babyLife = maxBabyLife;
-            baby = null;
+            Baby = null;
             pos.Y = Config.screenH + 200;
             lives--;
         }
 
-        public void Explode()
+        public override void Explode()
         {
             lives = 0;
+            base.Explode();
         }
 
         public void Respawn()
         {
-            baby = null;
+            Baby = null;
             holdingBaby = true;
             velocity = Vector2.Zero;
             pos.X = Config.screenW / 2;
@@ -405,14 +425,14 @@ namespace GlowBabyGlow
             Rectangle senseEnemyLeft = new Rectangle(hitRect.Left - (hitRect.Width * 20), hitRect.Top,
                 hitRect.Width * 20, hitRect.Width);
 
-            if (baby != null)
+            if (Baby != null)
             {
-                if (hitRect.Center.X > baby.HitRect.Right)
+                if (hitRect.Center.X > Baby.HitRect.Right)
                 {
                     automateLeft = true;
                     facingRight = false;
                 }
-                else if (hitRect.Center.X < baby.HitRect.Left)
+                else if (hitRect.Center.X < Baby.HitRect.Left)
                 {
                     automateRight = true;
                     facingRight = true;
@@ -641,14 +661,14 @@ namespace GlowBabyGlow
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
         {
             CoinCollision();
-            if (baby != null)
+            if (Baby != null)
             {
-                baby.Collision(ref tiles);
+                Baby.Collision(ref tiles);
 
-                if (baby.Rect.Intersects(rect)
-                    && baby.ReadyToCatch)
+                if (Baby.Rect.Intersects(rect)
+                    && Baby.ReadyToCatch)
                 {
-                    baby = null;
+                    Baby = null;
                     holdingBaby = true;
                 }
             }
@@ -900,12 +920,12 @@ namespace GlowBabyGlow
                     c = new Color(25, 25, 25, 100);
                 }
 
-                if (baby != null)
+                if (Baby != null)
                 {
-                    baby.Draw(sb, SpriteEffects.None);
+                    Baby.Draw(sb, SpriteEffects.None);
                     if (!World.Exploding)
                     {
-                        LineBatch.DrawCircle(sb, new Vector2(baby.Rect.Center.X, baby.Rect.Center.Y), (int)babyLife, c);
+                        LineBatch.DrawCircle(sb, new Vector2(Baby.Rect.Center.X, Baby.Rect.Center.Y), (int)babyLife, c);
                     }
                 }
                 else

@@ -61,6 +61,12 @@ namespace GlowBabyGlow
             inMenu = true;
         }
 
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            Config.InitiateSave();
+            base.OnExiting(sender, args);
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.

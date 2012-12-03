@@ -26,6 +26,7 @@ namespace GlowBabyGlow
         public static Texture2D bAlley;
         public static Texture2D bTutorial;
         public static Texture2D bAirport;
+        public static Texture2D bCity;
         public static Texture2D bPowerplant;
         public static Texture2D bJungle;
         public static Texture2D[] clouds = new Texture2D[4];
@@ -87,6 +88,7 @@ namespace GlowBabyGlow
             bPark = c.Load<Texture2D>("Backdrops\\testBackground");
             bAlley = c.Load<Texture2D>("Backdrops\\alley");
             bAirport = c.Load<Texture2D>("Backdrops\\airport");
+            bCity = c.Load<Texture2D>("Backdrops\\city");
             bJungle = c.Load<Texture2D>("Backdrops\\jungle");
             bPowerplant = c.Load<Texture2D>("Backdrops\\powerplant");
             clouds[0] = c.Load<Texture2D>("Backdrops\\cloud1");

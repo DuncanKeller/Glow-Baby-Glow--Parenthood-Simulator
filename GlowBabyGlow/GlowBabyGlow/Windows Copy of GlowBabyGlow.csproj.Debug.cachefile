@@ -38,5 +38,6 @@ Content\Powerups\springshoes.xnb
 Content\Powerups\sprintshoes.xnb
 Content\Menu\padlock1.xnb
 Content\Menu\padlock2.xnb
+Content\Backdrops\city.xnb
 Animation.cs
 Animator.cs

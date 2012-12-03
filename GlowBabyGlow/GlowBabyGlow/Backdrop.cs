@@ -86,6 +86,9 @@ namespace GlowBabyGlow
                 case "jungle":
                     backdrop = TextureManager.bJungle;
                     break;
+                case "city":
+                    backdrop = TextureManager.bCity;
+                    break;
                 case "powerplant":
                     backdrop = TextureManager.bPowerplant;
                     break;  
