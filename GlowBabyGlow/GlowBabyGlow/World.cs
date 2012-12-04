@@ -10,6 +10,8 @@ namespace GlowBabyGlow
 {
     class World
     {
+        bool paused = false;
+        float pauseCurtain;
         List<Player> players = new List<Player>();
         List<Tile> tiles = new List<Tile>();
         List<Ladder> ladders = new List<Ladder>();
@@ -24,6 +26,7 @@ namespace GlowBabyGlow
         Backdrop backdrop = new Backdrop();
         Hud hud = new Hud();
         Camera cam = new Camera();
+        GFont font;
 
         bool exploded = false;
         float explodeTime = 0;
@@ -31,6 +34,12 @@ namespace GlowBabyGlow
         string levelName;
 
         #region Properties
+
+        public bool Paused
+        {
+            get { return paused; }
+            set { paused = value; }
+        }
 
         public int PlayersAlive
         {
@@ -121,6 +130,7 @@ namespace GlowBabyGlow
 
         public void Init(string level)
         {
+            font = new GFont(TextureManager.font, 4, 10);
             Tutorial.Init(this);
             backdrop.Init(this);
             hud.Init(this);
@@ -176,75 +186,78 @@ namespace GlowBabyGlow
 
         public void Update(float dt)
         {
-            if (exploded)
+            if (!paused)
             {
-                UpdateExplosion(dt);
-            }
-            //dt = 5;
-            if (dtMod != 0)
-            {
-                dt = dtMod;
-            }
-
-            if (!exploded)
-            {
-                foreach (Player p in players)
+                if (exploded)
                 {
-                    if (p.Baby != null)
+                    UpdateExplosion(dt);
+                }
+                //dt = 5;
+                if (dtMod != 0)
+                {
+                    dt = dtMod;
+                }
+
+                if (!exploded)
+                {
+                    foreach (Player p in players)
                     {
-                        if (p.Baby.ClosestTile < 65 &&
-                            p.Baby.Velocity.Y > 0)
+                        if (p.Baby != null)
                         {
-                            dt = p.Baby.ClosestTile / 15;
+                            if (p.Baby.ClosestTile < 65 &&
+                                p.Baby.Velocity.Y > 0)
+                            {
+                                dt = p.Baby.ClosestTile / 15;
+                            }
                         }
                     }
                 }
-            }
 
-            List<Player> toRemove = new List<Player>();
+                List<Player> toRemove = new List<Player>();
 
-            foreach (Player p in players)
-            {
-                p.Update(dt);
-                p.Collision(ref tiles, ref ladders);
-
-                if (p.Lives == 0)
+                foreach (Player p in players)
                 {
-                    //toRemove.Add(p);
+                    p.Update(dt);
+                    p.Collision(ref tiles, ref ladders);
+
+                    if (p.Lives == 0)
+                    {
+                        //toRemove.Add(p);
+                    }
                 }
-            }
 
-            foreach (Player p in toRemove)
-            {
-                players.Remove(p);
-            }
+                foreach (Player p in toRemove)
+                {
+                    players.Remove(p);
+                }
 
-            foreach (Tile t in tiles)
-            {
-                t.Update(dt);
-            }
+                foreach (Tile t in tiles)
+                {
+                    t.Update(dt);
+                }
 
-            foreach (Ladder l in ladders)
-            {
-                l.Update(dt);
-            }
+                foreach (Ladder l in ladders)
+                {
+                    l.Update(dt);
+                }
 
-            enemies.Update(dt);
-            enemies.Collision(ref tiles, ref ladders);
-            bullets.Update(dt);
-            bullets.Collision(ref tiles, ref ladders);
-            coins.Update(dt);
-            powerups.Update(dt);
-            powerups.Collision(ref players);
-            particles.Update(dt);
+                enemies.Update(dt);
+                enemies.Collision(ref tiles, ref ladders);
+                bullets.Update(dt);
+                bullets.Collision(ref tiles, ref ladders);
+                coins.Update(dt);
+                powerups.Update(dt);
+                powerups.Collision(ref players);
+                particles.Update(dt);
 
-            if (Backdrop.Stage == "tutorial")
-            {
-                Tutorial.Update(dt, Players[0]);
+                if (Backdrop.Stage == "tutorial")
+                {
+                    Tutorial.Update(dt, Players[0]);
+                }
+                Backdrop.Update(dt);
+                hud.Update(dt);
+                UpdateGameOverScreen(dt);
             }
-            Backdrop.Update(dt);
-            hud.Update(dt);
-            UpdateGameOverScreen(dt);
         }
 
         public void UpdateGameOverScreen(float dt)
@@ -345,6 +358,10 @@ namespace GlowBabyGlow
 
             foreach (Tile tile in tiles)
             {
+                tile.DrawBack(sb, SpriteEffects.None);
+            }
+            foreach (Tile tile in tiles)
+            {
                 tile.Draw(sb, SpriteEffects.None);
             }
             foreach (Ladder l in ladders)
@@ -373,6 +390,28 @@ namespace GlowBabyGlow
             if (GameOver.Initialized)
             {
                 GameOver.Draw(sb);
+            }
+
+            if (paused)
+            {
+                sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, Config.screenH),
+                    new Color(100, 150, 100, 140));
+                int centerx = (int)((Config.screenW / 2) - (font.Size.X * "paused".Length) / 2);
+                int centery = (int)((Config.screenH / 2) - (font.Size.Y) / 2);
+                
+                pauseCurtain = Vector2.Lerp(new Vector2(pauseCurtain, 0), new Vector2((Config.screenW / 2) + (Config.screenW / 50), 0), 0.03f).X;
+                int width = TextureManager.curtain.Width / 2;
+
+                sb.Draw(TextureManager.curtain, new Rectangle((int)pauseCurtain - width, 0, width, Config.screenH), Color.White);
+                sb.Draw(TextureManager.curtain, new Rectangle(Config.screenW - (int)pauseCurtain, 0, width, Config.screenH), 
+                    new Rectangle(0, 0, TextureManager.curtain.Width, TextureManager.curtain.Height ), Color.White,
+                    0, new Vector2(0,0), SpriteEffects.FlipHorizontally, 0 );
+                font.Draw(sb, new Vector2(centerx, centery), "paused", Color.White);
+                sb.Draw(TextureManager.pauseBorder, new Rectangle(0, 0, Config.screenW, Config.screenH), Color.White);
+            }
+            else
+            {
+                pauseCurtain = 0;
             }
         }
     }

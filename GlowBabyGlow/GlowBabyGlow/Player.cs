@@ -646,7 +646,7 @@ namespace GlowBabyGlow
             {
                 if (coin.Rect.Intersects(hitRect))
                 {
-                    score += 500;
+                    score += 100;
                     coins.Remove(coin);
                     for (int i = 0; i < Coin.numParticles; i++)
                     {

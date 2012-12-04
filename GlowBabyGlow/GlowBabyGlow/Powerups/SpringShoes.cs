@@ -14,7 +14,7 @@ namespace GlowBabyGlow
         {
             texture = TextureManager.pupIconSpringshoes;
             icon = TextureManager.pupIconSpringshoes;
-            description = "air jordans";
+            description = "air gordans";
         }
 
         public override void Update(float dt)

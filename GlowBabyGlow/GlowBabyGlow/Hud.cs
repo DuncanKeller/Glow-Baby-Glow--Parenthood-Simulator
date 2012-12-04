@@ -11,6 +11,7 @@ namespace GlowBabyGlow
     {
         GFont font;
         World world;
+        int scorePos;
 
         public void Init(World w)
         {
@@ -29,7 +30,19 @@ namespace GlowBabyGlow
             {
                 if (world.Players.Count > 0)
                 {
-                    font.Draw(sb, new Vector2(10, 10), "score: " + world.Players[0].Score, Color.White);
+                    if (world.PowerupManager.ShowPowerup)
+                    {
+                        scorePos = world.PowerupManager.HudDistance + world.PowerupManager.Width;
+                        //scorePos = (int)Vector2.Lerp(
+                        //    new Vector2(scorePos, 0), new Vector2(10 + world.PowerupManager.Width, 0), 0.3f).X;
+                    }
+                    else
+                    {
+                        //scorePos = (int)Vector2.Lerp(
+                        //    new Vector2(scorePos, 0), new Vector2(10, 0), 0.3f).X;
+                    }
+
+                    font.Draw(sb, new Vector2(scorePos, 10), "score:" + world.Players[0].Score, Color.White);
                     Rectangle rect = new Rectangle(Config.screenW - 10 - (font.Size.X * 3), 10,
                         TextureManager.face.Width / 2, TextureManager.face.Height / 2);
                     if (world.Players[0].Lives > 0)

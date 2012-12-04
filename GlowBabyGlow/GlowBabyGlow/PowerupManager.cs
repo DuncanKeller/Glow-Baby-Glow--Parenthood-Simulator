@@ -16,6 +16,10 @@ namespace GlowBabyGlow
         float timer;
         float powerupTime = 30; // seconds
         int spawnDistance = 175;
+        int hudDistance = 0;
+        int width;
+        int height;
+        bool showPowerup = false;
         //float powerupTime = 0; // seconds
 
         GFont font;
@@ -24,6 +28,23 @@ namespace GlowBabyGlow
         {
             world = w;
             font = new GFont(TextureManager.smallFont, 4, 10);
+            width = TextureManager.pupBackdrop.Width / 2;
+            height = TextureManager.pupBackdrop.Height / 2;
+        }
+
+        public bool ShowPowerup
+        {
+            get { return showPowerup; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public int HudDistance
+        {
+            get { return hudDistance; }
         }
 
         public List<Powerup> Powerups
@@ -189,6 +210,7 @@ namespace GlowBabyGlow
 
         public void DrawIcon(SpriteBatch sb)
         {
+            showPowerup = false;
             if(world.Players.Count > 1)
             { return; }
             foreach (Player p in world.Players)
@@ -197,15 +219,13 @@ namespace GlowBabyGlow
                 
                 if (p.Powerup != null)
                 {
-                    int width = TextureManager.pupBackdrop.Width / 2;
-                    int height = TextureManager.pupBackdrop.Height / 2;
+                   
                     int maxCharge = (int)(width / (p.Powerup.MaxAliveTime));
                     int charge = (int)(maxCharge * p.Powerup.AliveTimer) + 50;
                     if (charge - width > 0)
                     {
                         int newMax = (int)(maxCharge * p.Powerup.MaxAliveTime) + 50;
                         charge = width - (width / ((newMax - charge) + 1));
-                        
                     }
 
                     // check for player overlapping 
@@ -214,17 +234,23 @@ namespace GlowBabyGlow
                         alpha = 100;
                     }
 
+                    if (charge > 0)
+                    {
+                        showPowerup = true;
+                    }
+
                     sb.Draw(TextureManager.pupBackdrop, new Rectangle(charge - width, 0, width, height),
                         new Color(alpha,alpha,alpha,alpha));
                     int xoffset = Config.screenW / 25;
                     int yoffset = Config.screenW / 30;
                     // change width to p.Powerup.Icon.width
+                    hudDistance = (charge - width);
                     sb.Draw(p.Powerup.Icon, new Rectangle((charge - width) + xoffset, yoffset,
                         p.Powerup.Icon.Width / 2, p.Powerup.Icon.Height / 2), 
                         new Color(alpha, alpha, alpha, alpha));
                     xoffset = (Config.screenW / 25);
                     yoffset = Config.screenW / 65;
-                    font.Draw(sb, new Vector2((charge - width) + xoffset, yoffset), p.Powerup.Description,
+                    font.Draw(sb, new Vector2((charge - width) + (xoffset / 3), yoffset), p.Powerup.Description,
                          new Color(alpha, alpha, alpha, alpha), true);
                 }
             }

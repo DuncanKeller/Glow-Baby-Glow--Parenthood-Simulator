@@ -87,7 +87,7 @@ namespace GlowBabyGlow
 
         public void Die(Bullet b)
         {
-            b.Player.Score += 100;
+            //b.Player.Score += 100;
             Vector2 center = new Vector2(hitRect.Center.X, hitRect.Center.Y);
             for (int i = 0; i < 8; i++)
             {
