@@ -34,7 +34,6 @@ namespace GlowBabyGlow
                 backdrop = TextureManager.bParkPond;
             }
             
-
             c = Color.White;
             destination = pos;
             //elements[0].Selected = true;
@@ -136,7 +135,14 @@ namespace GlowBabyGlow
             else if (Input.HoldingSecondary(Input.defaultIndex) &&
                !Input.HoldingSecondaryPrev(Input.defaultIndex))
             {
-                MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "single-multi");
+                if (multi)
+                {
+                    MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "multi");
+                }
+                else
+                {
+                    MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "single-multi");
+                }
             }
         }
 

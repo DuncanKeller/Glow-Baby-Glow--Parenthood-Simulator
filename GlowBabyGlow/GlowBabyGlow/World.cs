@@ -151,6 +151,15 @@ namespace GlowBabyGlow
 
         #endregion
 
+        public void AddPlayers()
+        {
+            int[] index = MenuSystem.Players();
+            for (int i = 0; i < index.Length; i++)
+            {
+                AddPlayer(index[i]);
+            }
+        }
+
         public void Init(string level)
         {
             font = new GFont(TextureManager.font, 4, 10);
@@ -164,7 +173,8 @@ namespace GlowBabyGlow
             Load(level);
             cam = new Camera();
             cam.Pos = new Vector2(Config.screenW / 2, Config.screenH / 2);
-            players.Add(new Player(spawnPoints[0], this, 0));
+            AddPlayers();
+            //players.Add(new Player(spawnPoints[0], this, 0));
         }
 
         public void AddPlayer(int index)

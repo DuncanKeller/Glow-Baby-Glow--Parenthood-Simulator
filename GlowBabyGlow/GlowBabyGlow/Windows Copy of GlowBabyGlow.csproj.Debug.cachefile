@@ -68,5 +68,9 @@ Content\Menu\Letters\o.xnb
 Content\Menu\Letters\w.xnb
 Content\Menu\Letters\y.xnb
 Content\fuzz.xnb
+Content\Hud\xbox-1.xnb
+Content\Hud\xbox-2.xnb
+Content\Hud\xbox-3.xnb
+Content\Hud\xbox-4.xnb
 Animation.cs
 Animator.cs

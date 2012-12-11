@@ -29,6 +29,8 @@ namespace GlowBabyGlow
         public static Texture2D tile;
         public static Texture2D hatch;
 
+        public static Texture2D[] xboxGuide = new Texture2D[4];
+
         public static Texture2D l_G;
         public static Texture2D l_L;
         public static Texture2D l_O;
@@ -57,7 +59,6 @@ namespace GlowBabyGlow
         public static Texture2D smallPlane;
         public static Texture2D[] parxAirport = new Texture2D[6];
         public static Texture2D[] parxJungle = new Texture2D[6];
-        public static Texture2D jungleGround;
         public static Texture2D paperBoat;
 
         public static Texture2D ladder;
@@ -78,6 +79,10 @@ namespace GlowBabyGlow
         public static void Init(ContentManager content)
         {
             c = content;
+        }
+
+        public static void LoadContent()
+        {
             // characters
             blankTexture = c.Load<Texture2D>("blank");
             testRun = c.Load<Texture2D>("runsheet");
@@ -94,6 +99,12 @@ namespace GlowBabyGlow
             padlockOpen = c.Load<Texture2D>("Menu\\padlock2");
             pauseBorder = c.Load<Texture2D>("Menu\\border");
             curtain = c.Load<Texture2D>("Menu\\curtain");
+
+            // multiplayer
+            xboxGuide[0] = c.Load<Texture2D>("Hud\\xbox-1");
+            xboxGuide[1] = c.Load<Texture2D>("Hud\\xbox-2");
+            xboxGuide[2] = c.Load<Texture2D>("Hud\\xbox-3");
+            xboxGuide[3] = c.Load<Texture2D>("Hud\\xbox-4");
 
             // tiles
             tile = c.Load<Texture2D>("Tiles\\tile");

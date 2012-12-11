@@ -21,7 +21,9 @@ namespace GlowBabyGlow
         SpriteBatch spriteBatch;
         World world = new World();
         bool inMenu = true;
-         THrea
+        Thread loadingThread;
+        delegate void LoadingDelegate(ContentManager c);
+        Texture2D blankTexture;
 
         public Game1()
         {
@@ -37,14 +39,22 @@ namespace GlowBabyGlow
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.screenH;
             graphics.ApplyChanges();
-
-            Config.Init();
-            LineBatch.Init(graphics.GraphicsDevice);
+            blankTexture = Content.Load<Texture2D>("blank");
             TextureManager.Init(Content);
+            Config.Init();
+
+            loadingThread = new Thread(TextureManager.LoadContent);
+            loadingThread.Start();
+            DrawLoadingScreen();
+
+            loadingThread.Join();
+
+            LineBatch.Init(graphics.GraphicsDevice);
             Input.Init(world);
             //world.Init();
             MenuSystem.Init(this);
@@ -76,7 +86,7 @@ namespace GlowBabyGlow
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -143,6 +153,14 @@ namespace GlowBabyGlow
             }
 
             base.Draw(gameTime);
+        }
+
+        void DrawLoadingScreen()
+        {
+            spriteBatch.Begin();
+            spriteBatch.Draw(blankTexture,
+                new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
+            spriteBatch.End();
         }
     }
 }

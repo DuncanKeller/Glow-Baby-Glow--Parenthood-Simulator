@@ -14,6 +14,21 @@ namespace GlowBabyGlow
         static Menu currentMenu;
         static Game1 g;
 
+        public static int[] Players()
+        {
+            if (menus.ContainsKey("multi"))
+            {
+                if ((menus["multi"] as MultiMenu).GetPlayers().Length > 0)
+                {
+                    return (menus["multi"] as MultiMenu).GetPlayers();
+                }
+            }
+            
+            int[] index = new int[1];
+            index[0] = Input.defaultIndex;
+            return index;
+        }
+
         public static void Init(Game1 game)
         {
             g = game;
