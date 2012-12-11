@@ -11,10 +11,12 @@ namespace GlowBabyGlow
     class World
     {
         bool paused = false;
+        bool unpausing = false;
         float pauseCurtain;
         List<Player> players = new List<Player>();
         List<Tile> tiles = new List<Tile>();
         List<Ladder> ladders = new List<Ladder>();
+        List<Point> spawnPoints = new List<Point>();
         Dictionary<Player, Baby> babies = new Dictionary<Player, Baby>();
 
         EnemyManager enemies;
@@ -35,10 +37,31 @@ namespace GlowBabyGlow
 
         #region Properties
 
+        public bool Automate
+        {
+            set
+            {
+                foreach (Player p in players)
+                {
+                    p.Automate = value;
+                }
+            }
+        }
+
         public bool Paused
         {
             get { return paused; }
-            set { paused = value; }
+            set
+            {
+                if (value == true)
+                {
+                    paused = true;
+                }
+                else
+                {
+                    unpausing = true;
+                }
+            }
         }
 
         public int PlayersAlive
@@ -138,15 +161,15 @@ namespace GlowBabyGlow
             enemies = new EnemyManager(this);
             powerups = new PowerupManager(this);
 
-            players.Add(new Player(new Point(100,400), this, 0));
             Load(level);
             cam = new Camera();
             cam.Pos = new Vector2(Config.screenW / 2, Config.screenH / 2);
+            players.Add(new Player(spawnPoints[0], this, 0));
         }
 
         public void AddPlayer(int index)
         {
-            players.Add(new Player(new Point(100, 400), this, index));
+            players.Add(new Player(spawnPoints[Players.Count], this, index));
         }
 
         void Load(string filename)
@@ -154,6 +177,12 @@ namespace GlowBabyGlow
             levelName = filename;
             backdrop.SetStage(filename);
             StreamReader sr = new StreamReader("Maps\\" + filename + ".txt");
+
+            if (levelName == "powerplant")
+            {
+                tiles.Add(new Hatch(new Point(14, 13), this, -1));
+                tiles.Add(new Hatch(new Point(16, 13), this, 1));
+            }
 
             while (!sr.EndOfStream)
             {
@@ -163,7 +192,8 @@ namespace GlowBabyGlow
                 int x = Int32.Parse(info[1]);
                 int y = Int32.Parse(info[2]);
 
-                Point p = new Point(x * Tile.Size, y * Tile.Size);
+                Point p = new Point((int)(x * Tile.Size ),
+                    (int)(y * Tile.Size));
 
                 switch (type)
                 {
@@ -173,15 +203,14 @@ namespace GlowBabyGlow
                     case "l":
                         ladders.Add(new Ladder(p, this));
                         break;
+                    case "s":
+                        spawnPoints.Add(new Point((int)(p.X * Config.screenR),
+                             (int)(p.Y * Config.screenR) - Player.height));
+                        break;
                 }
             }
-
-            tiles.Add(new Tile(new Point(-Tile.Size, Config.screenH - Tile.Size), this));
-            tiles.Add(new Tile(new Point(-Tile.Size * 2, Config.screenH - Tile.Size), this));
-            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size, Config.screenH - Tile.Size), this));
-            tiles.Add(new Tile(new Point(Config.screenW + Tile.Size * 2, Config.screenH - Tile.Size), this));
-
             sr.Close();
+
         }
 
         public void Update(float dt)
@@ -204,7 +233,7 @@ namespace GlowBabyGlow
                     {
                         if (p.Baby != null)
                         {
-                            if (p.Baby.ClosestTile < 65 &&
+                            if (p.Baby.ClosestTile < 75 * Config.screenR &&
                                 p.Baby.Velocity.Y > 0)
                             {
                                 dt = p.Baby.ClosestTile / 15;
@@ -394,12 +423,25 @@ namespace GlowBabyGlow
 
             if (paused)
             {
-                sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, Config.screenH),
-                    new Color(100, 150, 100, 140));
+                //sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, Config.screenH),
+                //    new Color(100, 150, 100, 140));
                 int centerx = (int)((Config.screenW / 2) - (font.Size.X * "paused".Length) / 2);
                 int centery = (int)((Config.screenH / 2) - (font.Size.Y) / 2);
-                
-                pauseCurtain = Vector2.Lerp(new Vector2(pauseCurtain, 0), new Vector2((Config.screenW / 2) + (Config.screenW / 50), 0), 0.03f).X;
+                if (unpausing)
+                {
+                    pauseCurtain = Vector2.Lerp(new Vector2(pauseCurtain, 0),
+                        new Vector2(0, 0), 0.08f).X;
+                    if (pauseCurtain < Config.screenW / 30)
+                    {
+                        paused = false;
+                        unpausing = false;
+                    }
+                }
+                else
+                {
+                    pauseCurtain = Vector2.Lerp(new Vector2(pauseCurtain, 0), 
+                        new Vector2((Config.screenW / 2) + (Config.screenW / 50), 0), 0.045f).X;
+                }
                 int width = TextureManager.curtain.Width / 2;
 
                 sb.Draw(TextureManager.curtain, new Rectangle((int)pauseCurtain - width, 0, width, Config.screenH), Color.White);
@@ -408,6 +450,7 @@ namespace GlowBabyGlow
                     0, new Vector2(0,0), SpriteEffects.FlipHorizontally, 0 );
                 font.Draw(sb, new Vector2(centerx, centery), "paused", Color.White);
                 sb.Draw(TextureManager.pauseBorder, new Rectangle(0, 0, Config.screenW, Config.screenH), Color.White);
+
             }
             else
             {

@@ -12,8 +12,12 @@ namespace GlowBabyGlow
 {
     class Config
     {
-        public static int screenW = 960;
-        public static int screenH = 540;
+        //public static int screenW = 960;
+        //public static int screenH = 540;
+        public static int screenW = (int)(960);
+        public static int screenH = (int)(540);
+        public static float screenR;
+        public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();
         
@@ -25,6 +29,12 @@ namespace GlowBabyGlow
 
         public static void Init()
         {
+            screenR = screenW / 1920.0f;
+            if (screenW <= 960)
+            {
+                fontRatio = screenR;
+            }
+
             highScore.Add("alley", 0);
             highScore.Add("airport", 0);
             highScore.Add("jungle", 0);

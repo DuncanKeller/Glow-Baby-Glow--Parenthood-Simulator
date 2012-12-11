@@ -35,19 +35,21 @@ namespace GlowBabyGlow
             rect = new Rectangle(0, -Config.screenH, Config.screenW, Config.screenH);
             world = w;
             CheckHighScore();
-           
         }
 
         public static void CheckHighScore()
         {
-            if (world.Players.Count == 1)
+            if (world != null)
             {
-                int score = world.Players[0].Score;
-
-                if (Config.highScore[world.LevelName] < score)
+                if (world.Players.Count == 1)
                 {
-                    Config.highScore[world.LevelName] = score;
-                    newScore = true;
+                    int score = world.Players[0].Score;
+
+                    if (Config.highScore[world.LevelName] < score)
+                    {
+                        Config.highScore[world.LevelName] = score;
+                        newScore = true;
+                    }
                 }
             }
         }
@@ -59,6 +61,7 @@ namespace GlowBabyGlow
             initialized = false;
             velocity = 0;
             CheckHighScore();
+            Input.spaceBarPreventativeMeasureFlag = false;
         }
 
         public static void Update(float dt)

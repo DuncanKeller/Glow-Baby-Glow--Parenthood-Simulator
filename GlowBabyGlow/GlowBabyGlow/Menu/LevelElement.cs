@@ -15,8 +15,8 @@ namespace GlowBabyGlow
         Vector2 topLeftDest;
         Vector2 bottomRightDest;
 
-        int smallWidth = Config.screenW / 20;
-        int smallHeight = Config.screenH / 20;
+        int smallWidth = Config.screenW / 16;
+        int smallHeight = Config.screenH / 16;
         int largeWidth = Config.screenW / 2;
         int largeHeight = Config.screenH / 2;
 

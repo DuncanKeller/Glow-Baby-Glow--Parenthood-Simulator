@@ -86,5 +86,13 @@ namespace GlowBabyGlow
                 element.Draw(sb, g);
             }
         }
+
+        public void DrawElements(SpriteBatch sb, GraphicsDevice g)
+        {
+            foreach (MenuElement element in elements)
+            {
+                element.Draw(sb, g);
+            }
+        }
     }
 }

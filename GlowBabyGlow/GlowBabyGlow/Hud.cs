@@ -38,13 +38,15 @@ namespace GlowBabyGlow
                     }
                     else
                     {
+                        scorePos = 10;
                         //scorePos = (int)Vector2.Lerp(
                         //    new Vector2(scorePos, 0), new Vector2(10, 0), 0.3f).X;
                     }
 
                     font.Draw(sb, new Vector2(scorePos, 10), "score:" + world.Players[0].Score, Color.White);
                     Rectangle rect = new Rectangle(Config.screenW - 10 - (font.Size.X * 3), 10,
-                        TextureManager.face.Width / 2, TextureManager.face.Height / 2);
+                        (int)((TextureManager.face.Width) * Config.fontRatio), 
+                        (int)((TextureManager.face.Height) * Config.fontRatio));
                     if (world.Players[0].Lives > 0)
                     {
                         font.Draw(sb, new Vector2(rect.Right, 10), "x" + (world.Players[0].Lives - 1), Color.White);

@@ -26,7 +26,9 @@ namespace GlowBabyGlow
             offset = (float)Config.rand.NextDouble();
 
             texture = TextureManager.darkClouds[num];
-            rect = new Rectangle(x, y, texture.Width / 2, texture.Height / 2);
+            rect = new Rectangle(x, y, 
+                (int)(texture.Width * Config.screenR), 
+                (int)(texture.Height * Config.screenR));
             pos.X = x;
             height = y;
             pos.Y = y;

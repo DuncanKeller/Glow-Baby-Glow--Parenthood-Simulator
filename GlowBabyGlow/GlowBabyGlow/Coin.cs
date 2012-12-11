@@ -11,9 +11,9 @@ namespace GlowBabyGlow
     {
         double offset = 0;
         float time;
-        public static int size = 30;
+        public static int size = (int)(60 * Config.screenR);
         public static int numParticles = 25;
-        int magnitude = 5;
+        int magnitude = (int)(10 * Config.screenR);
         int startingHeight;
 
         public Rectangle Rect
@@ -24,8 +24,9 @@ namespace GlowBabyGlow
         public Coin(int x, int y, World w)
             : base(w)
         {
-            rect = new Rectangle(x, y, size, size);
-            startingHeight = y;
+            rect = new Rectangle(
+                x, y, size, size);
+            startingHeight = rect.Y;
         }
 
         public override void Update(float dt)

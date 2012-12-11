@@ -13,6 +13,7 @@ namespace GlowBabyEditor
     {
         static List<Region> wallRegions = new List<Region>();
         static List<Region> ladderRegions = new List<Region>();
+        static List<Region> spawnRegions = new List<Region>();
         static List<Region> currentRegion;
         static MouseState mouse;
         static MouseState oldMouse;
@@ -27,6 +28,7 @@ namespace GlowBabyEditor
                 {
                     wallRegions.Add(new Region(x, y));
                     ladderRegions.Add(new Region(x, y));
+                    spawnRegions.Add(new Region(x, y));
                 }
             }
             currentRegion = wallRegions;
@@ -46,6 +48,11 @@ namespace GlowBabyEditor
                 oldkey.IsKeyUp(Keys.D2))
             {
                 currentRegion = ladderRegions;
+            }
+            else if (key.IsKeyDown(Keys.D3) &&
+                oldkey.IsKeyUp(Keys.D3))
+            {
+                currentRegion = spawnRegions;
             }
 
             if (key.IsKeyDown(Keys.S) &&
@@ -91,6 +98,10 @@ namespace GlowBabyEditor
                 {
                     type = "l";
                 }
+                else if (currentRegion == spawnRegions)
+                {
+                    type = "s";
+                }
 
                 r.Update(mouse, oldMouse, type);
             }
@@ -110,6 +121,13 @@ namespace GlowBabyEditor
                 }
             }
             foreach (Region r in ladderRegions)
+            {
+                if (r.Type != "e")
+                {
+                    sw.WriteLine(r.Type + "," + r.X + "," + r.Y);
+                }
+            }
+            foreach (Region r in spawnRegions)
             {
                 if (r.Type != "e")
                 {
@@ -164,6 +182,10 @@ namespace GlowBabyEditor
                 r.Draw(sb);
             }
             foreach (Region r in ladderRegions)
+            {
+                r.Draw(sb);
+            }
+            foreach (Region r in spawnRegions)
             {
                 r.Draw(sb);
             }

@@ -12,6 +12,7 @@ namespace GlowBabyGlow
     class Input
     {
         public static bool keys = true;
+        public static int defaultIndex = 0;
         static event InputChangeHandler Jump;
         
         static List<GamePadState> gamepad = new List<GamePadState>();
@@ -24,6 +25,7 @@ namespace GlowBabyGlow
         static Keys secondary = Keys.LeftShift;
 
         static World world;
+        public static bool spaceBarPreventativeMeasureFlag = false;
 
         public static Vector2 GetThumbs(int index)
         {
@@ -40,6 +42,25 @@ namespace GlowBabyGlow
             {
                 x = gamepad[index].ThumbSticks.Left.X;
                 y = gamepad[index].ThumbSticks.Left.Y;
+            }
+            return new Vector2(x, y);
+        }
+
+        public static Vector2 GetPrevThumbs(int index)
+        {
+            float x = 0;
+            float y = 0;
+            if (keys)
+            {
+                if (prevkeyboard.IsKeyDown(Keys.Left)) { x = -1; }
+                if (prevkeyboard.IsKeyDown(Keys.Right)) { x = 1; }
+                if (prevkeyboard.IsKeyDown(Keys.Up)) { y = 1; }
+                if (prevkeyboard.IsKeyDown(Keys.Down)) { y = -1; ; }
+            }
+            else
+            {
+                x = prevgamepad[index].ThumbSticks.Left.X;
+                y = prevgamepad[index].ThumbSticks.Left.Y;
             }
             return new Vector2(x, y);
         }
@@ -169,6 +190,8 @@ namespace GlowBabyGlow
                 world.Paused = !world.Paused;
             }
 
+
+
             if (!world.Paused)
             {
                 for (int i = 0; i < world.Players.Count; i++)
@@ -179,15 +202,26 @@ namespace GlowBabyGlow
                         {
                             if (HoldingPrimary(i))
                             {
-                                world.Players[i].ReadyToThrow = true;
+                                if (!world.Players[i].Shaking)
+                                {
+                                    world.Players[i].ReadyToThrow = true;
+                                }
                             }
                             else
                             {
-                                if (HoldingPrimaryPrev(i))
+                                if (!world.Players[i].Shaking)
                                 {
-                                    world.Players[i].Throw();
+                                    if (HoldingPrimaryPrev(i) && spaceBarPreventativeMeasureFlag)
+                                    {
+                                        world.Players[i].Throw();
+
+                                    }
+                                    else if (HoldingPrimaryPrev(i))
+                                    {
+                                        spaceBarPreventativeMeasureFlag = true;
+                                    }
+                                    world.Players[i].ReadyToThrow = false;
                                 }
-                                world.Players[i].ReadyToThrow = false;
                             }
                         }
 
@@ -197,24 +231,27 @@ namespace GlowBabyGlow
                             {
                                 if (!world.Players[i].InAir)
                                 {
-                                    float x = GetThumbs(i).X;
-                                    float y = GetThumbs(i).Y;
-                                    float angle = 0;
-                                    if (keys)
+                                    if (world.Players[i].Baby == null)
                                     {
-                                        world.Players[i].StartShake();
-                                        if (keyboard.IsKeyDown(Keys.Right) &&
-                                            prevkeyboard.IsKeyUp(Keys.Right) ||
-                                            keyboard.IsKeyDown(Keys.Left) &&
-                                            prevkeyboard.IsKeyUp(Keys.Left))
+                                        float x = GetThumbs(i).X;
+                                        float y = GetThumbs(i).Y;
+                                        float angle = 0;
+                                        if (keys)
                                         {
-                                            world.Players[i].KeyShake(x);
+                                            world.Players[i].StartShake();
+                                            if (keyboard.IsKeyDown(Keys.Right) &&
+                                                prevkeyboard.IsKeyUp(Keys.Right) ||
+                                                keyboard.IsKeyDown(Keys.Left) &&
+                                                prevkeyboard.IsKeyUp(Keys.Left))
+                                            {
+                                                world.Players[i].KeyShake(x);
+                                            }
                                         }
-                                    }
-                                    else
-                                    {
-                                        angle = (float)Math.Atan2(x, y);
-                                        world.Players[i].Shake(angle);
+                                        else
+                                        {
+                                            angle = (float)Math.Atan2(x, y);
+                                            world.Players[i].Shake(angle);
+                                        }
                                     }
                                 }
                             }

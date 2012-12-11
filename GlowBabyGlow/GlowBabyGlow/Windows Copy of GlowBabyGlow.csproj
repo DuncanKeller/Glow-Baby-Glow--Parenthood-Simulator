@@ -73,6 +73,7 @@
     <Compile Include="Actor.cs" />
     <Compile Include="Baby.cs" />
     <Compile Include="Backdrop.cs" />
+    <Compile Include="BackdropObject.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="BulletManager.cs" />
     <Compile Include="Camera.cs" />
@@ -85,10 +86,12 @@
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="GFont.cs" />
+    <Compile Include="Hatch.cs" />
     <Compile Include="Hud.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Ladder.cs" />
     <Compile Include="LineBatch.cs" />
+    <Compile Include="Menu\BlankMenu.cs" />
     <Compile Include="Menu\GameOver.cs" />
     <Compile Include="Menu\LevelElement.cs" />
     <Compile Include="Menu\LevelMenu.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="Obj.cs" />
     <Compile Include="Particles\BloodParticle.cs" />
     <Compile Include="Particles\DeathParticle.cs" />
+    <Compile Include="Particles\GlowParticle.cs" />
     <Compile Include="Particles\GoldParticle.cs" />
     <Compile Include="Particles\GooParticle.cs" />
     <Compile Include="Particles\Particle.cs" />

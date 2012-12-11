@@ -11,20 +11,22 @@ namespace GlowBabyGlow
     class Player : Actor
     {
         int index = 0;
-        static int width = 35;
-        static int height = 38;
+        public static int width = (int)(35 * 2 * Config.screenR);
+        public static int height = (int)(38 * 2 * Config.screenR);
         bool facingRight = true;
         int score = 0;
+        Vector2 spawnPoint = new Vector2();
 
-        float jumpStrength = 500;
-        float acceleration = 50;
-        float maxSpeed = 175;   //pixels per second
-        float ladderSpeed = 175;
+        float jumpStrength = (int)(1000 * Config.screenR);
+        float acceleration = (int)(100 * Config.screenR);
+        float maxSpeed = (int)(350 * Config.screenR);   //pixels per second
+        float ladderSpeed = (int)(350 * Config.screenR);
+        float ladderSnapX;
 
         bool holdingBaby = true;
         bool readyToThrow = false;
         bool shaking = false;
-        float throwStrength = 75;
+        float throwStrength = (int)(300 * Config.screenR);
         float prevAngle = 0;
         float shakeSpeed = 0;
 
@@ -49,14 +51,41 @@ namespace GlowBabyGlow
         bool automateRight = false;
         bool automateLeft = false;
         float automateBullet;
+        bool automateDirection = false;
         float automateShake;
         bool automateUpLadder = false;
         bool automateDownLadder = false;
         float automateLadderTimer;
+        float automateDirectionChange = 0;
+        bool automateStartShake = false;
+        bool automate = true;
 
         Powerup currentPowerup = null;
 
         #region Properties
+
+        public bool Automate
+        {
+            get { return automate; }
+            set
+            {
+                automate = value;
+                if (value == false)
+                {
+                    automateStartShake = false;
+                    automateUpLadder = false;
+                    automateDownLadder = false;
+                    automateDirection = false;
+                    automateRight = false;
+                    automateLeft = false;
+                }
+            }
+        }
+
+        public bool Shaking
+        {
+            get { return shaking; }
+        }
 
         public Powerup Powerup
         {
@@ -148,8 +177,12 @@ namespace GlowBabyGlow
 
         public Player(Point pos, World w, int i) : base(w)
         {
+            spawnPoint = new Vector2(pos.X, pos.Y);
             this.pos = new Vector2(pos.X, pos.Y);
-            rect = new Rectangle(pos.X, pos.Y, width, height);
+            rect = new Rectangle((int)(pos.X * Config.screenR), 
+                (int)(pos.Y * Config.screenR), 
+                width,
+                height);
             hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
             hitOffset = new Point(rect.Width / 4, 0);
             babyLife = maxBabyLife;
@@ -251,7 +284,7 @@ namespace GlowBabyGlow
                 }
             }
 
-            if (hitRect.Top > Config.screenH)
+            if (pos.Y - height / 2 > Config.screenH)
             {
                 Die();
             }
@@ -297,15 +330,24 @@ namespace GlowBabyGlow
             }
         }
 
+        public void ResetPos()
+        {
+            //stub
+            pos = spawnPoint;
+        }
+
         public void Die()
         {
-            currentPowerup = null;
-            alive = false;
-            respawnTimer = respawnTime;
-            babyLife = maxBabyLife;
-            Baby = null;
-            pos.Y = Config.screenH + 200;
-            lives--;
+            if (alive)
+            {
+                currentPowerup = null;
+                alive = false;
+                respawnTimer = respawnTime;
+                babyLife = maxBabyLife;
+                Baby = null;
+                pos.Y = Config.screenH + 200;
+                lives--;
+            }
         }
 
         public override void Explode()
@@ -319,8 +361,7 @@ namespace GlowBabyGlow
             Baby = null;
             holdingBaby = true;
             velocity = Vector2.Zero;
-            pos.X = Config.screenW / 2;
-            pos.Y = Config.screenH - Tile.Size - rect.Height - 5;
+            ResetPos();
             alive = true;
             World.EnemyManager.ClearEnemies();
             World.CoinManager.ClearCoins();
@@ -369,47 +410,65 @@ namespace GlowBabyGlow
 
         public void KeyShake(float key)
         {
-            shakeSpeed += 25;
-            if (shakeSpeed > 100)
-            { shakeSpeed = 100; }
-            babyLife += keyshakePower;
-            if (babyLife > maxBabyLife)
-            { babyLife = maxBabyLife; }
+            if (!ReadyToThrow)
+            {
+                shakeSpeed += 25;
+                if (shakeSpeed > 100)
+                { shakeSpeed = 100; }
+                babyLife += keyshakePower;
+                if (babyLife > maxBabyLife)
+                { babyLife = maxBabyLife; }
+            }
         }
 
         public void StartShake()
         {
-            testAnim.Play("shake");
-            shaking = true;
-            if (shakeSpeed > 0)
-            { shakeSpeed -= 3; }
-            else
-            { shakeSpeed = 0; }
-
-            if (Input.keys)
+            if (!ReadyToThrow)
             {
-                testAnim.SetSpeed(shakeSpeed);
+                testAnim.Play("shake");
+                shaking = true;
+                if (shakeSpeed > 0)
+                { shakeSpeed -= 3; }
+                else
+                { shakeSpeed = 0; }
+
+                if (Input.keys)
+                {
+                    testAnim.SetSpeed(shakeSpeed);
+                }
             }
         }
 
         public void Shake(float angle)
         {
-            shaking = true;
-            float dAngle = angle - prevAngle;
-            testAnim.Play("shake");
-            testAnim.SetSpeed(dAngle * 120);
-            prevAngle = angle;
+            if (!ReadyToThrow)
+            {
+                shaking = true;
+                float dAngle = angle - prevAngle;
+                testAnim.Play("shake");
+                testAnim.SetSpeed(dAngle * 120);
+                prevAngle = angle;
 
-            babyLife += joyshakePower * Math.Abs(dAngle);
-            if (babyLife > maxBabyLife)
-            { babyLife = maxBabyLife; }
+                babyLife += joyshakePower * Math.Abs(dAngle);
+                if (babyLife > maxBabyLife)
+                { babyLife = maxBabyLife; }
+            }
         }
 
-        public void Automate(float dt)
+        public void AutomatePlayer(float dt)
         {
-            automateShake += dt / 80;
+            automateShake += dt / 60;
             automateLeft = false;
             automateRight = false;
+            lives = 3;
+
+            automateDirectionChange += dt / 1000;
+
+            if (automateDirectionChange > 4)
+            {
+                automateDirectionChange = 0;
+                automateDirection = Config.rand.Next(2) == 0 ? true : false;
+            }
 
             if (automateLadderTimer > 0)
             {
@@ -480,7 +539,17 @@ namespace GlowBabyGlow
                         }
                     }
 
-                    if (babyLife < maxBabyLife / 2)
+                    if (babyLife < maxBabyLife / 2
+                        && !automateStartShake)
+                    {
+                        automateStartShake = true;
+                    }
+                    else if (babyLife > (maxBabyLife / 3) * 2 &&
+                        automateStartShake)
+                    {
+                        automateStartShake = false;
+                    }
+                    else if (automateStartShake)
                     {
                         Shake((float)Math.Sin(automateShake));
                     }
@@ -507,14 +576,16 @@ namespace GlowBabyGlow
                             }
                             else
                             {
-                                automateRight = true;
-                                facingRight = true;
+                                automateRight = automateDirection;
+                                automateLeft = !automateDirection;
+                                facingRight = automateDirection;
                             }
                         }
                         else
                         {
-                            automateRight = true;
-                            facingRight = true;
+                            automateRight = automateDirection;
+                            facingRight = automateDirection;
+                            automateLeft = !automateDirection;
                         }
                     }
                 }
@@ -538,7 +609,10 @@ namespace GlowBabyGlow
                 }
             }
 
-            //Automate(dt);
+            if (automate)
+            {
+                AutomatePlayer(dt);
+            }
 
             if (automateLeft)
             {
@@ -551,6 +625,10 @@ namespace GlowBabyGlow
 
             if (onLadder)
             {
+                pos.X = Vector2.Lerp(
+                    new Vector2(pos.X, 0),
+                    new Vector2(ladderSnapX - (width/2), 0),
+                    0.2f).X;
                 if (automateUpLadder)
                 {
                     yInput = 1;
@@ -708,6 +786,7 @@ namespace GlowBabyGlow
                                 velocity.Y = 0;
                                 testAnim.Play("climb");
                             }
+                            ladderSnapX = l.Rect.Center.X;
                             automateUpLadder = true;
                         }
                     }
@@ -728,7 +807,7 @@ namespace GlowBabyGlow
                                 velocity.Y = 0;
                                 testAnim.Play("climb");
                             }
-
+                            ladderSnapX = l.Rect.Center.X;
                             automateDownLadder = true;
                         }
                     }
@@ -787,7 +866,8 @@ namespace GlowBabyGlow
                 if (inAir && !onLadder)
                 {
                     int overlappingAbove = t.OverlappingAbove(hitRect);
-                    if (overlappingAbove > 0 && velocity.Y > 0)
+                    if (overlappingAbove > 0 && velocity.Y > 0 &&
+                        hitRect.Bottom < t.Rect.Center.Y + (velocity.Y / 50))
                     {
                         inAir = false;
                         velocity.Y = 0;
@@ -925,7 +1005,8 @@ namespace GlowBabyGlow
                     Baby.Draw(sb, SpriteEffects.None);
                     if (!World.Exploding)
                     {
-                        LineBatch.DrawCircle(sb, new Vector2(Baby.Rect.Center.X, Baby.Rect.Center.Y), (int)babyLife, c);
+                        LineBatch.DrawCircle(sb, new Vector2(Baby.Rect.Center.X, Baby.Rect.Center.Y), 
+                            (int)(babyLife * 2 * Config.screenR), c);
                     }
                 }
                 else
@@ -934,7 +1015,8 @@ namespace GlowBabyGlow
                     {
                         if (holdingBaby)
                         {
-                            LineBatch.DrawCircle(sb, new Vector2(hitRect.Center.X, hitRect.Center.Y), (int)babyLife, c );
+                            LineBatch.DrawCircle(sb, new Vector2(hitRect.Center.X, hitRect.Center.Y),
+                                (int)(babyLife * 2 * Config.screenR), c);
                         }
                     }
                 }

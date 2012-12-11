@@ -9,6 +9,7 @@ namespace GlowBabyGlow
 {
     static class TextureManager
     {
+        public static bool loaded = false;
         static ContentManager c;
         public static Texture2D blankTexture;
         public static Texture2D testRun;
@@ -16,6 +17,9 @@ namespace GlowBabyGlow
         public static Texture2D baby;
         public static Texture2D babyGlow;
         public static Texture2D blackCircle;
+        public static Texture2D glowParticle;
+
+        public static Texture2D titleScreen;
         public static Texture2D pauseBorder;
         public static Texture2D curtain;
 
@@ -23,8 +27,23 @@ namespace GlowBabyGlow
         public static Texture2D padlockOpen;
 
         public static Texture2D tile;
+        public static Texture2D hatch;
+
+        public static Texture2D l_G;
+        public static Texture2D l_L;
+        public static Texture2D l_O;
+        public static Texture2D l_W;
+        public static Texture2D l_B1;
+        public static Texture2D l_A;
+        public static Texture2D l_B2;
+        public static Texture2D l_Y;
+        public static Texture2D l_Comma1;
+        public static Texture2D l_Comma2;
 
         public static Texture2D bPark;
+        public static Texture2D bParkSky;
+        public static Texture2D bParkPond;
+        public static Texture2D bParkBandStand;
         public static Texture2D bAlley;
         public static Texture2D bTutorial;
         public static Texture2D bAirport;
@@ -36,6 +55,10 @@ namespace GlowBabyGlow
         public static Texture2D rain;
         public static Texture2D airplane;
         public static Texture2D smallPlane;
+        public static Texture2D[] parxAirport = new Texture2D[6];
+        public static Texture2D[] parxJungle = new Texture2D[6];
+        public static Texture2D jungleGround;
+        public static Texture2D paperBoat;
 
         public static Texture2D ladder;
         public static Texture2D coin;
@@ -63,7 +86,10 @@ namespace GlowBabyGlow
             babyGlow = c.Load<Texture2D>("Actors\\glow");
             blackCircle = c.Load<Texture2D>("circle");
 
+            glowParticle = c.Load<Texture2D>("fuzz");
+
             //menu
+            titleScreen = c.Load<Texture2D>("Menu\\title-screen");
             padlockClosed = c.Load<Texture2D>("Menu\\padlock1");
             padlockOpen = c.Load<Texture2D>("Menu\\padlock2");
             pauseBorder = c.Load<Texture2D>("Menu\\border");
@@ -71,6 +97,7 @@ namespace GlowBabyGlow
 
             // tiles
             tile = c.Load<Texture2D>("Tiles\\tile");
+            hatch = c.Load<Texture2D>("Tiles\\hatch");
 
             // items
             ladder = c.Load<Texture2D>("Objects\\ladder");
@@ -89,7 +116,11 @@ namespace GlowBabyGlow
 
             // backdrops
             bTutorial = c.Load<Texture2D>("Backdrops\\tutorial");
-            bPark = c.Load<Texture2D>("Backdrops\\testBackground");
+            bPark = c.Load<Texture2D>("Backdrops\\park");
+            bParkSky = c.Load<Texture2D>("Backdrops\\park-sky");
+            bParkPond = c.Load<Texture2D>("Backdrops\\level-select");
+            bParkBandStand = c.Load<Texture2D>("Backdrops\\park-multi");
+            paperBoat = c.Load<Texture2D>("Backdrops\\paper-boat");
             bAlley = c.Load<Texture2D>("Backdrops\\alley");
             bAirport = c.Load<Texture2D>("Backdrops\\airport");
             bCity = c.Load<Texture2D>("Backdrops\\city");
@@ -105,12 +136,34 @@ namespace GlowBabyGlow
             darkClouds[2] = c.Load<Texture2D>("Backdrops\\darkcloud3");
             airplane = c.Load<Texture2D>("Backdrops\\plane");
             smallPlane = c.Load<Texture2D>("Backdrops\\small-plane");
-            
+            //jungleGround = c.Load<Texture2D>("Backdrops\\Jungle\\ground");
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    parxAirport[i] = c.Load<Texture2D>("Backdrops\\Airport\\" + i);
+            //}
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    parxJungle[i] = c.Load<Texture2D>("Backdrops\\Jungle\\" + i);
+            //}
+
+            // titlescreen letters
+            l_G = c.Load<Texture2D>("Menu\\Letters\\g");
+            l_L = c.Load<Texture2D>("Menu\\Letters\\l");
+            l_O = c.Load<Texture2D>("Menu\\Letters\\o");
+            l_W = c.Load<Texture2D>("Menu\\Letters\\w");
+            l_B1 = c.Load<Texture2D>("Menu\\Letters\\b1");
+            l_B2 = c.Load<Texture2D>("Menu\\Letters\\b2");
+            l_A = c.Load<Texture2D>("Menu\\Letters\\a");
+            l_Y = c.Load<Texture2D>("Menu\\Letters\\y");
+            l_Comma1 = c.Load<Texture2D>("Menu\\Letters\\comma");
+            l_Comma2 = c.Load<Texture2D>("Menu\\Letters\\comma2");
 
             // fonts
             font = c.Load<Texture2D>("Fonts\\font");
             face = c.Load<Texture2D>("Hud\\face");
             smallFont = c.Load<Texture2D>("Fonts\\small-font");
+
+            loaded = true;
         }
     }
 }

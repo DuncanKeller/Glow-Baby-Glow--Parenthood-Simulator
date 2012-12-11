@@ -10,7 +10,7 @@ namespace GlowBabyGlow
     abstract class Actor : Entity
     {
         protected Vector2 pos;
-        protected float gravity = 2000;
+        protected float gravity = (int)(4000 * Config.screenR);
         protected Vector2 velocity = new Vector2();
 
         protected bool inAir = true;

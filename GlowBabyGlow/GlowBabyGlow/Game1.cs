@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Threading;
 
 namespace GlowBabyGlow
 {
@@ -20,6 +21,7 @@ namespace GlowBabyGlow
         SpriteBatch spriteBatch;
         World world = new World();
         bool inMenu = true;
+         THrea
 
         public Game1()
         {

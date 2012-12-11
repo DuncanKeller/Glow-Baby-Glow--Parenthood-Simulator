@@ -28,10 +28,10 @@ namespace GlowBabyGlow
         {
             texture = TextureManager.airplane;
             smallTexture = TextureManager.smallPlane;
-            height = texture.Height / 2;
-            width = texture.Width / 2;
+            height = (int)(texture.Height * Config.screenR);
+            width = (int)(texture.Width * Config.screenR);
             pos.X = -width - 10;
-            pos.Y = Config.screenH-height + 100;
+            pos.Y = Config.screenH-height + (Config.screenH / 5);
             speed = 0;
             timer = 5 + Config.rand.Next(30);
 
@@ -45,7 +45,6 @@ namespace GlowBabyGlow
         {
             base.Update(dt);
             timer -= dt / 1000;
-
 
             if (!smallPlane)
             {
@@ -93,7 +92,6 @@ namespace GlowBabyGlow
                 }
 
                 pos.X += speed * (dt / 1000);
-
             }
             else
             {
@@ -122,7 +120,8 @@ namespace GlowBabyGlow
         {
             sb.Draw(texture, rect, Color.White);
             Rectangle smallRect = new Rectangle((int)smallPos.X, (int)smallPos.Y,
-                smallTexture.Width / 3, smallTexture.Height / 3);
+                (int)((smallTexture.Width / 1.5f) * Config.screenR),
+                (int)((smallTexture.Height / 1.5f) * Config.screenR));
             sb.Draw(smallTexture, smallRect, Color.Gray);
         }
     }

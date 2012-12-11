@@ -10,8 +10,8 @@ namespace GlowBabyGlow
     class Baby : Actor
     {
         int index = 0;
-        static int width = 10;
-        static int height = 17;
+        static int width = 10 * 2;
+        static int height = 17 * 2;
         static float rotSpeed;
         float angle;
 
@@ -38,6 +38,16 @@ namespace GlowBabyGlow
             get { return rect; }
         }
 
+        public Rectangle HitRect
+        {
+            get
+            {
+                Rectangle r = new Rectangle(rect.X - rect.Width / 2,
+                    rect.Y - rect.Height / 2, rect.Width, rect.Height);
+                return r;
+            }
+        }
+
         public bool ReadyToCatch
         {
             get { return catchTimer == 0; }
@@ -47,11 +57,14 @@ namespace GlowBabyGlow
 
         public Baby(Vector2 pos, float xVel, int index, World w) : base(w)
         {
-            gravity = 175;
+            gravity = (int)( 350 * Config.screenR);
             this.pos = pos;
-            rect = new Rectangle((int)pos.X, (int)pos.Y, width, height);
-            velocity.Y = -175;
-            velocity.X = xVel;
+            rect = new Rectangle((int)(pos.X * Config.screenR), 
+                (int)(pos.Y * Config.screenR), 
+                (int)(width * Config.screenR), 
+                (int)(height * Config.screenR));
+            velocity.Y = (int)(-350 * Config.screenR);
+            velocity.X = (int)(xVel * Config.screenR);
             rotSpeed = (float)((Math.PI) -(Config.rand.NextDouble() * Math.PI * 2));
             this.index = index;
         }
@@ -76,7 +89,7 @@ namespace GlowBabyGlow
             closestTile = float.MaxValue;
             foreach (Tile t in tiles)
             {
-                if (t.Rect.Y > pos.Y)
+                if (velocity.Y > 0)
                 {
                     float distance = Vector2.Distance(
                         new Vector2(t.Rect.Center.X, t.Rect.Center.Y), pos);
@@ -86,19 +99,21 @@ namespace GlowBabyGlow
                     }
                 }
 
-                if (Rect.Intersects(t.Rect))
+                if (HitRect.Intersects(t.Rect))
                 {    
                     w.Explode();
                 }
             }
-
+            bool splode = false;
             foreach (Bullet b in w.BulletManager.Bullets)
             {
-                if (hitRect.Intersects(b.Rect))
+                if (HitRect.Intersects(b.Rect))
                 {
-                    w.Explode();
+                    splode = true;
                 }
             }
+            if (splode)
+            { w.Explode(); }
         }
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
@@ -133,6 +148,8 @@ namespace GlowBabyGlow
                     SpriteEffects.None, 0);
                 base.Draw(sb, SpriteEffects.None);
             }
+
+            
         }
     }
 }

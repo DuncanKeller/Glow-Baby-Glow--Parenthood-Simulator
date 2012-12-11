@@ -12,13 +12,13 @@ namespace GlowBabyGlow
         public SingleMultiMenu(Game1 g)
             : base(g)
         {
-            pos = new Vector2(0, Config.screenH);
-            backdrop = TextureManager.blankTexture;
+            pos = new Vector2(0, Config.screenH * 2);
+            backdrop = TextureManager.bPark;
             elements.Add(new MenuElement("single player", null, new Vector2(
                 0, Config.screenH / 3), true, this, delegate() { }));
             elements.Add(new MenuElement("multiplayer", null, new Vector2(
                 0, (Config.screenH / 3) + (Config.screenH / 6) ), true, this, delegate() { }));
-            c = Color.Blue;
+            c = Color.White;
             destination = pos;
             elements[0].Selected = true;
         }
@@ -33,11 +33,13 @@ namespace GlowBabyGlow
                     ((GFont.width * e.Text.Length) / 2), e.Position.Y));
             }
 
-            if (Input.GetThumbs(0).X > 0.2)
+            if (Input.GetThumbs(Input.defaultIndex).X > 0.2 &&
+                Input.GetPrevThumbs(Input.defaultIndex).X <= 0.2)
             {
                 MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "level");
             }
-            else if (Input.GetThumbs(0).X < -0.2)
+            else if (Input.GetThumbs(Input.defaultIndex).X < -0.2 &&
+                Input.GetPrevThumbs(Input.defaultIndex).X >= -0.2)
             {
                 MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "multi");
             }

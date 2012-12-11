@@ -19,6 +19,7 @@ namespace GlowBabyGlow
             g = game;
             TitleMenu tm = new TitleMenu(game);
             menus.Add("title", tm);
+            menus.Add("blank", new BlankMenu(game));
             menus.Add("single-multi", new SingleMultiMenu(game));
             menus.Add("level", new levelMenu(game, false));
             menus.Add("multi", new MultiMenu(game));
@@ -47,6 +48,7 @@ namespace GlowBabyGlow
             (menus["level"] as levelMenu).Unlock();
             (menus["multi-level"] as levelMenu).Unlock();
             g.Reset();
+            Input.spaceBarPreventativeMeasureFlag = false;
         }
 
         public static void Update(float dt)
@@ -56,22 +58,20 @@ namespace GlowBabyGlow
             else
             { inputTimer = 0; }
 
-            //foreach (Menu m in menus)
-            //{
-            //    m.Update(dt);
-            //}
+            inputTimer = 0;
+
             currentMenu.Update(dt);
 
             if (currentMenu != menus["level"] && currentMenu != menus["multi-level"])
             {
-                if (Input.GetThumbs(0).Y > 0.2 &&
-                    inputTimer == 0)
+                if (Input.GetThumbs(Input.defaultIndex).Y > 0.2 &&
+                    inputTimer == 0 && Input.GetPrevThumbs(Input.defaultIndex).Y <= 0.2)
                 {
                     currentMenu.CurrentItem++;
                     inputTimer = 0.4f;
                 }
-                if (Input.GetThumbs(0).Y < -0.2 &&
-                 inputTimer == 0)
+                if (Input.GetThumbs(Input.defaultIndex).Y < -0.2 &&
+                    inputTimer == 0 && Input.GetPrevThumbs(Input.defaultIndex).Y >= -0.2)
                 {
                     currentMenu.CurrentItem--;
                     inputTimer = 0.4f;
@@ -82,14 +82,14 @@ namespace GlowBabyGlow
                 if (!(menus["level"] as levelMenu).Locked
                     && !(menus["multi-level"] as levelMenu).Locked)
                 {
-                    if (Input.GetThumbs(0).X > 0.2 &&
-                        inputTimer == 0)
+                    if (Input.GetThumbs(Input.defaultIndex).X > 0.2 &&
+                        inputTimer == 0 && Input.GetPrevThumbs(Input.defaultIndex).X <= 0.2)
                     {
                         currentMenu.CurrentItem++;
                         inputTimer = 0.2f;
                     }
-                    if (Input.GetThumbs(0).X < -0.2 &&
-                        inputTimer == 0)
+                    if (Input.GetThumbs(Input.defaultIndex).X < -0.2 &&
+                        inputTimer == 0 && Input.GetPrevThumbs(Input.defaultIndex).X >= -0.2)
                     {
                         currentMenu.CurrentItem--;
                         inputTimer = 0.2f;

@@ -73,6 +73,9 @@ namespace GlowBabyEditor
                 case "l":
                     sb.Draw(TextureManager.blankTexture, new Rectangle(rect.X, rect.Y, SIZE, SIZE), Color.Yellow);
                     break;
+                case "s":
+                    sb.Draw(TextureManager.blankTexture, new Rectangle(rect.X, rect.Y, SIZE, SIZE), Color.Green);
+                    break;
                 
             }
 

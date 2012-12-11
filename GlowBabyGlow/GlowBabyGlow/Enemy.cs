@@ -10,9 +10,9 @@ namespace GlowBabyGlow
 {
     class Enemy : Actor
     {
-        bool movingRight = true;
-        public static int width = 35;
-        public static int height = 37;
+        //bool movingRight = true;
+        public static int width = (int)(35*2* Config.screenR);
+        public static int height = (int)(37*2* Config.screenR);
 
         int health = 2;
 
@@ -35,8 +35,8 @@ namespace GlowBabyGlow
             testAnim = new Animator(TextureManager.zombieSheet, 2, 6);
             testAnim.AddAnimation("default", 0, 11, 15, true);
             testAnim.Play("default");
-            velocity.X = -50;
-            idealVelocity.X = -50;
+            velocity.X = (int)(-100 * Config.screenR);
+            idealVelocity.X = (int)(-100 * Config.screenR);
         }
 
         public override void Update(float dt)
@@ -102,7 +102,7 @@ namespace GlowBabyGlow
             bool tileCollideLeft = false;
             bool tileCollideRight = false;
             bool floorBelow = false;
-            int floorPos = velocity.X > 0 ? rect.Width : -rect.Width;
+            int floorPos = velocity.X > 0 ? rect.Width / 2 : -rect.Width / 2;
             Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 1, 1);
 
             // air collision, landing, walls, etc
@@ -130,7 +130,9 @@ namespace GlowBabyGlow
                         fall = false;
                     }
 
-                    if (checkFloor.Intersects(t.Rect))
+                    if (checkFloor.Intersects(t.Rect) || 
+                        checkFloor.Right > Config.screenW ||
+                        checkFloor.Left < 0)
                     {
                         floorBelow = true;
                     }

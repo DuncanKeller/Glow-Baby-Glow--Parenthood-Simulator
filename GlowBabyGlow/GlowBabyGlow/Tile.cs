@@ -9,7 +9,7 @@ namespace GlowBabyGlow
 {
     class Tile : Entity
     {
-        static int size = 30;
+        static int size = 60;
 
         public Rectangle Rect
         {
@@ -23,7 +23,11 @@ namespace GlowBabyGlow
 
         public Tile(Point pos, World w) : base(w)
         {
-            rect = new Rectangle(pos.X, pos.Y, size, size);
+            rect = new Rectangle(
+                (int)(pos.X * Config.screenR),
+                (int)(pos.Y * Config.screenR), 
+                (int)(size * Config.screenR), 
+                (int)(size * Config.screenR));
         }
 
         public override void Update(float dt)

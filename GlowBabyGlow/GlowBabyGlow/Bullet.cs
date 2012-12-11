@@ -12,7 +12,7 @@ namespace GlowBabyGlow
         static int width = 6;
         static int height = 4;
 
-        float speed = 450;
+        float speed = (int)(900 * Config.screenR);
         Vector2 velocity;
         Vector2 pos;
 
@@ -42,7 +42,9 @@ namespace GlowBabyGlow
         {
             player = p;
             this.pos = pos;
-            rect = new Rectangle((int)pos.X, (int)pos.Y, width, height);
+            rect = new Rectangle((int)pos.X, (int)pos.Y,
+                (int)(width * Config.screenR),
+                (int)(height * Config.screenR));
             velocity = new Vector2(direction * speed, 0);
         }
 
