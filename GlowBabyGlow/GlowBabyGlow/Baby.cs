@@ -15,12 +15,30 @@ namespace GlowBabyGlow
         static float rotSpeed;
         float angle;
 
-        float closestTile;
+        float maxBabyLife = 175;
+        float babyLife;
+        float babyDecay = 8.5f;
 
+        float closestTile;
         float catchTimer = 0.25f;
 
         #region Properties
 
+        public float MaxLife
+        {
+            get { return maxBabyLife; }
+        }
+
+        public float Life
+        {
+            get { return babyLife; }
+            set { babyLife = value; }
+        }
+
+        public float Decay
+        {
+            get { return babyDecay; }
+        }
 
         public float ClosestTile
         {
@@ -59,13 +77,14 @@ namespace GlowBabyGlow
         {
             gravity = (int)( 350 * Config.screenR);
             this.pos = pos;
-            rect = new Rectangle((int)(pos.X * Config.screenR), 
-                (int)(pos.Y * Config.screenR), 
+            rect = new Rectangle((int)(pos.X ), 
+                (int)(pos.Y ), 
                 (int)(width * Config.screenR), 
                 (int)(height * Config.screenR));
             velocity.Y = (int)(-350 * Config.screenR);
             velocity.X = (int)(xVel * Config.screenR);
             rotSpeed = (float)((Math.PI) -(Config.rand.NextDouble() * Math.PI * 2));
+            babyLife = maxBabyLife;
             this.index = index;
         }
 

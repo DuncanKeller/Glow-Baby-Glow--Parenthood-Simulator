@@ -121,7 +121,8 @@ namespace GlowBabyGlow
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
             base.Draw(sb, g);
-            int alpha = 120;
+            int alpha = 180;
+            int alpha2 = 120;
 
             sb.Begin();
 
@@ -132,14 +133,36 @@ namespace GlowBabyGlow
                     ((Config.screenH / 5) * i), 
                     Config.screenW / 5, Config.screenH / 6);
 
-                sb.Draw(TextureManager.blankTexture, playerTab, new Color(0, 0, 0, alpha));
+                // tab
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.X, playerTab.Y,
+                        playerTab.Width, playerTab.Height / 5),
+                    new Color(20, 20, 20, alpha2));
 
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.X, playerTab.Y + (playerTab.Height / 5),
+                        playerTab.Width, (playerTab.Height / 5) * 2 ),
+                    new Color(playerColors[i].R, playerColors[i].G, playerColors[i].B, alpha));
+
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.X, playerTab.Y + ((playerTab.Height / 5) * 3 ),
+                        playerTab.Width, (playerTab.Height / 5) * 2 ),
+                    new Color(20, 20, 20, alpha2));
+
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.X, playerTab.Y - 1, playerTab.Width, 2), Color.Black);
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.X, playerTab.Bottom - 1, playerTab.Width, 2), Color.Black);
+                sb.Draw(TextureManager.blankTexture,
+                    new Rectangle(playerTab.Right, playerTab.Y - 1, 2, playerTab.Height + 2), Color.Black);
+
+                // icons
                 sb.Draw(TextureManager.face, new Rectangle(playerTab.Right - (playerTab.Width / 10) -
                     ((int)(TextureManager.face.Width * Config.screenR)),
                     playerTab.Top + playerTab.Height / 10,
                     (int)(TextureManager.face.Width * Config.screenR),
                     (int)(TextureManager.face.Height * Config.screenR)),
-                    playerColors[i]);
+                    Color.White);
 
                 sb.Draw(TextureManager.xboxGuide[i], new Rectangle((playerTab.Left + (playerTab.Width / 2)) -
                     ((int)(TextureManager.xboxGuide[i].Width * Config.screenR)),

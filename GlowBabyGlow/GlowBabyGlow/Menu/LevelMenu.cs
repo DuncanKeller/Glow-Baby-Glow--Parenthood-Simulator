@@ -26,7 +26,7 @@ namespace GlowBabyGlow
             if (multi)
             {
                 pos = new Vector2(-Config.screenW * 2, Config.screenH * 2);
-                backdrop = TextureManager.blankTexture;
+                backdrop = TextureManager.bParkPlayground;
             }
             else
             {
@@ -152,13 +152,15 @@ namespace GlowBabyGlow
 
             int w = (int)(TextureManager.paperBoat.Width * Config.screenR);
             int h = (int)(TextureManager.paperBoat.Height * Config.screenR);
-            sb.Begin();
-            sb.Draw(TextureManager.paperBoat, new Rectangle(
-                (int)boatPos + (int)pos.X, 
-                (Config.screenH - h - (Config.screenH / 70)) + (int)pos.Y,
-                w, h), Color.White);
-            sb.End();
-
+            if (!multi)
+            {
+                sb.Begin();
+                sb.Draw(TextureManager.paperBoat, new Rectangle(
+                    (int)boatPos + (int)pos.X,
+                    (Config.screenH - h - (Config.screenH / 70)) + (int)pos.Y,
+                    w, h), Color.White);
+                sb.End();
+            }
             DrawElements(sb, g);
         }
     }

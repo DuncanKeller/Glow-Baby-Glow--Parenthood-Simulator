@@ -72,5 +72,6 @@ Content\Hud\xbox-1.xnb
 Content\Hud\xbox-2.xnb
 Content\Hud\xbox-3.xnb
 Content\Hud\xbox-4.xnb
+Content\Backdrops\multi-level.xnb
 Animation.cs
 Animator.cs

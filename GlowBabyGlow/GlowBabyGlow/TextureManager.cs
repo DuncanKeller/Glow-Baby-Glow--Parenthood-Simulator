@@ -45,6 +45,7 @@ namespace GlowBabyGlow
         public static Texture2D bPark;
         public static Texture2D bParkSky;
         public static Texture2D bParkPond;
+        public static Texture2D bParkPlayground;
         public static Texture2D bParkBandStand;
         public static Texture2D bAlley;
         public static Texture2D bTutorial;
@@ -131,6 +132,7 @@ namespace GlowBabyGlow
             bParkSky = c.Load<Texture2D>("Backdrops\\park-sky");
             bParkPond = c.Load<Texture2D>("Backdrops\\level-select");
             bParkBandStand = c.Load<Texture2D>("Backdrops\\park-multi");
+            bParkPlayground = c.Load<Texture2D>("Backdrops\\multi-level");
             paperBoat = c.Load<Texture2D>("Backdrops\\paper-boat");
             bAlley = c.Load<Texture2D>("Backdrops\\alley");
             bAirport = c.Load<Texture2D>("Backdrops\\airport");

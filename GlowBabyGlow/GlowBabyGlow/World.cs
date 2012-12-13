@@ -265,6 +265,14 @@ namespace GlowBabyGlow
                     }
                 }
 
+                foreach (KeyValuePair<Player, Baby> b in babies.ToList())
+                {
+                    if (b.Value != null)
+                    {
+                        b.Value.Update(dt);
+                    }
+                }
+
                 foreach (Player p in toRemove)
                 {
                     players.Remove(p);
@@ -317,6 +325,7 @@ namespace GlowBabyGlow
                     GameOver.Reset();
                     Reset();
                     Init(levelName);
+                    Automate = false;
                 }
                 else if (Input.HoldingSecondary(0))
                 {

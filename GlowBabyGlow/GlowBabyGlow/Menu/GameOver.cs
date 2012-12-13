@@ -34,6 +34,7 @@ namespace GlowBabyGlow
             position = -Config.screenH;
             rect = new Rectangle(0, -Config.screenH, Config.screenW, Config.screenH);
             world = w;
+            world.Automate = false;
             CheckHighScore();
         }
 

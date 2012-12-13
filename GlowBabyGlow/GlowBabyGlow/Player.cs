@@ -234,11 +234,6 @@ namespace GlowBabyGlow
                     World.Explode();
                 }
 
-                if (Baby != null)
-                {
-                    Baby.Update(dt);
-                }
-
                 if (holdingBaby)
                 {
                     testAnim.SwapSpriteSheet(TextureManager.testBaby);
@@ -246,6 +241,11 @@ namespace GlowBabyGlow
                 else
                 {
                     testAnim.SwapSpriteSheet(TextureManager.testRun);
+
+                    if (Baby != null)
+                    {
+                        Baby.Life = babyLife;
+                    }
                 }
 
                 if (!shaking)
@@ -748,6 +748,26 @@ namespace GlowBabyGlow
                 {
                     Baby = null;
                     holdingBaby = true;
+                }
+                else
+                {
+                    foreach (KeyValuePair<Player, Baby> b in w.Babies)
+                    {
+                        if (b.Value != Baby)
+                        {
+                            if (b.Value != null)
+                            {
+                                if (b.Value.Rect.Intersects(rect)
+                                    && b.Value.ReadyToCatch)
+                                {
+                                    Baby temp = Baby;
+                                    Baby = b.Value;
+                                    w.Babies[b.Key] = temp;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if (alive)
