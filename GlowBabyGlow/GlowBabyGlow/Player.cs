@@ -59,6 +59,8 @@ namespace GlowBabyGlow
         float automateDirectionChange = 0;
         bool automateStartShake = false;
         bool automate = true;
+        int automatePos = 0;
+        bool directed = false;
 
         Powerup currentPowerup = null;
 
@@ -203,6 +205,13 @@ namespace GlowBabyGlow
                 currentPowerup.Activate(this);
             }
             index = i;
+        }
+
+        public void Direct(int pos)
+        {
+            automate = true;
+            directed = true;
+            automatePos = pos;
         }
 
         public override void Update(float dt)
@@ -612,6 +621,18 @@ namespace GlowBabyGlow
             if (automate)
             {
                 AutomatePlayer(dt);
+
+                if (directed)
+                {
+                    if (pos.X < automatePos - width)
+                    {
+                        xInput = 1;
+                    }
+                    else if (pos.X > automatePos + width)
+                    {
+                        xInput = -1;
+                    }
+                }
             }
 
             if (automateLeft)

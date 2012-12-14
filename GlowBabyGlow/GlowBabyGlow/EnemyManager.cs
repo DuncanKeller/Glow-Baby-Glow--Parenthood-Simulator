@@ -53,6 +53,7 @@ namespace GlowBabyGlow
                 {
                     timer = 0;
                     Spawn();
+                    enemyTime -= 0.02f;
                 }
             }
 

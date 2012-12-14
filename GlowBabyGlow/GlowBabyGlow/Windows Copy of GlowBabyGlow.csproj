@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actor.cs" />
+    <Compile Include="AutomatedPlayer.cs" />
     <Compile Include="Baby.cs" />
     <Compile Include="Backdrop.cs" />
     <Compile Include="BackdropObject.cs" />

@@ -9,6 +9,7 @@ namespace GlowBabyGlow
 {
     class MultiMenu : Menu
     {
+        Dictionary<int, Player> players = new Dictionary<int, Player>();
         public Dictionary<int, int> playerinfo = new Dictionary<int, int>();
         public Dictionary<int, int> playertabPos = new Dictionary<int, int>();
         public Dictionary<int, bool> playertabRetract = new Dictionary<int, bool>();
@@ -74,6 +75,12 @@ namespace GlowBabyGlow
                         else
                         {
                             playertabRetract[i] = false;
+                        }
+                        if (!players.Keys.Contains(i))
+                        {
+                            Player p = new Player(new Point(Config.screenW + Player.width,
+                                Config.screenH - Player.height - 10), null, i);
+                            players.Add(i, p);
                         }
                     }
                     else
