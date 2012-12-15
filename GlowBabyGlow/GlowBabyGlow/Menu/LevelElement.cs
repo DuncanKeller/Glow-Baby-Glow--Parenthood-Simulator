@@ -110,6 +110,13 @@ namespace GlowBabyGlow
                     rot += (float)(Math.PI / 4) * (dt / 1000);
                 }
             }
+
+            // hack to get the camera working
+            if (topLeft.X <= 2)
+            {
+                world.Cam.Zoom = 1;
+            }
+
         }
         
         public override void ChangePosition(Vector2 newPos)

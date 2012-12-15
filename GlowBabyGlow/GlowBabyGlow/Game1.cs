@@ -23,7 +23,10 @@ namespace GlowBabyGlow
         bool inMenu = true;
         Thread loadingThread;
         delegate void LoadingDelegate(ContentManager c);
+
         Texture2D blankTexture;
+        Texture2D loadingTexture;
+        float loadingTimer = 0;
 
         public Game1()
         {
@@ -46,12 +49,13 @@ namespace GlowBabyGlow
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             blankTexture = Content.Load<Texture2D>("blank");
+            loadingTexture = Content.Load<Texture2D>("Menu\\loading");
             TextureManager.Init(Content);
             Config.Init();
 
             loadingThread = new Thread(TextureManager.LoadContent);
             loadingThread.Start();
-            DrawLoadingScreen();
+            
 
             loadingThread.Join();
 
@@ -153,14 +157,25 @@ namespace GlowBabyGlow
                 
             }
 
+            if (!TextureManager.loaded)
+            {
+                DrawLoadingScreen();
+            }
+
             base.Draw(gameTime);
         }
 
         void DrawLoadingScreen()
         {
+            loadingTimer += 0.01f;
             spriteBatch.Begin();
             spriteBatch.Draw(blankTexture,
                 new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
+            int size = Config.screenW / 10;
+            Rectangle dest = new Rectangle(Config.screenW - size - 20, Config.screenH - size - 20, size, size);
+            Rectangle src =  new Rectangle(0,0,loadingTexture.Width, loadingTexture.Height);
+            spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer, 
+                new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
             spriteBatch.End();
         }
     }
