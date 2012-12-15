@@ -126,7 +126,7 @@ namespace GlowBabyGlow
 
             foreach (int i in players.Keys)
             {
-
+                players[i].Update(dt);
             }
         }
 
@@ -137,6 +137,11 @@ namespace GlowBabyGlow
             int alpha2 = 120;
 
             sb.Begin();
+
+            foreach (int i in players.Keys)
+            {
+                players[i].Draw(sb);
+            }
 
             foreach (int i in playertabRetract.Keys)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Duncanimation;
 
 namespace GlowBabyGlow
 {
@@ -12,6 +13,8 @@ namespace GlowBabyGlow
         Texture2D texture;
         Vector2 pos;
         Vector2 velocity;
+        Animator anim;
+
         float destination;
         int width;
         int height;
@@ -26,6 +29,14 @@ namespace GlowBabyGlow
             pos = new Vector2(x, Config.screenH - height - 10);
             destination = d;
             velocity = new Vector2();
+            anim = new Animator(TextureManager.testRun, 13, 6);
+            anim.AddAnimation("run", 0, 17, 16.5f, true);
+            anim.AddAnimation("idle", 18, 0, 0, true);
+            anim.AddAnimation("jump", 24, 3, 15, true, 26);
+            anim.AddAnimation("fall", 42, 3, 24, true, 44);
+            anim.AddAnimation("shoot", 30, 10, 24, true);
+            anim.AddAnimation("climb", 48, 8, 30, true);
+            anim.AddAnimation("shake", 60, 17, 200, true);
         }
 
         public void Update(float dt)
@@ -58,12 +69,14 @@ namespace GlowBabyGlow
                 velocity.Y = 0;
                 pos.Y = Config.screenH - height;
             }
+
+            anim.Update(dt);
         }
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(TextureManager.testRun,
-                new Rectangle((int)pos.X, (int)pos.Y, width, height), Color.White);
+            anim.Draw(sb, new Rectangle((int)pos.X, (int)pos.Y, width, height),
+                Color.White, 0, new Vector2(0, 0), SpriteEffects.None);
         }
     }
 }
