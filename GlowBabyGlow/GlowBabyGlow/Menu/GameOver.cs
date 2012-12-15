@@ -81,7 +81,7 @@ namespace GlowBabyGlow
                 }
                 else
                 {
-                    velocity += 65;
+                    velocity += (65 * 2) * Config.screenR;
                 }
 
                 position += velocity * (dt / 1000);

@@ -25,10 +25,10 @@ namespace GlowBabyGlow
             {
                 veloc = new Vector2();
                 texture = t;
-                idealPos = new Vector2(ip.X * (Config.screenW / 100),
-                    ip.Y * (Config.screenH / 100));
-                currentPos = new Vector2(cp.X * (Config.screenW / 100),
-                    cp.Y * (Config.screenH / 100));
+                idealPos = new Vector2(ip.X * (Config.screenW / 100.0f),
+                    ip.Y * (Config.screenH / 100.0f));
+                currentPos = new Vector2(cp.X * (Config.screenW / 100.0f),
+                    cp.Y * (Config.screenH / 100.0f));
             }
 
             public void Update(float dt)
@@ -66,7 +66,7 @@ namespace GlowBabyGlow
             destination = pos;
             backdrop = TextureManager.titleScreen;
             elements.Add(new MenuElement("press start", null, new Vector2(
-                0, Config.screenH - 60), false, this, null));
+                0, Config.screenH - GFont.height), false, this, null));
             c = Color.White;
 
             Init();
@@ -136,11 +136,11 @@ namespace GlowBabyGlow
             {
                 timer = 0;
                 pm.AddParticle(new GlowParticle(new Vector2(
-                    (Config.screenW / 100) * 92,
-                    (Config.screenH / 100) * 17)));
+                    (Config.screenW / 100.0f) * 86,
+                    (Config.screenH / 100.0f) * 15)));
                 pm.AddParticle(new GlowParticle(new Vector2(
-                   (Config.screenW / 100) * 96,
-                   (Config.screenH / 100) * 25)));
+                   (Config.screenW / 100.0f) * 90,
+                   (Config.screenH / 100.0f) * 23)));
             }
         }
 

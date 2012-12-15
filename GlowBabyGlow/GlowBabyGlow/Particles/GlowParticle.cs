@@ -24,6 +24,7 @@ namespace GlowBabyGlow
             c = new Color(100, 255,
                 Config.rand.Next(255));
             size = 10 + Config.rand.Next(30);
+            size = (int)(size * 2 * Config.screenR);
             //c.A = (byte)10;
 
             maxLifetime = 2.6f + (float)(Config.rand.NextDouble() * 2.2); // seconds

@@ -22,11 +22,12 @@ namespace GlowBabyGlow
         float maxSpeed = (int)(350 * Config.screenR);   //pixels per second
         float ladderSpeed = (int)(350 * Config.screenR);
         float ladderSnapX;
+        float ladderThumbSensitivity = 0.4f;
 
         bool holdingBaby = true;
         bool readyToThrow = false;
         bool shaking = false;
-        float throwStrength = (int)(300 * Config.screenR);
+        float throwStrength = (int)(150 * Config.screenR);
         float prevAngle = 0;
         float shakeSpeed = 0;
 
@@ -650,13 +651,16 @@ namespace GlowBabyGlow
                     new Vector2(pos.X, 0),
                     new Vector2(ladderSnapX - (width/2), 0),
                     0.2f).X;
-                if (automateUpLadder)
+                if (automate)
                 {
-                    yInput = 1;
-                }
-                else if (automateDownLadder)
-                {
-                    yInput = -1;
+                    if (automateUpLadder)
+                    {
+                        yInput = 1;
+                    }
+                    else if (automateDownLadder)
+                    {
+                        yInput = -1;
+                    }
                 }
             }
 
@@ -665,7 +669,7 @@ namespace GlowBabyGlow
                 xInput = 0;
                 if (onLadder && testAnim.CurrentAnimation == "climb")
                 {
-                    testAnim.SetSpeed(velocity.Y / 10);
+                    testAnim.SetSpeed(velocity.Y / 13);
                 }
             }
             else
@@ -818,9 +822,9 @@ namespace GlowBabyGlow
                 {
                     if (l.LadderAbove(hitRect))
                     {
-                        if (!onLadder)
+                        if (!onLadder && !Shaking)
                         {
-                            if (Input.GetThumbs(index).Y > 0)
+                            if (Input.GetThumbs(index).Y > ladderThumbSensitivity)
                             {
                                 onLadder = true;
                                 velocity.X = 0;
@@ -839,9 +843,9 @@ namespace GlowBabyGlow
                 {
                     if (l.LadderBelow(hitRect))
                     {
-                        if (!onLadder)
+                        if (!onLadder && !Shaking)
                         {
-                            if (Input.GetThumbs(index).Y < 0)
+                            if (Input.GetThumbs(index).Y < -ladderThumbSensitivity)
                             {
                                 onLadder = true;
                                 velocity.X = 0;

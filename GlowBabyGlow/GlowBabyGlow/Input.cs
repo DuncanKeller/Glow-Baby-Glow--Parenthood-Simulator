@@ -11,7 +11,7 @@ namespace GlowBabyGlow
 
     class Input
     {
-        public static bool keys = false;
+        public static bool keys = true;
         public static int defaultIndex = 0;
         static event InputChangeHandler Jump;
         

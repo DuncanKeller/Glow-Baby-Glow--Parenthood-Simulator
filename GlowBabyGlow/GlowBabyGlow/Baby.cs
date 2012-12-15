@@ -82,7 +82,7 @@ namespace GlowBabyGlow
                 (int)(width * Config.screenR), 
                 (int)(height * Config.screenR));
             velocity.Y = (int)(-350 * Config.screenR);
-            velocity.X = (int)(xVel * Config.screenR);
+            velocity.X = (int)(xVel);
             rotSpeed = (float)((Math.PI) -(Config.rand.NextDouble() * Math.PI * 2));
             babyLife = maxBabyLife;
             this.index = index;
