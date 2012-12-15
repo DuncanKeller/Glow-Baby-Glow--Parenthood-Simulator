@@ -52,11 +52,18 @@ namespace GlowBabyGlow
 
             pos.X += velocity.X;
             pos.Y += velocity.Y;
+
+            if (pos.Y + height > Config.screenH)
+            {
+                velocity.Y = 0;
+                pos.Y = Config.screenH - height;
+            }
         }
 
         public void Draw(SpriteBatch sb)
         {
-
+            sb.Draw(TextureManager.testRun,
+                new Rectangle((int)pos.X, (int)pos.Y, width, height), Color.White);
         }
     }
 }

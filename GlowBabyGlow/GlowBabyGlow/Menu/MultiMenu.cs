@@ -9,7 +9,7 @@ namespace GlowBabyGlow
 {
     class MultiMenu : Menu
     {
-        Dictionary<int, Player> players = new Dictionary<int, Player>();
+        Dictionary<int, AutomatedPlayer> players = new Dictionary<int, AutomatedPlayer>();
         public Dictionary<int, int> playerinfo = new Dictionary<int, int>();
         public Dictionary<int, int> playertabPos = new Dictionary<int, int>();
         public Dictionary<int, bool> playertabRetract = new Dictionary<int, bool>();
@@ -30,7 +30,7 @@ namespace GlowBabyGlow
             playerColors.Add(Color.Green);
             playerColors.Add(Color.Red);
             playerColors.Add(Color.Blue);
-            playerColors.Add(Color.Pink);
+            playerColors.Add(Color.Yellow);
         }
 
         public int[] GetPlayers()
@@ -78,8 +78,8 @@ namespace GlowBabyGlow
                         }
                         if (!players.Keys.Contains(i))
                         {
-                            Player p = new Player(new Point(Config.screenW + Player.width,
-                                Config.screenH - Player.height - 10), null, i);
+                            AutomatedPlayer p = new AutomatedPlayer(Config.screenW + Player.width,
+                                (Config.screenW / 6) * (i + 1));
                             players.Add(i, p);
                         }
                     }
@@ -122,6 +122,11 @@ namespace GlowBabyGlow
                     playertabPos[i] = (int)Vector2.Lerp(new Vector2(playertabPos[i], 0),
                         new Vector2(Config.screenW / 5, 0), 0.2f).X;
                 }
+            }
+
+            foreach (int i in players.Keys)
+            {
+
             }
         }
 

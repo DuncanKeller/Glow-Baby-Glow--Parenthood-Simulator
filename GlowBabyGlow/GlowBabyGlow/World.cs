@@ -461,7 +461,7 @@ namespace GlowBabyGlow
                     pauseCurtain = Vector2.Lerp(new Vector2(pauseCurtain, 0), 
                         new Vector2((Config.screenW / 2) + (Config.screenW / 50), 0), 0.045f).X;
                 }
-                int width = TextureManager.curtain.Width / 2;
+                int width = Config.screenW / 2;
 
                 sb.Draw(TextureManager.curtain, new Rectangle((int)pauseCurtain - width, 0, width, Config.screenH), Color.White);
                 sb.Draw(TextureManager.curtain, new Rectangle(Config.screenW - (int)pauseCurtain, 0, width, Config.screenH), 
