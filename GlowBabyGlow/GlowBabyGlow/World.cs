@@ -258,11 +258,6 @@ namespace GlowBabyGlow
                 {
                     p.Update(dt);
                     p.Collision(ref tiles, ref ladders);
-
-                    if (p.Lives == 0)
-                    {
-                        //toRemove.Add(p);
-                    }
                 }
 
                 foreach (KeyValuePair<Player, Baby> b in babies.ToList())
@@ -318,7 +313,7 @@ namespace GlowBabyGlow
                 GameOver.Update(dt);
             }
 
-            if (GameOver.Initialized)
+            if (GameOver.ReadyToContinue)
             {
                 if (Input.HoldingPrimary(0))
                 {
@@ -428,8 +423,6 @@ namespace GlowBabyGlow
             particles.Draw(sb);
 
             hud.Draw(sb);
-
-            
 
             if (Backdrop.Stage == "tutorial")
             {

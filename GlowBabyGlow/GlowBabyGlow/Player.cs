@@ -634,6 +634,17 @@ namespace GlowBabyGlow
                         xInput = -1;
                     }
                 }
+
+                if (wallLeft)
+                {
+                    automateLeft = false;
+                    automateRight = true;
+                }
+                if (wallRight)
+                {
+                    automateLeft = true;
+                    automateRight = false;
+                }
             }
 
             if (automateLeft)
@@ -857,7 +868,6 @@ namespace GlowBabyGlow
                         }
                     }
                 }
-
             }
             else
             {
@@ -897,7 +907,6 @@ namespace GlowBabyGlow
                             {
                                 intersectingLadder = true;
                             }
-                            
                         }
                         if (!intersectingLadder)
                         {
@@ -936,7 +945,7 @@ namespace GlowBabyGlow
                 }
                 if (!onLadder)
                 {
-                    if (Input.GetThumbs(index).X < 0)
+                    if (Input.GetThumbs(index).X < 0 || automate)
                     {
                         
                         int overlappingRight = t.OverlappingRight(hitRect);
@@ -963,7 +972,7 @@ namespace GlowBabyGlow
                             }
                         }
                     }
-                    if (Input.GetThumbs(index).X > 0)
+                    if (Input.GetThumbs(index).X > 0 || automate)
                     {
                         int overlappingLeft = t.OverlappingLeft(hitRect);
                         if (overlappingLeft > 0)

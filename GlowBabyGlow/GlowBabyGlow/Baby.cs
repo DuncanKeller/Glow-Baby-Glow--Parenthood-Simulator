@@ -111,7 +111,7 @@ namespace GlowBabyGlow
                 if (velocity.Y > 0)
                 {
                     float distance = Vector2.Distance(
-                        new Vector2(t.Rect.Center.X, t.Rect.Center.Y), pos);
+                        new Vector2(t.Rect.Center.X, t.Rect.Top), pos);
                     if (distance < closestTile)
                     {
                         closestTile = distance;

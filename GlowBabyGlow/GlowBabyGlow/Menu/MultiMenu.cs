@@ -82,6 +82,10 @@ namespace GlowBabyGlow
                                 (Config.screenW / 6) * (i + 1));
                             players.Add(i, p);
                         }
+                        else
+                        {
+                            players[i].SetDest((Config.screenW / 6) * (i + 1));
+                        }
                     }
                     else
                     {
@@ -99,6 +103,7 @@ namespace GlowBabyGlow
                     {
                         playerinfo.Remove(i);
                         playertabRetract[i] = true;
+                        players[i].SetDest(Config.screenW + (Config.screenW / 20));
                     }
                     else
                     {
@@ -140,7 +145,7 @@ namespace GlowBabyGlow
 
             foreach (int i in players.Keys)
             {
-                players[i].Draw(sb);
+                players[i].Draw(sb, pos);
             }
 
             foreach (int i in playertabRetract.Keys)
@@ -187,7 +192,6 @@ namespace GlowBabyGlow
                     (int)(TextureManager.face.Height * Config.screenR),
                     (int)(TextureManager.face.Height * Config.screenR)),
                     Color.White);
-
              }
 
             sb.End();

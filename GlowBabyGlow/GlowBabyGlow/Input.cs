@@ -130,7 +130,11 @@ namespace GlowBabyGlow
         {
             if (keys)
             {
-                return keyboard.IsKeyDown(primary);
+                if (index == 0)
+                {
+                    return keyboard.IsKeyDown(primary);
+                }
+                return false;
             }
             else
             {
@@ -142,7 +146,11 @@ namespace GlowBabyGlow
         {
             if (keys)
             {
-                return prevkeyboard.IsKeyDown(primary);
+                if (index == 0)
+                {
+                    return prevkeyboard.IsKeyDown(primary);
+                }
+                return false;
             }
             else
             {
@@ -154,7 +162,11 @@ namespace GlowBabyGlow
         {
             if (keys)
             {
-                return keyboard.IsKeyDown(secondary);
+                if (index == 0)
+                {
+                    return keyboard.IsKeyDown(secondary);
+                }
+                return false;
             }
             else
             {
@@ -166,7 +178,11 @@ namespace GlowBabyGlow
         {
             if (keys)
             {
-                return prevkeyboard.IsKeyDown(secondary);
+                if (index == 0)
+                {
+                    return prevkeyboard.IsKeyDown(secondary);
+                }
+                return false;
             }
             else
             {
@@ -189,8 +205,6 @@ namespace GlowBabyGlow
             {
                 world.Paused = !world.Paused;
             }
-
-
 
             if (!world.Paused)
             {

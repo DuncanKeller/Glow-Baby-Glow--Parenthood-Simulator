@@ -25,6 +25,14 @@ namespace GlowBabyGlow
             get { return initialized; }
         }
 
+        public static bool ReadyToContinue
+        {
+            get
+            {
+                return (initialized == true && rect.Bottom > Config.screenH / 2);
+            }
+        }
+
         public static void Init(World w)
         {
             newScore = false;
