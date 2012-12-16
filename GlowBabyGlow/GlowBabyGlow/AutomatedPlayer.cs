@@ -39,30 +39,43 @@ namespace GlowBabyGlow
             anim.AddAnimation("shake", 60, 17, 200, true);
         }
 
+        public void SetDest(float d)
+        {
+            destination = d;
+        }
+
         public void Update(float dt)
         {
+            float xMod = 1;
+            float distance = destination - pos.X;
+            if (Math.Abs(distance) < 70)
+            {
+                xMod = Math.Abs(distance / 70);
+            }
+
             velocity.Y += gravity * (dt / 1000);
 
             if (pos.X < destination - width)
             {
-                velocity.X += acceleration;
+                velocity.X += acceleration * xMod;
             }
             else if (pos.X > destination + width)
             {
-                velocity.X -= acceleration;
+                velocity.X -= acceleration * xMod;
+            }
+            
+
+            if (velocity.X > maxSpeed * xMod)
+            {
+                velocity.X = maxSpeed * xMod;
+            }
+            if (velocity.X < -maxSpeed * xMod)
+            {
+                velocity.X = -maxSpeed * xMod;
             }
 
-            if (velocity.X > maxSpeed)
-            {
-                velocity.X = maxSpeed;
-            }
-            if (velocity.X < -maxSpeed)
-            {
-                velocity.X = -maxSpeed;
-            }
-
-            pos.X += velocity.X;
-            pos.Y += velocity.Y;
+            pos.X += velocity.X * (dt / 1000);
+            pos.Y += velocity.Y * (dt / 1000);
 
             if (pos.Y + height > Config.screenH)
             {
@@ -70,13 +83,29 @@ namespace GlowBabyGlow
                 pos.Y = Config.screenH - height;
             }
 
+            if (Math.Abs(velocity.X) > maxSpeed / 10)
+            {
+                anim.Play("run");
+            }
+            else
+            {
+                anim.Play("idle");
+            }
+
             anim.Update(dt);
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb, Vector2 camPos)
         {
-            anim.Draw(sb, new Rectangle((int)pos.X, (int)pos.Y, width, height),
-                Color.White, 0, new Vector2(0, 0), SpriteEffects.None);
+            SpriteEffects s = SpriteEffects.None;
+
+            if (velocity.X < 0)
+            {
+                s = SpriteEffects.FlipHorizontally;
+            }
+
+            anim.Draw(sb, new Rectangle((int)(pos.X + camPos.X), (int)(pos.Y + camPos.Y), width, height),
+                Color.White, 0, new Vector2(0, 0), s);
         }
     }
 }
