@@ -46,7 +46,7 @@ namespace GlowBabyGlow
 
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.screenH;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = Config.fullScrn;
             graphics.ApplyChanges();
             blankTexture = Content.Load<Texture2D>("blank");
             loadingTexture = Content.Load<Texture2D>("Menu\\loading");

@@ -89,7 +89,7 @@ namespace GlowBabyGlow
                     }
                     else
                     {
-                        if (playerinfo.Count > 1)
+                        if (playerinfo.Count > 1 || Config.poop) 
                         {
                             MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "coop");
                         }

@@ -7,36 +7,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
-    enum GameType
-    {
-        survival,
-        vsSurvival,
-        hotPotato,
-        theif
-    }
-
-    class GametypeCoopMenu : Menu
+    class GametypeVsMenu : Menu
     {
         List<MenuElement> gameTypes = new List<MenuElement>();
         int index = 0;
-       
-        public GametypeCoopMenu(Game1 g)
+
+        public GametypeVsMenu(Game1 g)
             : base(g)
         {
-            pos = new Vector2(-Config.screenW*2, Config.screenH * 2);
+            pos = new Vector2(-Config.screenW * 3, Config.screenH * 2);
             backdrop = TextureManager.bPark;
-            elements.Add(new MenuElement("cooperative", null, new Vector2(
-                Config.screenW - (GFont.width * "cooperative".Length) - 10, 10), true, this, delegate() { }));
+            elements.Add(new MenuElement("competitive", null, new Vector2(
+                10, 10), true, this, delegate() { }));
             c = Color.White;
             destination = pos;
             //elements[0].Selected = true;
 
-            gameTypes.Add(new MenuElement("survival", null, new Vector2(
-                (Config.screenW / 3) + 10, (Config.screenH / 20) * 4),
-                true, this, delegate() { MenuSystem.gameType = GameType.survival; }));
-            gameTypes.Add(new MenuElement("hot potato", null, new Vector2(
-                (Config.screenW / 3) + 10, (Config.screenH / 20) * 7),
-                true, this, delegate() { MenuSystem.gameType = GameType.hotPotato; }));
+            gameTypes.Add(new MenuElement("vs survival", null, new Vector2(
+                 ((Config.screenW / 3) * 2) - ("vs survival".Length * GFont.width) - 10, (Config.screenH / 20) * 4),
+                true, this, delegate() { MenuSystem.gameType = GameType.vsSurvival; }));
+            gameTypes.Add(new MenuElement("theif", null, new Vector2(
+                 ((Config.screenW / 3) * 2) - ("theif".Length * GFont.width) - 10, (Config.screenH / 20) * 7),
+                true, this, delegate() { MenuSystem.gameType = GameType.theif; }));
 
         }
 
@@ -47,7 +39,7 @@ namespace GlowBabyGlow
             if (Input.HoldingSecondary(Input.defaultIndex) &&
                   !Input.HoldingSecondaryPrev(Input.defaultIndex))
             {
-                MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "multi");
+                MenuSystem.SwitchMenu(new Vector2(-Config.screenW * 2, 0), "multi");
             }
 
             foreach (MenuElement m in gameTypes)
@@ -68,11 +60,10 @@ namespace GlowBabyGlow
                 index--;
             }
 
-
-            if (Input.GetThumbs(Input.defaultIndex).X < -0.2 &&
-                Input.GetPrevThumbs(Input.defaultIndex).X >= -0.2)
+            if (Input.GetThumbs(Input.defaultIndex).X > 0.2 &&
+                Input.GetPrevThumbs(Input.defaultIndex).X <= 0.2)
             {
-                MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "versus");
+                MenuSystem.SwitchMenu(new Vector2(-Config.screenW , 0), "coop");
             }
 
         }
@@ -83,13 +74,11 @@ namespace GlowBabyGlow
 
             sb.Begin();
 
-            DrawRegion(sb, 0, 0, Config.screenW, Config.screenH / 8, 
-                Color.MediumPurple);
-            DrawRegion(sb, Config.screenW / 3, Config.screenH / 8,
-                Config.screenW - (Config.screenW / 3), Config.screenH - (Config.screenH / 8), 
-                Color.MediumPurple);
-            int w = (int)(Config.screenW / 6);
-            DrawGradient(sb, Color.Red, Color.MediumPurple, -w / 2, 0, w, Config.screenH / 8);
+            DrawRegion(sb, 0, 0, Config.screenW, Config.screenH / 8,
+                Color.Red);
+            DrawRegion(sb, 0, Config.screenH / 8,
+                Config.screenW - (Config.screenW / 3), Config.screenH - (Config.screenH / 8),
+                Color.Red);
 
             sb.End();
 
@@ -112,7 +101,7 @@ namespace GlowBabyGlow
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 (int)x + (int)pos.X, (int)y + (int)pos.Y,
                 (int)w, (int)h), c);
-                
+
         }
 
         public void DrawGradient(SpriteBatch sb, Color c1, Color c2, float x, float y, float w, float h)

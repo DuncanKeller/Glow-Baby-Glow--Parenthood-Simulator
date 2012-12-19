@@ -40,6 +40,7 @@ namespace GlowBabyGlow
             menus.Add("single-multi", new SingleMultiMenu(game));
             menus.Add("level", new levelMenu(game, false));
             menus.Add("multi", new MultiMenu(game));
+            menus.Add("versus", new GametypeVsMenu(game));
             menus.Add("coop", new GametypeCoopMenu(game));
             menus.Add("multi-level", new levelMenu(game, true));
 

@@ -95,6 +95,7 @@
     <Compile Include="Menu\BlankMenu.cs" />
     <Compile Include="Menu\GameOver.cs" />
     <Compile Include="Menu\GametypeCoopMenu.cs" />
+    <Compile Include="Menu\GametypeVsMenu.cs" />
     <Compile Include="Menu\LevelElement.cs" />
     <Compile Include="Menu\LevelMenu.cs" />
     <Compile Include="Menu\Menu.cs" />

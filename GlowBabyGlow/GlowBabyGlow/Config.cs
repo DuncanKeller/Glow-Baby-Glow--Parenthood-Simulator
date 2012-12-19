@@ -17,6 +17,7 @@ namespace GlowBabyGlow
         public static int screenW = (int)(1920);
         public static int screenH = (int)(1080);
         public static float screenR;
+        public static bool fullScrn = false;
         public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();
@@ -25,6 +26,8 @@ namespace GlowBabyGlow
         static string filename = "save.dat";
         static bool xbox = false;
         static StorageContainer storageContainer;
+
+        public static bool poop = true; // delete this
 
 
         public static void Init()

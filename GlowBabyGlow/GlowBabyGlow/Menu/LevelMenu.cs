@@ -25,7 +25,7 @@ namespace GlowBabyGlow
             this.multi = multi;
             if (multi)
             {
-                pos = new Vector2(-Config.screenW * 3, Config.screenH * 2);
+                pos = new Vector2(-Config.screenW * 4, Config.screenH * 2);
                 backdrop = TextureManager.bParkPlayground;
             }
             else
