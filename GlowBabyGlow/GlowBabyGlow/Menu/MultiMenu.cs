@@ -91,7 +91,7 @@ namespace GlowBabyGlow
                     {
                         if (playerinfo.Count > 1)
                         {
-                            MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "multi-level");
+                            MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "coop");
                         }
                     }
                 }

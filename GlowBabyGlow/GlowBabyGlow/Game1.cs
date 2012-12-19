@@ -22,7 +22,7 @@ namespace GlowBabyGlow
         World world = new World();
         bool inMenu = true;
         Thread loadingThread;
-        delegate void LoadingDelegate(ContentManager c);
+        Thread loadingScreenThread;
 
         Texture2D blankTexture;
         Texture2D loadingTexture;
@@ -46,13 +46,15 @@ namespace GlowBabyGlow
 
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.screenH;
-           // graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             blankTexture = Content.Load<Texture2D>("blank");
             loadingTexture = Content.Load<Texture2D>("Menu\\loading");
             TextureManager.Init(Content);
             Config.Init();
 
+            loadingScreenThread = new Thread(DrawLoadingScreen);
+            loadingScreenThread.Start();
             loadingThread = new Thread(TextureManager.LoadContent);
             loadingThread.Start();
             
@@ -138,45 +140,48 @@ namespace GlowBabyGlow
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // menu draw
-            if (inMenu)
+            if (TextureManager.loaded)
             {
-                MenuSystem.Draw(spriteBatch, graphics.GraphicsDevice);
+                GraphicsDevice.Clear(new Color(158, 252, 254));
+
+                // menu draw
+                if (inMenu)
+                {
+                    MenuSystem.Draw(spriteBatch, graphics.GraphicsDevice);
+                }
+                else
+                {
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                     DepthStencilState.Default, RasterizerState.CullNone, null,
+                     world.Cam.get_transformation(graphics.GraphicsDevice));
+
+                    world.Draw(spriteBatch);
+
+                    spriteBatch.End();
+
+                }
             }
-            else
-            {
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
-                 DepthStencilState.Default, RasterizerState.CullNone, null,
-                 world.Cam.get_transformation(graphics.GraphicsDevice));
-
-                world.Draw(spriteBatch);
-
-                spriteBatch.End();
-                
-            }
-
-            if (!TextureManager.loaded)
-            {
-                DrawLoadingScreen();
-            }
-
+          
             base.Draw(gameTime);
         }
 
         void DrawLoadingScreen()
         {
-            loadingTimer += 0.01f;
-            spriteBatch.Begin();
-            spriteBatch.Draw(blankTexture,
-                new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
-            int size = Config.screenW / 10;
-            Rectangle dest = new Rectangle(Config.screenW - size - 20, Config.screenH - size - 20, size, size);
-            Rectangle src =  new Rectangle(0,0,loadingTexture.Width, loadingTexture.Height);
-            spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer, 
-                new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
-            spriteBatch.End();
+            if (!TextureManager.loaded)
+            {
+                GraphicsDevice.Clear(new Color(158, 252, 254));
+
+                loadingTimer += 0.01f;
+                spriteBatch.Begin();
+                spriteBatch.Draw(blankTexture,
+                    new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
+                int size = Config.screenW / 10;
+                Rectangle dest = new Rectangle(Config.screenW - size - 20, Config.screenH - size - 20, size, size);
+                Rectangle src = new Rectangle(0, 0, loadingTexture.Width, loadingTexture.Height);
+                spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer,
+                    new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
+                spriteBatch.End();
+            }
         }
     }
 }

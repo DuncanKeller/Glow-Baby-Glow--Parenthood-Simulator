@@ -70,14 +70,24 @@ namespace GlowBabyGlow
 
         public virtual void Draw(SpriteBatch sb, GraphicsDevice g)
         {
+            RealDraw(sb, g, Color.White);
+        }
+
+        public virtual void Draw(SpriteBatch sb, GraphicsDevice g, Color c)
+        {
+            RealDraw(sb, g, c);
+        }
+
+        public void RealDraw(SpriteBatch sb, GraphicsDevice g, Color c)
+        {
             sb.Begin();
 
             int s = selected ? 100 : 0;
             if (texture != null)
             {
-                sb.Draw(texture, new Rectangle((int)(pos.X + m.Position.X), (int)(pos.Y + m.Position.Y), width, height), Color.White);
+                sb.Draw(texture, new Rectangle((int)(pos.X + m.Position.X), (int)(pos.Y + m.Position.Y), width, height), c);
             }
-            font.Draw(sb, pos + m.Position, text, Color.White);
+            font.Draw(sb, pos + m.Position, text, c);
 
             sb.End();
         }
