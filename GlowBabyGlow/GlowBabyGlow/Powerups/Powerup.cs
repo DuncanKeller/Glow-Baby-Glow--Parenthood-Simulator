@@ -17,7 +17,7 @@ namespace GlowBabyGlow
         protected Texture2D icon;
         protected string description;
 
-        float maxAlive = 12;
+        float maxAlive = 20;
         bool active = false;
         float aliveTimer = 0;
         protected Player p;

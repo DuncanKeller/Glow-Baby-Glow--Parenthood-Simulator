@@ -11,12 +11,16 @@ namespace GlowBabyGlow
     {
         List<MenuElement> gameTypes = new List<MenuElement>();
         int index = 0;
+        MenuElement description;
+        float fingerOffset = 0;
+        float fingerTimer = 0;
+        bool fingerDirectionRight = false;
 
         public GametypeVsMenu(Game1 g)
             : base(g)
         {
             pos = new Vector2(-Config.screenW * 3, Config.screenH * 2);
-            backdrop = TextureManager.bPark;
+            backdrop = TextureManager.bParkWildernessLeft;
             elements.Add(new MenuElement("competitive", null, new Vector2(
                 10, 10), true, this, delegate() { }));
             c = Color.White;
@@ -24,11 +28,16 @@ namespace GlowBabyGlow
             //elements[0].Selected = true;
 
             gameTypes.Add(new MenuElement("vs survival", null, new Vector2(
-                 ((Config.screenW / 3) * 2) - ("vs survival".Length * GFont.width) - 10, (Config.screenH / 20) * 4),
+                 ((Config.screenW / 3) * 2) - ("vs survival".Length * GFont.width) - 10, ((Config.screenH / 20) * 4) + (Config.screenH / 10)),
                 true, this, delegate() { MenuSystem.gameType = GameType.vsSurvival; }));
             gameTypes.Add(new MenuElement("theif", null, new Vector2(
-                 ((Config.screenW / 3) * 2) - ("theif".Length * GFont.width) - 10, (Config.screenH / 20) * 7),
+                 ((Config.screenW / 3) * 2) - ("theif".Length * GFont.width) - 10, ((Config.screenH / 20) * 7) + (Config.screenH / 10)),
                 true, this, delegate() { MenuSystem.gameType = GameType.theif; }));
+
+            description = new MenuElement("", null, new Vector2((Config.screenW / 3) * 2 + (Config.screenW / 20), (Config.screenH / 20) * 7),
+               false, this, delegate() { });
+            description.SetToDescr();
+            UpdateDescr();
 
         }
 
@@ -52,12 +61,34 @@ namespace GlowBabyGlow
                 index < gameTypes.Count - 1)
             {
                 index++;
+                UpdateDescr();
             }
             else if (Input.GetThumbs(Input.defaultIndex).Y > 0.2 &&
                Input.GetPrevThumbs(Input.defaultIndex).Y <= 0.2 &&
                 index > 0)
             {
                 index--;
+                UpdateDescr();
+            }
+
+            fingerTimer += dt / 1000;
+            if (fingerDirectionRight)
+            {
+                fingerOffset += (dt / 1000) * 150;
+                if (fingerTimer > 0.4)
+                {
+                    fingerDirectionRight = !fingerDirectionRight;
+                    fingerTimer -= 0.4f;
+                }
+            }
+            else
+            {
+                fingerOffset -= (dt / 1000) * 75;
+                if (fingerTimer > 0.8)
+                {
+                    fingerDirectionRight = !fingerDirectionRight;
+                    fingerTimer -= 0.8f;
+                }
             }
 
             if (Input.GetThumbs(Input.defaultIndex).X > 0.2 &&
@@ -68,10 +99,22 @@ namespace GlowBabyGlow
 
         }
 
+        public void UpdateDescr()
+        {
+            if (index == 0)
+            {
+                description.Text = "players face off to see who can stay alive the longest";
+            }
+            else if (index == 1)
+            {
+                description.Text = "only one baby- steal it away and hold onto it as long as you can";
+            }
+        }
+
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
             base.Draw(sb, g);
-
+            /*
             sb.Begin();
 
             DrawRegion(sb, 0, 0, Config.screenW, Config.screenH / 8,
@@ -81,7 +124,7 @@ namespace GlowBabyGlow
                 Color.Red);
 
             sb.End();
-
+            */
             base.DrawElements(sb, g);
 
             foreach (MenuElement m in gameTypes)
@@ -89,10 +132,17 @@ namespace GlowBabyGlow
                 m.Draw(sb, g, new Color(250, 250, 250));
             }
 
+            description.Draw(sb, g);
+
             sb.Begin();
-            sb.Draw(TextureManager.babyGlow, new Rectangle(
-                (int)(gameTypes[index].Position.X + pos.X), (int)(gameTypes[index].Position.Y + pos.Y), 50, 50),
-                Color.Yellow);
+            sb.Draw(TextureManager.finger, new Rectangle(
+                (int)(gameTypes[index].Position.X + pos.X) + (int)(fingerOffset) - (int)(TextureManager.finger.Width * Config.screenR),
+                (int)(gameTypes[index].Position.Y + pos.Y) + (TextureManager.finger.Height / 2),
+                (int)(TextureManager.finger.Width * Config.screenR), (int)(TextureManager.finger.Height * Config.screenR)),
+                new Rectangle(0, 0, TextureManager.finger.Width, TextureManager.finger.Height),
+                Color.White, /* rot */ 0,
+                new Vector2(TextureManager.finger.Width / 6, TextureManager.finger.Height / 2),
+                SpriteEffects.None, 0);
             sb.End();
         }
 

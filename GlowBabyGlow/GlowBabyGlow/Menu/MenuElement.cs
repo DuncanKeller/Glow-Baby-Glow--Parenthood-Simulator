@@ -19,14 +19,15 @@ namespace GlowBabyGlow
         int width;
         int height;
         protected Menu m;
-
         bool selected = false;
-
         MenuAction action;
+
+        bool descriptionflag = false;
 
         public string Text
         {
             get { return text; }
+            set { text = value; }
         }
 
         public Vector2 Position
@@ -58,6 +59,12 @@ namespace GlowBabyGlow
             height = h;
         }
 
+        public void SetToDescr()
+        {
+            descriptionflag = true;
+            font.SetTexture(TextureManager.smallFont);
+        }
+
         public virtual void ChangePosition(Vector2 newPos)
         {
             destination = newPos;
@@ -87,8 +94,14 @@ namespace GlowBabyGlow
             {
                 sb.Draw(texture, new Rectangle((int)(pos.X + m.Position.X), (int)(pos.Y + m.Position.Y), width, height), c);
             }
-            font.Draw(sb, pos + m.Position, text, c);
-
+            if (descriptionflag)
+            {
+                font.DrawDescrition(sb, pos + m.Position, text, new Color(254, 254, 254), ((Config.screenW / 3) - (Config.screenW / 8)) - (Config.screenW / 40));
+            }
+            else
+            {
+                font.Draw(sb, pos + m.Position, text, c);
+            }
             sb.End();
         }
     }

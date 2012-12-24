@@ -19,12 +19,16 @@ namespace GlowBabyGlow
     {
         List<MenuElement> gameTypes = new List<MenuElement>();
         int index = 0;
+        MenuElement description;
+        float fingerOffset = 0;
+        float fingerTimer = 0;
+        bool fingerDirectionRight = true;
        
         public GametypeCoopMenu(Game1 g)
             : base(g)
         {
             pos = new Vector2(-Config.screenW*2, Config.screenH * 2);
-            backdrop = TextureManager.bPark;
+            backdrop = TextureManager.bParkWildernessRight;
             elements.Add(new MenuElement("cooperative", null, new Vector2(
                 Config.screenW - (GFont.width * "cooperative".Length) - 10, 10), true, this, delegate() { }));
             c = Color.White;
@@ -32,11 +36,16 @@ namespace GlowBabyGlow
             //elements[0].Selected = true;
 
             gameTypes.Add(new MenuElement("survival", null, new Vector2(
-                (Config.screenW / 3) + 10, (Config.screenH / 20) * 4),
+                (Config.screenW / 3) + 10, ((Config.screenH / 20) * 4) + (Config.screenH / 10)),
                 true, this, delegate() { MenuSystem.gameType = GameType.survival; }));
             gameTypes.Add(new MenuElement("hot potato", null, new Vector2(
-                (Config.screenW / 3) + 10, (Config.screenH / 20) * 7),
+                (Config.screenW / 3) + 10, ((Config.screenH / 20) * 7) + (Config.screenH / 10)),
                 true, this, delegate() { MenuSystem.gameType = GameType.hotPotato; }));
+
+            description = new MenuElement("", null, new Vector2(20, (Config.screenH / 20) * 7),
+                false, this, delegate() { });
+            description.SetToDescr();
+            UpdateDescr();
 
         }
 
@@ -60,12 +69,34 @@ namespace GlowBabyGlow
                 index < gameTypes.Count - 1)
             {
                 index++;
+                UpdateDescr();
             }
             else if (Input.GetThumbs(Input.defaultIndex).Y > 0.2 &&
                Input.GetPrevThumbs(Input.defaultIndex).Y <= 0.2 &&
                 index > 0)
             {
                 index--;
+                UpdateDescr();
+            }
+
+            fingerTimer += dt / 1000;
+            if (fingerDirectionRight)
+            {
+                fingerOffset += (dt / 1000) * 75;
+                if (fingerTimer > 0.8)
+                {
+                    fingerDirectionRight = !fingerDirectionRight;
+                    fingerTimer -= 0.8f;
+                }
+            }
+            else
+            {
+                fingerOffset -= (dt / 1000) * 150;
+                if (fingerTimer > 0.4)
+                {
+                    fingerDirectionRight = !fingerDirectionRight;
+                    fingerTimer -= 0.4f;
+                }
             }
 
 
@@ -77,10 +108,22 @@ namespace GlowBabyGlow
 
         }
 
+        public void UpdateDescr()
+        {
+            if (index == 0)
+            {
+                description.Text = "players must work together to get coins and stay alive";
+            }
+            else if (index == 1)
+            {
+                description.Text = "similar to survival, but there is only one baby- when thrown, a different player must catch";
+            }
+        }
+
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
             base.Draw(sb, g);
-
+            /*
             sb.Begin();
 
             DrawRegion(sb, 0, 0, Config.screenW, Config.screenH / 8, 
@@ -92,7 +135,7 @@ namespace GlowBabyGlow
             DrawGradient(sb, Color.Red, Color.MediumPurple, -w / 2, 0, w, Config.screenH / 8);
 
             sb.End();
-
+            */
             base.DrawElements(sb, g);
 
             foreach (MenuElement m in gameTypes)
@@ -100,10 +143,17 @@ namespace GlowBabyGlow
                 m.Draw(sb, g, new Color(250, 250, 250));
             }
 
+            description.Draw(sb, g);
+
             sb.Begin();
-            sb.Draw(TextureManager.babyGlow, new Rectangle(
-                (int)(gameTypes[index].Position.X + pos.X), (int)(gameTypes[index].Position.Y + pos.Y), 50, 50),
-                Color.Yellow);
+            sb.Draw(TextureManager.finger, new Rectangle(
+                (int)(gameTypes[index].Position.X + pos.X) + gameTypes[index].Text.Length * GFont.width + (int)(TextureManager.finger.Width * Config.screenR) + (int)(fingerOffset), 
+                (int)(gameTypes[index].Position.Y + pos.Y) + (TextureManager.finger.Height / 2),
+                (int)(TextureManager.finger.Width * Config.screenR), (int)(TextureManager.finger.Height * Config.screenR)),
+                new Rectangle(0,0, TextureManager.finger.Width, TextureManager.finger.Height),
+                Color.White, /* rot */ 0,
+                new Vector2(TextureManager.finger.Width - TextureManager.finger.Width / 6, TextureManager.finger.Height / 2), 
+                SpriteEffects.FlipHorizontally, 0);
             sb.End();
         }
 

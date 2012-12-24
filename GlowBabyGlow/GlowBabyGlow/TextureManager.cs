@@ -30,6 +30,7 @@ namespace GlowBabyGlow
         public static Texture2D hatch;
 
         public static Texture2D[] xboxGuide = new Texture2D[4];
+        public static Texture2D finger;
 
         public static Texture2D l_G;
         public static Texture2D l_L;
@@ -46,6 +47,8 @@ namespace GlowBabyGlow
         public static Texture2D bParkSky;
         public static Texture2D bParkPond;
         public static Texture2D bParkPlayground;
+        public static Texture2D bParkWildernessLeft;
+        public static Texture2D bParkWildernessRight;
         public static Texture2D bParkBandStand;
         public static Texture2D bAlley;
         public static Texture2D bTutorial;
@@ -100,6 +103,7 @@ namespace GlowBabyGlow
             padlockOpen = c.Load<Texture2D>("Menu\\padlock2");
             pauseBorder = c.Load<Texture2D>("Menu\\border");
             curtain = c.Load<Texture2D>("Menu\\curtain");
+            finger = c.Load<Texture2D>("Menu\\finger");
 
             // multiplayer
             xboxGuide[0] = c.Load<Texture2D>("Hud\\xbox-1");
@@ -133,6 +137,8 @@ namespace GlowBabyGlow
             bParkPond = c.Load<Texture2D>("Backdrops\\level-select");
             bParkBandStand = c.Load<Texture2D>("Backdrops\\park-multi");
             bParkPlayground = c.Load<Texture2D>("Backdrops\\multi-level");
+            bParkWildernessLeft = c.Load<Texture2D>("Backdrops\\wilderness-left");
+            bParkWildernessRight = c.Load<Texture2D>("Backdrops\\wilderness-right");
             paperBoat = c.Load<Texture2D>("Backdrops\\paper-boat");
             bAlley = c.Load<Texture2D>("Backdrops\\alley");
             bAirport = c.Load<Texture2D>("Backdrops\\airport");

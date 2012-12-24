@@ -17,7 +17,7 @@ namespace GlowBabyGlow
         public static int screenW = (int)(1920);
         public static int screenH = (int)(1080);
         public static float screenR;
-        public static bool fullScrn = false;
+        public static bool fullScrn = true;
         public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();
@@ -118,11 +118,18 @@ namespace GlowBabyGlow
 
         public static void Load(BinaryReader br)
         {
-            highScore["alley"] = br.ReadInt32();
-            highScore["airport"] = br.ReadInt32();
-            highScore["jungle"] = br.ReadInt32();
-            highScore["city"] = br.ReadInt32();
-            highScore["powerplant"] = br.ReadInt32();
+            try
+            {
+                highScore["alley"] = br.ReadInt32();
+                highScore["airport"] = br.ReadInt32();
+                highScore["jungle"] = br.ReadInt32();
+                highScore["city"] = br.ReadInt32();
+                highScore["powerplant"] = br.ReadInt32();
+            }
+            catch(Exception e)
+            {
+                // todo
+            }
         }
 
         public static void PCLoad()

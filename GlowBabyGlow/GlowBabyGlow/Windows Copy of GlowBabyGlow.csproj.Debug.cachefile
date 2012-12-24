@@ -74,5 +74,8 @@ Content\Hud\xbox-3.xnb
 Content\Hud\xbox-4.xnb
 Content\Backdrops\multi-level.xnb
 Content\Menu\loading.xnb
+Content\Backdrops\wilderness-left.xnb
+Content\Backdrops\wilderness-right.xnb
+Content\Menu\finger.xnb
 Animation.cs
 Animator.cs

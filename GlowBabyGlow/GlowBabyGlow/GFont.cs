@@ -85,9 +85,17 @@ namespace GlowBabyGlow
             fontMap.Add('8', new Point(4, 3));
             fontMap.Add('9', new Point(5, 3));
             fontMap.Add(':', new Point(6, 3));
+            fontMap.Add(',', new Point(7, 3));
+            fontMap.Add('!', new Point(8, 3));
+            fontMap.Add('-', new Point(9, 3));
         }
 
         #endregion
+
+        public void SetTexture(Texture2D t)
+        {
+            fontSheet = t;
+        }
 
         public void Draw(SpriteBatch sb, Vector2 pos, string word, Color c, bool small = false)
         {
@@ -123,6 +131,83 @@ namespace GlowBabyGlow
                     (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
                     fontSheet.Width / columns, fontSheet.Height / rows);
                 sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (w * i), (int)pos.Y, w, h), rect, color);
+            }
+        }
+
+        public void DrawDescrition(SpriteBatch sb, Vector2 pos, string word, Color c, int maxWidth)
+        {
+            int offset = 5;
+            int spacing = 1;
+            int yspacing = 6;
+
+            int w = width / 2;
+            int h = height / 2;
+            int yoff = 0;
+
+            word = word.ToLower();
+
+            int index = 0;
+
+            for (int i = 0; i < word.Length; i++)
+            {
+                Rectangle rect = new Rectangle(
+                    (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
+                    (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
+                    fontSheet.Width / columns, fontSheet.Height / rows);
+                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * index) + (w * index) - offset, (int)pos.Y + offset + yoff, w, h),
+                    rect, new Color(0, 0, 0, 50));
+
+                index++;
+
+                int checkspace = i;
+                while (checkspace < word.Length)
+                {
+                    if (word[checkspace] == ' ' && word[i] == ' ')
+                    {
+                        if ((spacing * (index + (checkspace - i))) + (w * (index + (checkspace - i))) > maxWidth)
+                        {
+                            index = 0;
+                            yoff += h + yspacing;
+                        }
+
+                        break;
+                    }
+
+                    checkspace++;
+                }
+
+            }
+
+            index = 0;
+            yoff = 0;
+
+            for (int i = 0; i < word.Length; i++)
+            {
+                Color color = c == Color.White ? colorBank[i] : c;
+                Rectangle rect = new Rectangle(
+                    (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
+                    (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
+                    fontSheet.Width / columns, fontSheet.Height / rows);
+                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * index) + (w * index), (int)pos.Y + yoff, w, h), rect, color);
+
+                index++;
+
+                int checkspace = i;
+                while (checkspace < word.Length)
+                {
+                    if (word[checkspace] == ' ' && word[i] == ' ')
+                    {
+                        if ((spacing * (index + (checkspace - i))) + (w * (index + (checkspace - i))) > maxWidth)
+                        {
+                            index = 0;
+                            yoff += h + yspacing;
+                        }
+
+                        break;
+                    }
+
+                    checkspace++;
+                }
             }
         }
     }
