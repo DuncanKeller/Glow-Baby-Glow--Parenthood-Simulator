@@ -161,6 +161,10 @@ namespace GlowBabyGlow
 
                 }
             }
+            else
+            {
+                DrawLoadingScreen();
+            }
           
             base.Draw(gameTime);
         }
@@ -180,6 +184,8 @@ namespace GlowBabyGlow
                 Rectangle src = new Rectangle(0, 0, loadingTexture.Width, loadingTexture.Height);
                 spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer,
                     new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
+
+                spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(100, 100, 100, 100), Color.Wheat);
                 spriteBatch.End();
             }
         }

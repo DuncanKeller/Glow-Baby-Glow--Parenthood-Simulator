@@ -63,6 +63,9 @@ namespace GlowBabyGlow
         int automatePos = 0;
         bool directed = false;
 
+        bool spawnBaby = true;
+        float pointTimer = 0;
+
         Powerup currentPowerup = null;
 
         #region Properties
@@ -206,6 +209,24 @@ namespace GlowBabyGlow
                 currentPowerup.Activate(this);
             }
             index = i;
+
+            if (MenuSystem.gameType == GameType.vsSurvival ||
+                MenuSystem.gameType == GameType.survival)
+            {
+                lives = 1;
+            }
+
+            if (MenuSystem.gameType == GameType.hotPotato ||
+                MenuSystem.gameType == GameType.theif)
+            {
+                if (index != 0) // change to a randomly generated number in menusystem
+                {
+                    holdingBaby = false;
+                    Baby = null;
+                    spawnBaby = false;
+                }
+            }
+            
         }
 
         public void Direct(int pos)
@@ -219,6 +240,22 @@ namespace GlowBabyGlow
         {
             if (alive)
             {
+                if (holdingBaby &&
+                    MenuSystem.gameType == GameType.theif)
+                {
+                    pointTimer += dt / 1000;
+
+                    if (pointTimer > 0.5f)
+                    {
+                        pointTimer = 0;
+                        score += 25;
+                    }
+                }
+                else
+                {
+                    pointTimer = 0;
+                }
+
                 if (automateBullet > 0)
                 { automateBullet -= dt / 1000; }
                 else
@@ -356,7 +393,10 @@ namespace GlowBabyGlow
                 babyLife = maxBabyLife;
                 Baby = null;
                 pos.Y = Config.screenH + 200;
-                lives--;
+                if (MenuSystem.gameType != GameType.theif)
+                {
+                    lives--;
+                }
             }
         }
 
@@ -369,7 +409,8 @@ namespace GlowBabyGlow
         public void Respawn()
         {
             Baby = null;
-            holdingBaby = true;
+            if (spawnBaby)
+            { holdingBaby = true; }
             velocity = Vector2.Zero;
             ResetPos();
             alive = true;
@@ -760,7 +801,16 @@ namespace GlowBabyGlow
             {
                 if (coin.Rect.Intersects(hitRect))
                 {
-                    score += 100;
+                    if (MenuSystem.gameType == GameType.survival ||
+                        MenuSystem.gameType == GameType.hotPotato)
+                    {
+                        w.Players[0].score += 100;
+                    }
+                    else
+                    {
+                        score += 100;
+                    }
+
                     coins.Remove(coin);
                     for (int i = 0; i < Coin.numParticles; i++)
                     {
@@ -775,36 +825,38 @@ namespace GlowBabyGlow
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)
         {
             CoinCollision();
-            if (Baby != null)
+            if (!holdingBaby)
             {
-                Baby.Collision(ref tiles);
+                if (Baby != null)
+                {
+                    Baby.Collision(ref tiles);
 
-                if (Baby.Rect.Intersects(rect)
-                    && Baby.ReadyToCatch)
-                {
-                    Baby = null;
-                    holdingBaby = true;
-                }
-                else
-                {
-                    foreach (KeyValuePair<Player, Baby> b in w.Babies)
+                    if (Baby.Rect.Intersects(rect)
+                        && Baby.ReadyToCatch)
                     {
-                        if (b.Value != Baby)
+                        Baby = null;
+                        holdingBaby = true;
+                    }
+                }
+                
+                foreach (KeyValuePair<Player, Baby> b in w.Babies)
+                {
+                    if (b.Value != Baby)
+                    {
+                        if (b.Value != null)
                         {
-                            if (b.Value != null)
+                            if (b.Value.Rect.Intersects(hitRect)
+                                && b.Value.ReadyToCatch)
                             {
-                                if (b.Value.Rect.Intersects(rect)
-                                    && b.Value.ReadyToCatch)
-                                {
-                                    Baby temp = Baby;
-                                    Baby = b.Value;
-                                    w.Babies[b.Key] = temp;
-                                    break;
-                                }
+                                Baby temp = Baby;
+                                Baby = b.Value;
+                                w.Babies[b.Key] = temp;
+                                break;
                             }
                         }
                     }
                 }
+                
             }
             if (alive)
             {

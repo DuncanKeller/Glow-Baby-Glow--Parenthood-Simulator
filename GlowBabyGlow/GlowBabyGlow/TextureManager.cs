@@ -72,6 +72,9 @@ namespace GlowBabyGlow
 
         public static Texture2D font;
         public static Texture2D face;
+        public static Texture2D faceBum;
+        public static Texture2D facePedo;
+        public static Texture2D faceSanta;
         public static Texture2D smallFont;
 
         public static Texture2D pupBackdrop;
@@ -104,6 +107,11 @@ namespace GlowBabyGlow
             pauseBorder = c.Load<Texture2D>("Menu\\border");
             curtain = c.Load<Texture2D>("Menu\\curtain");
             finger = c.Load<Texture2D>("Menu\\finger");
+
+            face = c.Load<Texture2D>("Hud\\face");
+            faceBum = c.Load<Texture2D>("Hud\\face-bum");
+            facePedo = c.Load<Texture2D>("Hud\\face-pedo");
+            faceSanta = c.Load<Texture2D>("Hud\\face-santa");
 
             // multiplayer
             xboxGuide[0] = c.Load<Texture2D>("Hud\\xbox-1");
@@ -179,7 +187,6 @@ namespace GlowBabyGlow
 
             // fonts
             font = c.Load<Texture2D>("Fonts\\font");
-            face = c.Load<Texture2D>("Hud\\face");
             smallFont = c.Load<Texture2D>("Fonts\\small-font");
 
             loaded = true;

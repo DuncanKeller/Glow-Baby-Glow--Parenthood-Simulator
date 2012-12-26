@@ -77,5 +77,8 @@ Content\Menu\loading.xnb
 Content\Backdrops\wilderness-left.xnb
 Content\Backdrops\wilderness-right.xnb
 Content\Menu\finger.xnb
+Content\Hud\face-bum.xnb
+Content\Hud\face-pedo.xnb
+Content\Hud\face-santa.xnb
 Animation.cs
 Animator.cs

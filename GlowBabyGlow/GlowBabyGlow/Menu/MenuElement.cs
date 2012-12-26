@@ -53,6 +53,11 @@ namespace GlowBabyGlow
             action = a;
         }
 
+        public void Evoke()
+        {
+            action();
+        }
+
         public void SetSize(int w, int h)
         {
             width = w;

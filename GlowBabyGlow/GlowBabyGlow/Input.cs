@@ -11,7 +11,7 @@ namespace GlowBabyGlow
 
     class Input
     {
-        public static bool keys = true;
+        public static bool keys = false;
         public static int defaultIndex = 0;
         static event InputChangeHandler Jump;
         
@@ -214,7 +214,7 @@ namespace GlowBabyGlow
                     {
                         if (!world.Players[i].InAir)
                         {
-                            if (HoldingPrimary(i))
+                            if (HoldingPrimary(world.Players[i].Index))
                             {
                                 if (!world.Players[i].Shaking)
                                 {
@@ -225,12 +225,12 @@ namespace GlowBabyGlow
                             {
                                 if (!world.Players[i].Shaking)
                                 {
-                                    if (HoldingPrimaryPrev(i) && spaceBarPreventativeMeasureFlag)
+                                    if (HoldingPrimaryPrev(world.Players[i].Index) && spaceBarPreventativeMeasureFlag)
                                     {
                                         world.Players[i].Throw();
 
                                     }
-                                    else if (HoldingPrimaryPrev(i))
+                                    else if (HoldingPrimaryPrev(world.Players[i].Index))
                                     {
                                         spaceBarPreventativeMeasureFlag = true;
                                     }
@@ -241,7 +241,7 @@ namespace GlowBabyGlow
 
                         if (!world.Players[i].ReadyToThrow)
                         {
-                            if (HoldingSecondary(i))
+                            if (HoldingSecondary(world.Players[i].Index))
                             {
                                 if (!world.Players[i].InAir)
                                 {
@@ -277,14 +277,14 @@ namespace GlowBabyGlow
                     }
                     else
                     {
-                        if (HoldingPrimary(i) &&
-                        !HoldingPrimaryPrev(i))
+                        if (HoldingPrimary(world.Players[i].Index) &&
+                        !HoldingPrimaryPrev(world.Players[i].Index))
                         {
                             world.Players[i].Jump();
                         }
 
-                        if (HoldingSecondary(i) &&
-                            !HoldingSecondaryPrev(i))
+                        if (HoldingSecondary(world.Players[i].Index) &&
+                            !HoldingSecondaryPrev(world.Players[i].Index))
                         {
                             world.Players[i].Shoot();
                         }

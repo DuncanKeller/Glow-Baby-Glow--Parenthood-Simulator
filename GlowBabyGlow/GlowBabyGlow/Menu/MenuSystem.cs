@@ -14,7 +14,7 @@ namespace GlowBabyGlow
         static Menu currentMenu;
         static Game1 g;
 
-        public static GameType gameType = GameType.survival;
+        public static GameType gameType = GameType.single;
 
         public static int[] Players()
         {

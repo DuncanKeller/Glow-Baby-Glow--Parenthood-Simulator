@@ -47,13 +47,17 @@ namespace GlowBabyGlow
                     Rectangle rect = new Rectangle(Config.screenW - 10 - (font.Size.X * 3), 10,
                         (int)((TextureManager.face.Width) * Config.fontRatio), 
                         (int)((TextureManager.face.Height) * Config.fontRatio));
-                    if (world.Players[0].Lives > 0)
+                    if (MenuSystem.gameType == GameType.single)
                     {
-                        font.Draw(sb, new Vector2(rect.Right, 10), "x" + (world.Players[0].Lives - 1), Color.White);
-                    }
-                    sb.Draw(TextureManager.face, rect, Color.White);
+                        if (world.Players[0].Lives > 0)
+                        {
+                            font.Draw(sb, new Vector2(rect.Right, 10), "x" + (world.Players[0].Lives - 1), Color.White);
+                        }
 
-                    world.PowerupManager.DrawIcon(sb);
+                        sb.Draw(TextureManager.face, rect, Color.White);
+
+                        world.PowerupManager.DrawIcon(sb);
+                    }
                 }
             }
         }

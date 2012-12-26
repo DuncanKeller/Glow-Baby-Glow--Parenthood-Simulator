@@ -148,11 +148,12 @@ namespace GlowBabyGlow
                 players[i].Draw(sb, pos);
             }
 
+            int count = 0;
             foreach (int i in playertabRetract.Keys)
             {
                 Rectangle playerTab = new Rectangle(
                     playertabPos[i] - (Config.screenW / 5), (Config.screenH / 8) +
-                    ((Config.screenH / 5) * i), 
+                    ((Config.screenH / 5) * count), 
                     Config.screenW / 5, Config.screenH / 6);
 
                 // tab
@@ -179,7 +180,29 @@ namespace GlowBabyGlow
                     new Rectangle(playerTab.Right, playerTab.Y - 1, 2, playerTab.Height + 2), Color.Black);
 
                 // icons
-                sb.Draw(TextureManager.face, new Rectangle(playerTab.Right - (playerTab.Width / 10) -
+
+                Texture2D face;
+
+                switch (i)
+                {
+                    case 0:
+                        face = TextureManager.face;
+                        break;
+                    case 1:
+                        face = TextureManager.faceBum; 
+                        break;
+                    case 2:
+                        face = TextureManager.facePedo;
+                        break;
+                    case 3:
+                        face = TextureManager.faceSanta;
+                        break;
+                    default:
+                        face = TextureManager.face;
+                        break;
+                }
+
+                sb.Draw(face, new Rectangle(playerTab.Right - (playerTab.Width / 10) -
                     ((int)(TextureManager.face.Width * Config.screenR)),
                     playerTab.Top + playerTab.Height / 10,
                     (int)(TextureManager.face.Width * Config.screenR),
@@ -192,6 +215,8 @@ namespace GlowBabyGlow
                     (int)(TextureManager.face.Height * Config.screenR),
                     (int)(TextureManager.face.Height * Config.screenR)),
                     Color.White);
+
+                count++;
              }
 
             sb.End();

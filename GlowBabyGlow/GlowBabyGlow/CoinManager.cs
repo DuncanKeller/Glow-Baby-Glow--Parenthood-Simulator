@@ -41,10 +41,14 @@ namespace GlowBabyGlow
         {
             timer += dt / 1000;
 
-            if (timer > coinTime)
+            if (MenuSystem.gameType != GameType.vsSurvival &&
+                MenuSystem.gameType != GameType.theif)
             {
-                timer = 0;
-                Spawn();
+                if (timer > coinTime)
+                {
+                    timer = 0;
+                    Spawn();
+                }
             }
 
             foreach (Coin e in toRemove)

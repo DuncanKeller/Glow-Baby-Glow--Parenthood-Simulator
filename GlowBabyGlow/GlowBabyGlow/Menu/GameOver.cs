@@ -20,6 +20,8 @@ namespace GlowBabyGlow
         static int score;
         static bool newScore;
 
+        static int winnerNum;
+
         public static bool Initialized
         {
             get { return initialized; }
@@ -61,6 +63,33 @@ namespace GlowBabyGlow
                     }
                 }
             }
+        }
+
+        public static void EvaluateWinner()
+        {
+            // see who won in a competitive match
+            int highscore = -1;
+            Player winner = null;
+
+            bool tie = false;
+            List<Player> otherWinners = new List<Player>();
+
+            foreach (Player p in world.Players)
+            {
+                if (p.Score > highscore)
+                {
+                    highscore = p.Score;
+                    winner = p;
+                }
+                else if (p.Score == highscore)
+                {
+                    otherWinners.Add(p);
+                    tie = true;
+                }
+            }
+
+            winnerNum = winner.Index + 1;
+
         }
 
         public static void Reset()
