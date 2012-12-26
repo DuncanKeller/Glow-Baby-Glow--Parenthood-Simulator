@@ -9,6 +9,7 @@ namespace GlowBabyGlow
 {
     enum GameType
     {
+        single,
         survival,
         vsSurvival,
         hotPotato,
@@ -57,6 +58,13 @@ namespace GlowBabyGlow
                   !Input.HoldingSecondaryPrev(Input.defaultIndex))
             {
                 MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "multi");
+                MenuSystem.gameType = GameType.single;
+            }
+            else if (Input.HoldingPrimary(Input.defaultIndex) &&
+                  !Input.HoldingPrimaryPrev(Input.defaultIndex))
+            {
+                MenuSystem.SwitchMenu(new Vector2(Config.screenW * 2, 0), "multi-level");
+                gameTypes[index].Evoke();
             }
 
             foreach (MenuElement m in gameTypes)
@@ -105,6 +113,8 @@ namespace GlowBabyGlow
             {
                 MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "versus");
             }
+
+
 
         }
 
