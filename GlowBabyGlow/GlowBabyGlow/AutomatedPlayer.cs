@@ -39,10 +39,10 @@ namespace GlowBabyGlow
                     anim = new Animator(TextureManager.santa, 13, 6);
                     break;
                 case 2:
-                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    anim = new Animator(TextureManager.bum, 13, 6);
                     break;
                 case 3:
-                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    anim = new Animator(TextureManager.pedo, 13, 6);
                     break;
                 default:
                     anim = new Animator(TextureManager.testRun, 13, 6);

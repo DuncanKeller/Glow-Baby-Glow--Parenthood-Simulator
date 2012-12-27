@@ -108,6 +108,10 @@ namespace GlowBabyGlow
             glowParticle = c.Load<Texture2D>("fuzz");
             santa = c.Load<Texture2D>("Actors\\sprite-santa");
             santaBaby = c.Load<Texture2D>("Actors\\sprite-santa-baby");
+            bum = c.Load<Texture2D>("Actors\\sprite-bum");
+            bumBaby = c.Load<Texture2D>("Actors\\sprite-bum-baby");
+            pedo = c.Load<Texture2D>("Actors\\sprite-pedo");
+            pedoBaby = c.Load<Texture2D>("Actors\\sprite-pedo-baby");
 
             //menu
             titleScreen = c.Load<Texture2D>("Menu\\title-screen");

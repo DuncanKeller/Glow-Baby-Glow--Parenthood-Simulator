@@ -200,10 +200,10 @@ namespace GlowBabyGlow
                     testAnim = new Animator(TextureManager.santa, 13, 6);
                     break;
                 case 2:
-                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    testAnim = new Animator(TextureManager.bum, 13, 6);
                     break;
                 case 3:
-                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    testAnim = new Animator(TextureManager.pedo, 13, 6);
                     break;
                 default:
                     testAnim = new Animator(TextureManager.testRun, 13, 6);
@@ -331,10 +331,10 @@ namespace GlowBabyGlow
                             testAnim.SwapSpriteSheet(TextureManager.santaBaby);
                             break;
                         case 2:
-                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            testAnim.SwapSpriteSheet(TextureManager.bumBaby);
                             break;
                         case 3:
-                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            testAnim.SwapSpriteSheet(TextureManager.pedoBaby);
                             break;
                         default:
                             testAnim.SwapSpriteSheet(TextureManager.testBaby);
@@ -352,10 +352,10 @@ namespace GlowBabyGlow
                            testAnim.SwapSpriteSheet(TextureManager.santa);
                             break;
                         case 2:
-                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            testAnim.SwapSpriteSheet(TextureManager.bum);
                             break;
                         case 3:
-                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            testAnim.SwapSpriteSheet(TextureManager.pedo);
                             break;
                         default:
                             testAnim.SwapSpriteSheet(TextureManager.testRun);
