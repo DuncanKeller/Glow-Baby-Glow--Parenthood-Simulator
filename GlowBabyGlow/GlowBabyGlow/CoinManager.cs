@@ -41,8 +41,7 @@ namespace GlowBabyGlow
         {
             timer += dt / 1000;
 
-            if (MenuSystem.gameType != GameType.vsSurvival &&
-                MenuSystem.gameType != GameType.theif)
+            if (MenuSystem.gameType != GameType.thief)
             {
                 if (timer > coinTime)
                 {

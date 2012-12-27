@@ -18,10 +18,22 @@ namespace GlowBabyGlow
         public static Texture2D babyGlow;
         public static Texture2D blackCircle;
         public static Texture2D glowParticle;
+        public static Texture2D santa;
+        public static Texture2D santaBaby;
+        public static Texture2D bum;
+        public static Texture2D bumBaby;
+        public static Texture2D pedo;
+        public static Texture2D pedoBaby;
 
         public static Texture2D titleScreen;
         public static Texture2D pauseBorder;
         public static Texture2D curtain;
+
+        public static Texture2D face;
+        public static Texture2D faceBum;
+        public static Texture2D facePedo;
+        public static Texture2D faceSanta;
+        public static Texture2D[] winPose = new Texture2D[4];
 
         public static Texture2D padlockClosed;
         public static Texture2D padlockOpen;
@@ -71,10 +83,6 @@ namespace GlowBabyGlow
         public static Texture2D arrow;
 
         public static Texture2D font;
-        public static Texture2D face;
-        public static Texture2D faceBum;
-        public static Texture2D facePedo;
-        public static Texture2D faceSanta;
         public static Texture2D smallFont;
 
         public static Texture2D pupBackdrop;
@@ -97,8 +105,9 @@ namespace GlowBabyGlow
             baby = c.Load<Texture2D>("Actors\\baby");
             babyGlow = c.Load<Texture2D>("Actors\\glow");
             blackCircle = c.Load<Texture2D>("circle");
-
             glowParticle = c.Load<Texture2D>("fuzz");
+            santa = c.Load<Texture2D>("Actors\\sprite-santa");
+            santaBaby = c.Load<Texture2D>("Actors\\sprite-santa-baby");
 
             //menu
             titleScreen = c.Load<Texture2D>("Menu\\title-screen");
@@ -112,6 +121,10 @@ namespace GlowBabyGlow
             faceBum = c.Load<Texture2D>("Hud\\face-bum");
             facePedo = c.Load<Texture2D>("Hud\\face-pedo");
             faceSanta = c.Load<Texture2D>("Hud\\face-santa");
+            winPose[0] = c.Load<Texture2D>("Menu\\win-normal");
+            winPose[1] = c.Load<Texture2D>("Menu\\win-santa");
+            winPose[2] = c.Load<Texture2D>("Menu\\win-bum");
+            winPose[3] = c.Load<Texture2D>("Menu\\win-pedo");
 
             // multiplayer
             xboxGuide[0] = c.Load<Texture2D>("Hud\\xbox-1");

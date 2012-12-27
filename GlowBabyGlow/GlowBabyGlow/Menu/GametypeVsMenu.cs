@@ -27,12 +27,12 @@ namespace GlowBabyGlow
             destination = pos;
             //elements[0].Selected = true;
 
-            gameTypes.Add(new MenuElement("vs survival", null, new Vector2(
-                 ((Config.screenW / 3) * 2) - ("vs survival".Length * GFont.width) - 10, ((Config.screenH / 20) * 4) + (Config.screenH / 10)),
+            gameTypes.Add(new MenuElement("face off", null, new Vector2(
+                 ((Config.screenW / 3) * 2) - ("face off".Length * GFont.width) - 10, ((Config.screenH / 20) * 4) + (Config.screenH / 10)),
                 true, this, delegate() { MenuSystem.gameType = GameType.vsSurvival; }));
             gameTypes.Add(new MenuElement("theif", null, new Vector2(
-                 ((Config.screenW / 3) * 2) - ("theif".Length * GFont.width) - 10, ((Config.screenH / 20) * 7) + (Config.screenH / 10)),
-                true, this, delegate() { MenuSystem.gameType = GameType.theif; }));
+                 ((Config.screenW / 3) * 2) - ("thief".Length * GFont.width) - 10, ((Config.screenH / 20) * 7) + (Config.screenH / 10)),
+                true, this, delegate() { MenuSystem.gameType = GameType.thief; }));
 
             description = new MenuElement("", null, new Vector2((Config.screenW / 3) * 2 + (Config.screenW / 20), (Config.screenH / 20) * 7),
                false, this, delegate() { });

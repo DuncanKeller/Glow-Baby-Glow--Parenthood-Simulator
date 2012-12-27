@@ -13,7 +13,7 @@ namespace GlowBabyGlow
         survival,
         vsSurvival,
         hotPotato,
-        theif
+        thief
     }
 
     class GametypeCoopMenu : Menu

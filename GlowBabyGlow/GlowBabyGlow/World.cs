@@ -111,7 +111,18 @@ namespace GlowBabyGlow
 
         public bool Exploding
         {
-            get { return exploded; }
+            get
+            {
+                if (MenuSystem.gameType == GameType.thief ||
+                    MenuSystem.gameType == GameType.vsSurvival)
+                {
+                    return false;
+                }
+                else
+                {
+                    return exploded;
+                }
+            }
         }
 
         public ParticleManager ParticleManager
@@ -150,6 +161,16 @@ namespace GlowBabyGlow
         }
 
         #endregion
+
+        public void TestRemove(Player p)
+        {
+            //if (MenuSystem.gameType == GameType.vsSurvival ||
+            //    MenuSystem.gameType == GameType.theif)
+            //{
+            //    babies.Remove(p);
+            //    players.Remove(p);
+            //}
+        }
 
         public void AddPlayers()
         {
@@ -370,29 +391,60 @@ namespace GlowBabyGlow
             else
             {
                 dtMod = 0;
+                if (MenuSystem.gameType == GameType.vsSurvival ||
+                MenuSystem.gameType == GameType.thief)
+                {
+                    exploded = false;
+                    explodeTime = 0;
+                }
+            }
+        }
+
+        public void SpawnBaby()
+        {
+            List<Player> candidates = new List<Player>();
+            foreach (Player p in players)
+            {
+                if (p.Alive)
+                {
+                    candidates.Add(p);
+                }
+            }
+            if (candidates.Count > 0)
+            {
+                int index = Config.rand.Next(candidates.Count);
+                candidates[index].HoldingBaby = true;
             }
         }
 
         public void Explode()
         {
             exploded = true;
-            foreach (Player p in players)
+            if (MenuSystem.gameType != GameType.vsSurvival &&
+                MenuSystem.gameType != GameType.thief)
             {
-                p.Explode();
+                foreach (Player p in players)
+                {
+                    p.Explode();
+                }
+                foreach (Tile t in tiles)
+                {
+                    (t as Entity).Explode();
+                }
+                foreach (Ladder l in ladders)
+                {
+                    (l as Entity).Explode();
+                }
+                powerups.ClearPowerups();
+                particles.ClearParticles();
+                enemies.ClearEnemies();
+                bullets.ClearBullets();
+                coins.ClearCoins();
             }
-            foreach (Tile t in tiles)
+            else
             {
-                (t as Entity).Explode();
+
             }
-            foreach (Ladder l in ladders)
-            {
-                (l as Entity).Explode();
-            }
-            powerups.ClearPowerups();
-            particles.ClearParticles();
-            enemies.ClearEnemies();
-            bullets.ClearBullets();
-            coins.ClearCoins();
         }
 
         public void Draw(SpriteBatch sb)

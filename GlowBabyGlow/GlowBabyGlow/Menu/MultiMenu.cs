@@ -14,8 +14,6 @@ namespace GlowBabyGlow
         public Dictionary<int, int> playertabPos = new Dictionary<int, int>();
         public Dictionary<int, bool> playertabRetract = new Dictionary<int, bool>();
 
-        public List<Color> playerColors = new List<Color>();
-
         public MultiMenu(Game1 g)
             : base(g)
         {
@@ -27,10 +25,7 @@ namespace GlowBabyGlow
             destination = pos;
             //elements[0].Selected = true;
 
-            playerColors.Add(Color.Green);
-            playerColors.Add(Color.Red);
-            playerColors.Add(Color.Blue);
-            playerColors.Add(Color.Yellow);
+            
         }
 
         public int[] GetPlayers()
@@ -79,7 +74,7 @@ namespace GlowBabyGlow
                         if (!players.Keys.Contains(i))
                         {
                             AutomatedPlayer p = new AutomatedPlayer(Config.screenW + Player.width,
-                                (Config.screenW / 6) * (i + 1));
+                                (Config.screenW / 6) * (i + 1), i);
                             players.Add(i, p);
                         }
                         else
@@ -165,7 +160,7 @@ namespace GlowBabyGlow
                 sb.Draw(TextureManager.blankTexture,
                     new Rectangle(playerTab.X, playerTab.Y + (playerTab.Height / 5),
                         playerTab.Width, (playerTab.Height / 5) * 2 ),
-                    new Color(playerColors[i].R, playerColors[i].G, playerColors[i].B, alpha));
+                    new Color(Config.playerColors[i].R, Config.playerColors[i].G, Config.playerColors[i].B, alpha));
 
                 sb.Draw(TextureManager.blankTexture,
                     new Rectangle(playerTab.X, playerTab.Y + ((playerTab.Height / 5) * 3 ),
@@ -189,13 +184,13 @@ namespace GlowBabyGlow
                         face = TextureManager.face;
                         break;
                     case 1:
-                        face = TextureManager.faceBum; 
+                        face = TextureManager.faceSanta; 
                         break;
                     case 2:
-                        face = TextureManager.facePedo;
+                        face = TextureManager.faceBum;
                         break;
                     case 3:
-                        face = TextureManager.faceSanta;
+                        face = TextureManager.facePedo;
                         break;
                     default:
                         face = TextureManager.face;

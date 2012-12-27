@@ -17,10 +17,11 @@ namespace GlowBabyGlow
         public static int screenW = (int)(1920);
         public static int screenH = (int)(1080);
         public static float screenR;
-        public static bool fullScrn = false;
+        public static bool fullScrn = true;
         public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();
+        public static List<Color> playerColors = new List<Color>();
         
         static IAsyncResult result;
         static string filename = "save.dat";
@@ -32,6 +33,11 @@ namespace GlowBabyGlow
 
         public static void Init()
         {
+            playerColors.Add(Color.Green);
+            playerColors.Add(Color.Red);
+            playerColors.Add(Color.Blue);
+            playerColors.Add(Color.Yellow);
+
             screenR = screenW / 1920.0f;
             if (screenW <= 960)
             {

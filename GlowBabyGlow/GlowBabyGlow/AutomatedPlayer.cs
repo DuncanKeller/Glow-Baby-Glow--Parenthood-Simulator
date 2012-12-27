@@ -22,14 +22,33 @@ namespace GlowBabyGlow
         float acceleration = (int)(100 * Config.screenR);
         protected float gravity = (int)(4000 * Config.screenR);
 
-        public AutomatedPlayer(int x, int d)
+        public AutomatedPlayer(int x, int d, int index)
         {
             width = Player.width;
             height = Player.height;
             pos = new Vector2(x, Config.screenH - height - 10);
             destination = d;
             velocity = new Vector2();
-            anim = new Animator(TextureManager.testRun, 13, 6);
+
+            switch (index)
+            {
+                case 0:
+                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                case 1:
+                    anim = new Animator(TextureManager.santa, 13, 6);
+                    break;
+                case 2:
+                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                case 3:
+                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                default:
+                    anim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+            }
+
             anim.AddAnimation("run", 0, 17, 16.5f, true);
             anim.AddAnimation("idle", 18, 0, 0, true);
             anim.AddAnimation("jump", 24, 3, 15, true, 26);

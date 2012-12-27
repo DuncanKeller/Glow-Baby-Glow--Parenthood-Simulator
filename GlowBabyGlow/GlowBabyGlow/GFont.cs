@@ -140,8 +140,8 @@ namespace GlowBabyGlow
             int spacing = 1;
             int yspacing = 6;
 
-            int w = width / 2;
-            int h = height / 2;
+            int w = width / 3;
+            int h = height / 3;
             int yoff = 0;
 
             word = word.ToLower();

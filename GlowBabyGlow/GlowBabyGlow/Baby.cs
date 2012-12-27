@@ -21,6 +21,7 @@ namespace GlowBabyGlow
 
         float closestTile;
         float catchTimer = 0.25f;
+        public bool splodin = false;
 
         #region Properties
 
@@ -121,6 +122,8 @@ namespace GlowBabyGlow
                 if (HitRect.Intersects(t.Rect))
                 {    
                     w.Explode();
+                    
+                    splodin = true;
                 }
             }
             bool splode = false;
@@ -132,13 +135,13 @@ namespace GlowBabyGlow
                 }
             }
             if (splode)
-            { w.Explode(); }
+            { w.Explode(); splodin = true; }
         }
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
 
-            if (w.Exploding)
+            if (splodin)
             {
                 if (w.ExplodeTimer < 1)
                 {
@@ -154,7 +157,8 @@ namespace GlowBabyGlow
             Rectangle wrapLeft = new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height);
             Rectangle wrapRight = new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height);
 
-            if (w.ExplodeTimer < 1)
+            if (w.ExplodeTimer < 1 && splodin 
+                || !splodin)
             {
                 sb.Draw(TextureManager.baby, rect, new Rectangle(0, 0, TextureManager.baby.Width, TextureManager.baby.Height),
                    Color.White, angle, new Vector2(TextureManager.baby.Width / 2, TextureManager.baby.Height / 2),

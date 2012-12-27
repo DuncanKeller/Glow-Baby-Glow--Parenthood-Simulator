@@ -20,7 +20,8 @@ namespace GlowBabyGlow
         static int score;
         static bool newScore;
 
-        static int winnerNum;
+        static List<int> winnerNums = new List<int>();
+        static Dictionary<int, int> scores = new Dictionary<int, int>();
 
         public static bool Initialized
         {
@@ -46,6 +47,7 @@ namespace GlowBabyGlow
             world = w;
             world.Automate = false;
             CheckHighScore();
+            EvaluateWinner();
         }
 
         public static void CheckHighScore()
@@ -68,6 +70,8 @@ namespace GlowBabyGlow
         public static void EvaluateWinner()
         {
             // see who won in a competitive match
+            winnerNums.Clear();
+            scores.Clear();
             int highscore = -1;
             Player winner = null;
 
@@ -86,10 +90,15 @@ namespace GlowBabyGlow
                     otherWinners.Add(p);
                     tie = true;
                 }
+                scores.Add(p.Index, p.Score);
             }
 
-            winnerNum = winner.Index + 1;
+            winnerNums.Add(winner.Index);
 
+            foreach (Player p in otherWinners)
+            {
+                winnerNums.Add(p.Index);
+            }
         }
 
         public static void Reset()
@@ -135,14 +144,89 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
-            sb.Draw(TextureManager.blankTexture, rect, new Color(25,25,25));
+            sb.Draw(TextureManager.blankTexture, rect, new Color(25, 25, 25));
             sb.Draw(TextureManager.blankTexture, new Rectangle(
-                0, 0, Config.screenW, rect.Top), Color.Black);
-            Vector2 pos = new Vector2(
-                (Config.screenW / 2) - ((font.Size.X * "game over".Length) / 2),
-                (Config.screenH / 2) - (Config.screenH / 6) + position);
-            font.Draw(sb, pos, "game over", Color.Red);
-        }
+                0, 0, Config.screenW, rect.Top), new Color(25, 25, 25));
 
+            if (MenuSystem.gameType == GameType.single ||
+                MenuSystem.gameType == GameType.hotPotato ||
+                MenuSystem.gameType == GameType.survival)
+            {
+                Vector2 pos = new Vector2(
+                    (Config.screenW / 2) - ((font.Size.X * "game over".Length) / 2),
+                    (Config.screenH / 2) - (Config.screenH / 6) + position);
+                font.Draw(sb, pos, "game over", Color.Red);
+                string scoreText = "final score: " + score;
+                Vector2 scorePos = new Vector2(
+                    (Config.screenW / 2) - (((font.Size.X / 2) * scoreText.Length) / 2),
+                    (Config.screenH / 2) - (Config.screenH / 6) + position + GFont.height);
+                font.Draw(sb, scorePos, scoreText, new Color(254, 254, 254), true);
+            }
+            else
+            {
+                Rectangle r = new Rectangle(
+                    Config.screenW / 8,
+                    (int)((Config.screenH - (int)((TextureManager.winPose[winnerNums[0]].Height * Config.screenR))) + position),
+                    (int)(TextureManager.winPose[winnerNums[0]].Width * Config.screenR),
+                    (int)((TextureManager.winPose[winnerNums[0]].Height * Config.screenR)));
+
+                string text = "player " + (winnerNums[0] + 1) + " wins";
+                if (winnerNums.Count > 1)
+                { text = "tie game"; }
+
+                Vector2 pos = new Vector2(
+                 (Config.screenW / 2) - ((font.Size.X * text.Length) / 2),
+                 (Config.screenH / 20) + position);
+
+                Color c = new Color(254, 254, 254);
+                if (winnerNums.Count == 1)
+                { c = Config.playerColors[winnerNums[0]]; }
+                font.Draw(sb, pos, text, c);
+
+                for (int i = 0; i < winnerNums.Count; i++)
+                {
+                    sb.Draw(TextureManager.winPose[winnerNums[i]], r, Color.White);
+                    r.X += Config.screenW / 14;
+                }
+
+                for (int i = 0; i < scores.Count; i++)
+                {
+                    int[] scoresArr = new int[scores.Count];
+                    scores.Keys.CopyTo(scoresArr, 0);
+
+                    Vector2 facePos = new Vector2(Config.screenW - TextureManager.face.Width - 20,
+                        Config.screenH - ((i + 1) * TextureManager.face.Height) - ((i + 1) * 20) + position);
+
+                    Vector2 scorePos = new Vector2(Config.screenW - TextureManager.face.Width - 40 - (scores[scoresArr[i]].ToString().Length * (GFont.width / 2)),
+                       Config.screenH - ((i + 1) * TextureManager.face.Height) - ((i + 1) * 20) + position + (GFont.height / 2));
+
+                    Texture2D face;
+
+                   
+                    switch (scoresArr[i])
+                    {
+                        case 0:
+                            face = TextureManager.face;
+                            break;
+                        case 1:
+                            face = TextureManager.faceSanta;
+                            break;
+                        case 2:
+                            face = TextureManager.faceBum;
+                            break;
+                        case 3:
+                            face = TextureManager.facePedo;
+                            break;
+                        default:
+                            face = TextureManager.face;
+                            break;
+                    }
+
+                    sb.Draw(face, facePos, Color.White);
+                    font.Draw(sb, scorePos, scores[scoresArr[i]].ToString(), Color.White, true);
+                }
+
+            }
+        }
     }
 }

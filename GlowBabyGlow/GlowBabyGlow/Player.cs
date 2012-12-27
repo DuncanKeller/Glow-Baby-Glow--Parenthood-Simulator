@@ -65,8 +65,8 @@ namespace GlowBabyGlow
 
         bool spawnBaby = true;
         float pointTimer = 0;
-
         Powerup currentPowerup = null;
+        bool hide = false;
 
         #region Properties
 
@@ -192,7 +192,23 @@ namespace GlowBabyGlow
             hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
             hitOffset = new Point(rect.Width / 4, 0);
             babyLife = maxBabyLife;
-            testAnim = new Animator(TextureManager.testRun, 13, 6);
+            switch(index){
+                case 0:
+                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                case 1:
+                    testAnim = new Animator(TextureManager.santa, 13, 6);
+                    break;
+                case 2:
+                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                case 3:
+                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+                default:
+                    testAnim = new Animator(TextureManager.testRun, 13, 6);
+                    break;
+            }
             testAnim.AddAnimation("run", 0, 17, 16.5f, true);
             testAnim.AddAnimation("idle", 18, 0, 0, true);
             testAnim.AddAnimation("jump", 24, 3, 15, true, 26);
@@ -217,7 +233,7 @@ namespace GlowBabyGlow
             }
 
             if (MenuSystem.gameType == GameType.hotPotato ||
-                MenuSystem.gameType == GameType.theif)
+                MenuSystem.gameType == GameType.thief)
             {
                 if (index != 0) // change to a randomly generated number in menusystem
                 {
@@ -236,12 +252,22 @@ namespace GlowBabyGlow
             automatePos = pos;
         }
 
+        public void BabyExplode()
+        {
+            lives = 0;
+            Die();
+            if (MenuSystem.gameType == GameType.thief)
+            {
+                w.SpawnBaby();
+            }
+        }
+
         public override void Update(float dt)
         {
             if (alive)
             {
                 if (holdingBaby &&
-                    MenuSystem.gameType == GameType.theif)
+                    MenuSystem.gameType == GameType.thief)
                 {
                     pointTimer += dt / 1000;
 
@@ -254,6 +280,18 @@ namespace GlowBabyGlow
                 else
                 {
                     pointTimer = 0;
+                }
+
+                if (MenuSystem.gameType == GameType.thief ||
+                    MenuSystem.gameType == GameType.vsSurvival)
+                {
+                    if (Baby != null)
+                    {
+                        if (Baby.splodin)
+                        {
+                            BabyExplode();
+                        }
+                    }
                 }
 
                 if (automateBullet > 0)
@@ -278,16 +316,51 @@ namespace GlowBabyGlow
                 if (babyLife <= 0)
                 {
                     lives = 0;
-                    World.Explode();
+                    w.Explode();
+                    BabyExplode();
                 }
 
                 if (holdingBaby)
                 {
-                    testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                    switch (index)
+                    {
+                        case 0:
+                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            break;
+                        case 1:
+                            testAnim.SwapSpriteSheet(TextureManager.santaBaby);
+                            break;
+                        case 2:
+                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            break;
+                        case 3:
+                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            break;
+                        default:
+                            testAnim.SwapSpriteSheet(TextureManager.testBaby);
+                            break;
+                    }
                 }
                 else
                 {
-                    testAnim.SwapSpriteSheet(TextureManager.testRun);
+                    switch (index)
+                    {
+                        case 0:
+                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            break;
+                        case 1:
+                           testAnim.SwapSpriteSheet(TextureManager.santa);
+                            break;
+                        case 2:
+                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            break;
+                        case 3:
+                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            break;
+                        default:
+                            testAnim.SwapSpriteSheet(TextureManager.testRun);
+                            break;
+                    }
 
                     if (Baby != null)
                     {
@@ -393,7 +466,7 @@ namespace GlowBabyGlow
                 babyLife = maxBabyLife;
                 Baby = null;
                 pos.Y = Config.screenH + 200;
-                if (MenuSystem.gameType != GameType.theif)
+                if (MenuSystem.gameType != GameType.thief)
                 {
                     lives--;
                 }
@@ -408,16 +481,19 @@ namespace GlowBabyGlow
 
         public void Respawn()
         {
-            Baby = null;
-            if (spawnBaby)
-            { holdingBaby = true; }
-            velocity = Vector2.Zero;
-            ResetPos();
-            alive = true;
-            World.EnemyManager.ClearEnemies();
-            World.CoinManager.ClearCoins();
-            World.ParticleManager.ClearParticles();
-            World.BulletManager.ClearBullets();
+            if (lives > 0)
+            {
+                Baby = null;
+                if (spawnBaby)
+                { holdingBaby = true; }
+                velocity = Vector2.Zero;
+                ResetPos();
+                alive = true;
+                World.EnemyManager.ClearEnemies();
+                World.CoinManager.ClearCoins();
+                World.ParticleManager.ClearParticles();
+                World.BulletManager.ClearBullets();
+            }
         }
 
         public void Shoot()
@@ -1109,7 +1185,7 @@ namespace GlowBabyGlow
                 if (Baby != null)
                 {
                     Baby.Draw(sb, SpriteEffects.None);
-                    if (!World.Exploding)
+                    if (!World.Exploding && !hide)
                     {
                         LineBatch.DrawCircle(sb, new Vector2(Baby.Rect.Center.X, Baby.Rect.Center.Y), 
                             (int)(babyLife * 2 * Config.screenR), c);
@@ -1117,7 +1193,7 @@ namespace GlowBabyGlow
                 }
                 else
                 {
-                    if (!World.Exploding)
+                    if (!World.Exploding && !hide)
                     {
                         if (holdingBaby)
                         {
@@ -1131,7 +1207,7 @@ namespace GlowBabyGlow
             effect = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             //sb.Draw(TextureManager.blankTexture, rect, Color.Green);
-            if (!World.Exploding)
+            if (!World.Exploding && !hide)
             {
                 base.Draw(sb, effect);
             }

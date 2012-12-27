@@ -80,5 +80,11 @@ Content\Menu\finger.xnb
 Content\Hud\face-bum.xnb
 Content\Hud\face-pedo.xnb
 Content\Hud\face-santa.xnb
+Content\Menu\win-bum.xnb
+Content\Menu\win-normal.xnb
+Content\Menu\win-pedo.xnb
+Content\Menu\win-santa.xnb
+Content\Actors\sprite-santa-baby.xnb
+Content\Actors\sprite-santa.xnb
 Animation.cs
 Animator.cs
