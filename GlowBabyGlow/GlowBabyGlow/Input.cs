@@ -122,6 +122,21 @@ namespace GlowBabyGlow
                 gamepad.Add(new GamePadState());
                 prevgamepad.Add(new GamePadState());
             }
+
+            bool connected = false;
+            for (int i = 0; i < 4; i++)
+            {
+                if (gamepad[i].IsConnected)
+                {
+                    keys = false;
+                    defaultIndex = i;
+                    connected = true;
+                    break;
+                }
+            }
+
+            if (!connected)
+            { keys = true; }
         }
 
         #region KeyFunctions
