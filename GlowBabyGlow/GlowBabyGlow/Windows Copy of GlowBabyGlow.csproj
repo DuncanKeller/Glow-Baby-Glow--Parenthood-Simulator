@@ -128,6 +128,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Rain.cs" />
+    <Compile Include="SoundsManager.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Tutorial.cs" />

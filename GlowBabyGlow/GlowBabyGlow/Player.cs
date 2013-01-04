@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using Duncanimation;
 
 namespace GlowBabyGlow
@@ -23,6 +24,7 @@ namespace GlowBabyGlow
         float ladderSpeed = (int)(350 * Config.screenR);
         float ladderSnapX;
         float ladderThumbSensitivity = 0.4f;
+        SoundEffectInstance runSound;
 
         bool holdingBaby = true;
         bool readyToThrow = false;
@@ -36,6 +38,8 @@ namespace GlowBabyGlow
         float babyDecay = 8.5f;
         float keyshakePower = 5;
         float joyshakePower = 2;
+        SoundEffectInstance shakeSound;
+        SoundEffectInstance crySound;
 
         bool alive = true;
         float respawnTimer = 0;
@@ -45,7 +49,7 @@ namespace GlowBabyGlow
         int bullets = 6;
         int maxBullets = 6;
         float reloadTimer;
-        float reloadTime = 1.9f; // seconds
+        float reloadTime = 1.25f; // seconds
         float recoilTimer;
         float recoilTime = 0.3f;
 
@@ -219,6 +223,9 @@ namespace GlowBabyGlow
     
             testAnim.Play("idle");
 
+            runSound = SoundManager.run.CreateInstance();
+            shakeSound = SoundManager.shake.CreateInstance();
+
             //test
             if (currentPowerup != null)
             {
@@ -381,6 +388,15 @@ namespace GlowBabyGlow
                             babyLife -= (dt / 1000) * babyDecay;
                         }
                     }
+                    shakeSound.Stop();
+                }
+                else
+                {
+                    if (shakeSound.State != SoundState.Playing)
+                    {
+                        shakeSound.Play();
+                        shakeSound.Volume = ((shakeSpeed / 100.0f) * .7f) + .3f;
+                    }
                 }
 
                 if (currentPowerup != null)
@@ -436,6 +452,8 @@ namespace GlowBabyGlow
                         w.ParticleManager.AddParticle( new SpringParticle(new Vector2(
                             hitRect.Center.X, hitRect.Bottom )));
                     }
+                    SoundEffectInstance spring = SoundManager.spring.CreateInstance();
+                    spring.Play();
                 }
             }
         }
@@ -444,9 +462,23 @@ namespace GlowBabyGlow
         {
             if (Baby == null)
             {
-                Vector2 throwPos = new Vector2(pos.X + rect.Width / 2, pos.Y + rect.Height / 2);
-                Baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
-                holdingBaby = false;
+                if (holdingBaby)
+                {
+                    Vector2 throwPos = new Vector2(pos.X + rect.Width / 2, pos.Y + rect.Height / 2);
+                    Baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
+                    holdingBaby = false;
+                    int i = Config.rand.Next(SoundManager.cry.Length);
+                    if (crySound != null)
+                    {
+                        if (crySound.State == SoundState.Playing)
+                        {
+                            crySound.Stop();
+                        }
+                    }
+                    crySound = SoundManager.cry[i].CreateInstance();
+                    crySound.Volume = .5f;
+                    crySound.Play();
+                }
             }
         }
 
@@ -517,9 +549,15 @@ namespace GlowBabyGlow
                     testAnim.Play("shoot");
                 }
 
+                SoundEffectInstance gunSound = SoundManager.gun.CreateInstance();
+                gunSound.Pitch = (float)(Config.rand.NextDouble() / 2.0f) - .5f;
+                gunSound.Play();
+
                 if (bullets == 0)
                 {
                     reloadTimer = reloadTime;
+                    SoundEffectInstance reloadSound = SoundManager.reload.CreateInstance();
+                    reloadSound.Play();
                 }
                 automateBullet = 0.25f;
             }
@@ -818,6 +856,18 @@ namespace GlowBabyGlow
             {
                 speedMod = 3f;
                 accMod = 1.5f;
+
+                if (Math.Abs(velocity.X) > 10 && !InAir)
+                {
+                    if (runSound.State != SoundState.Playing)
+                    {
+                        runSound.Play();
+                    }
+                }
+                else
+                {
+                    runSound.Stop();
+                }
             }
 
             float xMax = Math.Abs(maxSpeed * xInput * speedMod);

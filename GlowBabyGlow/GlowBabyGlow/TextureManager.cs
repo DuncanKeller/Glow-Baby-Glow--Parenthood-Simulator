@@ -206,6 +206,8 @@ namespace GlowBabyGlow
             font = c.Load<Texture2D>("Fonts\\font");
             smallFont = c.Load<Texture2D>("Fonts\\small-font");
 
+            SoundManager.LoadContent();
+
             loaded = true;
         }
     }

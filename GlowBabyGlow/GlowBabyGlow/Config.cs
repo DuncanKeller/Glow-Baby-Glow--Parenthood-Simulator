@@ -14,10 +14,10 @@ namespace GlowBabyGlow
     {
         //public static int screenW = 960;
         //public static int screenH = 540;
-        public static int screenW = (int)(1920);
-        public static int screenH = (int)(1080);
+        public static int screenW = (int)(1920 - (1920 / 16));
+        public static int screenH = (int)(1080 - (1080 / 16));
         public static float screenR;
-        public static bool fullScrn = true;
+        public static bool fullScrn = false;
         public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();

@@ -51,6 +51,7 @@ namespace GlowBabyGlow
             blankTexture = Content.Load<Texture2D>("blank");
             loadingTexture = Content.Load<Texture2D>("Menu\\loading");
             TextureManager.Init(Content);
+            SoundManager.Init(Content);
             Config.Init();
 
             loadingScreenThread = new Thread(DrawLoadingScreen);
