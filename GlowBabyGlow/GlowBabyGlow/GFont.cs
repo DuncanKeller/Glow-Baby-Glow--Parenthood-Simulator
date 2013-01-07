@@ -88,6 +88,13 @@ namespace GlowBabyGlow
             fontMap.Add(',', new Point(7, 3));
             fontMap.Add('!', new Point(8, 3));
             fontMap.Add('-', new Point(9, 3));
+
+            fontMap.Add('@', new Point(0, 4)); // a button
+            fontMap.Add('#', new Point(1, 4)); // x button
+            fontMap.Add('$', new Point(2, 4)); // control stick
+            fontMap.Add('%', new Point(3, 4)); // arrow keys
+            fontMap.Add('^', new Point(4, 4)); // z key
+            fontMap.Add('&', new Point(5, 4)); // x key
         }
 
         #endregion

@@ -27,7 +27,7 @@ namespace GlowBabyGlow
         public PowerupManager(World w)
         {
             world = w;
-            font = new GFont(TextureManager.smallFont, 4, 10);
+            font = new GFont(TextureManager.smallFont, 5, 10);
             width = TextureManager.pupBackdrop.Width / 2;
             height = TextureManager.pupBackdrop.Height / 2;
         }

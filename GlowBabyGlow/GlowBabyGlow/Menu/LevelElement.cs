@@ -56,7 +56,7 @@ namespace GlowBabyGlow
 
             vp = new Viewport();
             this.levelname = levelname;
-            smallfont = new GFont(TextureManager.smallFont, 4, 10);
+            smallfont = new GFont(TextureManager.smallFont, 5, 10);
 
             levelThatUnlocks.Add("airport", "alley");
             levelThatUnlocks.Add("jungle", "airport");
