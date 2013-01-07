@@ -54,9 +54,9 @@ namespace GlowBabyGlow
         {
             if (world != null)
             {
-                if (world.Players.Count == 1)
+                if (MenuSystem.gameType == GameType.single)
                 {
-                    int score = world.Players[0].Score;
+                    score = world.Players[0].Score;
 
                     if (Config.highScore[world.LevelName] < score)
                     {

@@ -252,6 +252,11 @@ namespace GlowBabyGlow
                 {
                     font.Draw(sb, new Vector2((Config.screenW / 2) - ((font.Size.X * Text.Length) / 2),
                         Config.screenH - 15 - font.Size.Y), Text, Color.White);
+
+                    string score = "High Score: " + Config.highScore[levelname];
+                    Vector2 pos = new Vector2((Config.screenW / 2) - ((score.Length * smallfont.Size.X) / 4),
+                        (Config.screenH / 2) + (largeHeight / 2) + 10);
+                    smallfont.Draw(sb, pos, score, Color.Black, true);
                 }
             }
 

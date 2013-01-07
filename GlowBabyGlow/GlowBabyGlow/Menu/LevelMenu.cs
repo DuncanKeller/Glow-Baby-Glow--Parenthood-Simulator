@@ -159,8 +159,10 @@ namespace GlowBabyGlow
                     (int)boatPos + (int)pos.X,
                     (Config.screenH - h - (Config.screenH / 70)) + (int)pos.Y,
                     w, h), Color.White);
+
                 sb.End();
             }
+
             DrawElements(sb, g);
         }
     }

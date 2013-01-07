@@ -138,6 +138,7 @@ namespace GlowBabyGlow
 
             sb.Begin();
 
+            
             foreach (int i in players.Keys)
             {
                 players[i].Draw(sb, pos);
