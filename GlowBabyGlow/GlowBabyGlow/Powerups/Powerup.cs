@@ -22,6 +22,8 @@ namespace GlowBabyGlow
         float aliveTimer = 0;
         protected Player p;
 
+        float size = 20 * Config.screenR;
+
         protected Color color;
         float particleTimer = 0;
         float particleTime = 0.4f;
@@ -67,8 +69,8 @@ namespace GlowBabyGlow
 
         public Powerup(int x, int y, World w) : base(w)
         {
-            rect = new Rectangle(x, y, 20, 20);
-            startingHeight = y;
+            rect = new Rectangle(x, y - (int)(size * 2f), (int)size, (int)size);
+            startingHeight = rect.Y;
         }
 
         public override void Update(float dt)

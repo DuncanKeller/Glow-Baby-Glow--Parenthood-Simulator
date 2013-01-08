@@ -177,7 +177,7 @@ namespace GlowBabyGlow
 
                         int num = Config.rand.Next(5);
                         int x = world.Tiles[index].Rect.Center.X;
-                        int y = world.Tiles[index].Rect.Y - Enemy.height;
+                        int y = world.Tiles[index].Rect.Y;
 
                         switch (num)
                         {

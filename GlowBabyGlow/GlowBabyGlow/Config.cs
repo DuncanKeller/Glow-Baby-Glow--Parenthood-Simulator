@@ -12,8 +12,8 @@ namespace GlowBabyGlow
 {
     class Config
     {
-        //public static int screenW = 960;
-        //public static int screenH = 540;
+        //public static int screenW = 1366;
+        //public static int screenH = 768;
         public static int screenW = (int)(1920  / 2);
         public static int screenH = (int)(1080 / 2);
         public static float screenR;

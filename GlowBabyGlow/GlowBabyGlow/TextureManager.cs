@@ -80,6 +80,8 @@ namespace GlowBabyGlow
         public static Texture2D ladder;
         public static Texture2D coin;
         public static Texture2D zombieSheet;
+        public static Texture2D zombieSpeedy;
+        public static Texture2D zombieFat;
         public static Texture2D arrow;
 
         public static Texture2D font;
@@ -154,6 +156,8 @@ namespace GlowBabyGlow
 
             // enemies
             zombieSheet = c.Load<Texture2D>("Actors\\zombie-sheet");
+            zombieFat = c.Load<Texture2D>("Actors\\zombie-sheet-fat");
+            zombieSpeedy = c.Load<Texture2D>("Actors\\zombie-sheet-fast");
 
             // backdrops
             bTutorial = c.Load<Texture2D>("Backdrops\\tutorial");

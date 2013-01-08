@@ -103,5 +103,7 @@ Content\Sound\cry4.xnb
 Content\Sound\cry5.xnb
 Content\Sound\cry6.xnb
 Content\Sound\cry7.xnb
+Content\Actors\zombie-sheet-fast.xnb
+Content\Actors\zombie-sheet-fat.xnb
 Animation.cs
 Animator.cs

@@ -132,8 +132,31 @@ namespace GlowBabyGlow
                     { break; }
                     else
                     {
-                        Enemy e = new Enemy(new Point(world.Tiles[index].Rect.Center.X,
-                            world.Tiles[index].Rect.Y - Enemy.height), world);
+                        Enemy e = null;
+                        int enemyPorb = Config.rand.Next(100);
+
+                        if (enemyPorb < 3)
+                        {
+                            e = new BossEnemy(new Point(world.Tiles[index].Rect.Center.X,
+                                world.Tiles[index].Rect.Y), world);
+                        }
+                        else if (enemyPorb < 15)
+                        {
+                            e = new SpeedEnemy(new Point(world.Tiles[index].Rect.Center.X,
+                                world.Tiles[index].Rect.Y), world);
+                        }
+                        else if (enemyPorb < 22)
+                        {
+                            e = new FatEnemy(new Point(world.Tiles[index].Rect.Center.X,
+                                world.Tiles[index].Rect.Y), world);
+                        }
+                        else
+                        {
+                            e = new Enemy(new Point(world.Tiles[index].Rect.Center.X,
+                                world.Tiles[index].Rect.Y), world);
+                        }
+                    
+                        e.MoveUp();
                         enemies.Add(e);
                         return;
                     }

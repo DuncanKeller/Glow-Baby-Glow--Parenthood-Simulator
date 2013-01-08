@@ -73,6 +73,9 @@
     <Compile Include="Actors\Actor.cs" />
     <Compile Include="Actors\AutomatedPlayer.cs" />
     <Compile Include="Actors\Baby.cs" />
+    <Compile Include="Actors\BossEnemy.cs" />
+    <Compile Include="Actors\FatEnemy.cs" />
+    <Compile Include="Actors\SpeedEnemy.cs" />
     <Compile Include="Backdrops\Backdrop.cs" />
     <Compile Include="Backdrops\BackdropObject.cs" />
     <Compile Include="Items\Bullet.cs" />
@@ -84,7 +87,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Backdrops\DarkCloud.cs" />
     <Compile Include="Actors\Enemy.cs" />
-    <Compile Include="EnemyManager.cs" />
+    <Compile Include="Actors\EnemyManager.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="GFont.cs" />
     <Compile Include="Backdrops\Hatch.cs" />

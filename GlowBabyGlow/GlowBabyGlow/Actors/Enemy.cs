@@ -11,12 +11,13 @@ namespace GlowBabyGlow
     class Enemy : Actor
     {
         //bool movingRight = true;
-        public static int width = (int)(35*2* Config.screenR);
-        public static int height = (int)(37*2* Config.screenR);
+        public int width = (int)(35*2* Config.screenR);
+        public int height = (int)(37*2* Config.screenR);
 
-        int health = 2;
+        protected float maxVeloc = 100;
+        protected int health = 2;
 
-        Vector2 idealVelocity = new Vector2();
+        protected Vector2 idealVelocity = new Vector2();
 
         List<Bullet> alreadyHit = new List<Bullet>();
 
@@ -35,8 +36,13 @@ namespace GlowBabyGlow
             testAnim = new Animator(TextureManager.zombieSheet, 2, 6);
             testAnim.AddAnimation("default", 0, 11, 15, true);
             testAnim.Play("default");
-            velocity.X = (int)(-100 * Config.screenR);
-            idealVelocity.X = (int)(-100 * Config.screenR);
+            velocity.X = (int)(-maxVeloc * Config.screenR);
+            idealVelocity.X = (int)(-maxVeloc * Config.screenR);
+        }
+
+        public void MoveUp()
+        {
+            pos.Y -= height;
         }
 
         public override void Update(float dt)
