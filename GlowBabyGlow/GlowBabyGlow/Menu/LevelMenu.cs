@@ -137,7 +137,14 @@ namespace GlowBabyGlow
             {
                 if (multi)
                 {
-                    MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "versus");
+                    if (MenuSystem.lastScreenVersus)
+                    {
+                        MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "versus");
+                    }
+                    else
+                    {
+                        MenuSystem.SwitchMenu(new Vector2(-Config.screenW * 2, 0), "coop");
+                    }
                 }
                 else
                 {

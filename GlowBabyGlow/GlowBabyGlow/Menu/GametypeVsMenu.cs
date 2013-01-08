@@ -45,6 +45,8 @@ namespace GlowBabyGlow
         {
             base.Update(dt);
 
+            MenuSystem.lastScreenVersus = true;
+
             if (Input.HoldingSecondary(Input.defaultIndex) &&
                   !Input.HoldingSecondaryPrev(Input.defaultIndex))
             {

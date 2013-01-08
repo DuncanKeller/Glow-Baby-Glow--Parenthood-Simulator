@@ -15,6 +15,7 @@ namespace GlowBabyGlow
             texture = TextureManager.pupIconSpeedshoes;
             icon = TextureManager.pupIconSpeedshoes;
             description = "speed up";
+            color = Color.Red;
         }
 
         public override void Update(float dt)

@@ -15,6 +15,7 @@ namespace GlowBabyGlow
             texture = TextureManager.blackCircle;
             icon = TextureManager.pupIconPacifier;
             description = "shake break";
+            color = Color.LightBlue;
         }
 
         public override void Update(float dt)

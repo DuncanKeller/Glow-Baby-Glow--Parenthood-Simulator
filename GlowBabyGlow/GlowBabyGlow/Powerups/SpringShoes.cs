@@ -15,6 +15,7 @@ namespace GlowBabyGlow
             texture = TextureManager.pupIconSpringshoes;
             icon = TextureManager.pupIconSpringshoes;
             description = "air gordans";
+            color = Color.Purple;
         }
 
         public override void Update(float dt)

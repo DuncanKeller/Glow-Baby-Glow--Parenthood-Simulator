@@ -111,6 +111,7 @@
     <Compile Include="Particles\GlowParticle.cs" />
     <Compile Include="Particles\GoldParticle.cs" />
     <Compile Include="Particles\GooParticle.cs" />
+    <Compile Include="Particles\ItemParticle.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleManager.cs" />
     <Compile Include="Particles\PowerupParticle.cs" />

@@ -22,6 +22,12 @@ namespace GlowBabyGlow
         float aliveTimer = 0;
         protected Player p;
 
+        protected Color color;
+        float particleTimer = 0;
+        float particleTime = 0.4f;
+
+        List<Particle> particles = new List<Particle>();
+
         public Rectangle Rect
         {
             get { return rect; }
@@ -76,11 +82,44 @@ namespace GlowBabyGlow
                 aliveTimer -= dt / 1000;
             }
 
+            if (particleTimer >= particleTime)
+            {
+                particles.Add(new ItemParticle(
+                    new Vector2(rect.Center.X, rect.Center.Y),
+                    color));
+                particleTime = 0;
+            }
+            else
+            {
+                particleTimer += dt / 1000;
+            }
+
+            List<Particle> remove = new List<Particle>();
+
+            foreach (Particle p in particles)
+            {
+                p.Update(dt);
+                if (!p.Alive)
+                {
+                    remove.Add(p);
+                }
+            }
+
+            foreach (Particle p in remove)
+            {
+                particles.Remove(p);
+            }
+
             base.Update(dt);
         }
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
+            foreach (Particle p in particles)
+            {
+                p.Draw(sb);
+            }
+            sb.Draw(TextureManager.babyGlow, rect, color);
             sb.Draw(texture, rect, Color.White);
             base.Draw(sb, effect);
         }

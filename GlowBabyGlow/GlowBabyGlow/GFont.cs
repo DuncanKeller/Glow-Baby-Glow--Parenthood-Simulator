@@ -143,7 +143,7 @@ namespace GlowBabyGlow
 
         public void DrawDescrition(SpriteBatch sb, Vector2 pos, string word, Color c, int maxWidth)
         {
-            int offset = 5;
+            int offset = (int)(5.0 * Config.screenR);
             int spacing = 1;
             int yspacing = 6;
 

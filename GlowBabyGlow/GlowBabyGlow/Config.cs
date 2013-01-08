@@ -14,8 +14,8 @@ namespace GlowBabyGlow
     {
         //public static int screenW = 960;
         //public static int screenH = 540;
-        public static int screenW = (int)(1920 - (1920 / 16));
-        public static int screenH = (int)(1080 - (1080 / 16));
+        public static int screenW = (int)(1920  / 2);
+        public static int screenH = (int)(1080 / 2);
         public static float screenR;
         public static bool fullScrn = false;
         public static float fontRatio = 1;

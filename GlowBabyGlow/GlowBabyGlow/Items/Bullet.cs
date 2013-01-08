@@ -9,8 +9,8 @@ namespace GlowBabyGlow
 {
     class Bullet : Entity
     {
-        static int width = 6;
-        static int height = 4;
+        static int width = (int)(6 * Config.screenR);
+        static int height = (int)(4 * Config.screenR);
 
         float speed = (int)(900 * Config.screenR);
         Vector2 velocity;

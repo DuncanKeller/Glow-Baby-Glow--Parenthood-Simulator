@@ -15,6 +15,7 @@ namespace GlowBabyGlow
             texture = TextureManager.pupIconArrow;
             icon = TextureManager.pupIconArrow;
             description = "piercing";
+            color = Color.Yellow;
         }
 
         public override void Update(float dt)

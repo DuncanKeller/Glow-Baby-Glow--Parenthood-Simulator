@@ -394,8 +394,11 @@ namespace GlowBabyGlow
                 {
                     if (shakeSound.State != SoundState.Playing)
                     {
-                        shakeSound.Play();
-                        shakeSound.Volume = ((shakeSpeed / 100.0f) * .7f) + .3f;
+                        if (!automate)
+                        {
+                            shakeSound.Play();
+                            shakeSound.Volume = ((shakeSpeed / 100.0f) * .7f) + .3f;
+                        }
                     }
                 }
 
@@ -449,11 +452,14 @@ namespace GlowBabyGlow
                     testAnim.Play("jump");
                     for (int i = 0; i < 50; i++)
                     {
-                        w.ParticleManager.AddParticle( new SpringParticle(new Vector2(
-                            hitRect.Center.X, hitRect.Bottom )));
+                        w.ParticleManager.AddParticle(new SpringParticle(new Vector2(
+                            hitRect.Center.X, hitRect.Bottom)));
                     }
-                    SoundEffectInstance spring = SoundManager.spring.CreateInstance();
-                    spring.Play();
+                    if (!automate)
+                    {
+                        SoundEffectInstance spring = SoundManager.spring.CreateInstance();
+                        spring.Play();
+                    }
                 }
             }
         }
@@ -468,16 +474,19 @@ namespace GlowBabyGlow
                     Baby = new Baby(throwPos, throwStrength * Input.GetThumbs(index).X, index, w);
                     holdingBaby = false;
                     int i = Config.rand.Next(SoundManager.cry.Length);
-                    if (crySound != null)
+                    if (!automate)
                     {
-                        if (crySound.State == SoundState.Playing)
+                        if (crySound != null)
                         {
-                            crySound.Stop();
+                            if (crySound.State == SoundState.Playing)
+                            {
+                                crySound.Stop();
+                            }
                         }
+                        crySound = SoundManager.cry[i].CreateInstance();
+                        crySound.Volume = .5f;
+                        crySound.Play();
                     }
-                    crySound = SoundManager.cry[i].CreateInstance();
-                    crySound.Volume = .5f;
-                    crySound.Play();
                 }
             }
         }
@@ -552,12 +561,14 @@ namespace GlowBabyGlow
                 SoundEffectInstance gunSound = SoundManager.gun.CreateInstance();
                 gunSound.Pitch = (float)(Config.rand.NextDouble() / 2.0f) - .5f;
                 gunSound.Play();
-
-                if (bullets == 0)
+                if (!automate)
                 {
-                    reloadTimer = reloadTime;
-                    SoundEffectInstance reloadSound = SoundManager.reload.CreateInstance();
-                    reloadSound.Play();
+                    if (bullets == 0)
+                    {
+                        reloadTimer = reloadTime;
+                        SoundEffectInstance reloadSound = SoundManager.reload.CreateInstance();
+                        reloadSound.Play();
+                    }
                 }
                 automateBullet = 0.25f;
             }
@@ -856,17 +867,19 @@ namespace GlowBabyGlow
             {
                 speedMod = 3f;
                 accMod = 1.5f;
-
-                if (Math.Abs(velocity.X) > 10 && !InAir)
+                if (!automate)
                 {
-                    if (runSound.State != SoundState.Playing)
+                    if (Math.Abs(velocity.X) > 10 && !InAir)
                     {
-                        runSound.Play();
+                        if (runSound.State != SoundState.Playing)
+                        {
+                            runSound.Play();
+                        }
                     }
-                }
-                else
-                {
-                    runSound.Stop();
+                    else
+                    {
+                        runSound.Stop();
+                    }
                 }
             }
 

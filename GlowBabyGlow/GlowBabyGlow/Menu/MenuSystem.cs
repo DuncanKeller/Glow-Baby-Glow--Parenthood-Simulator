@@ -15,6 +15,7 @@ namespace GlowBabyGlow
         static Game1 g;
 
         public static GameType gameType = GameType.single;
+        public static bool lastScreenVersus = false;
 
         public static int[] Players()
         {
