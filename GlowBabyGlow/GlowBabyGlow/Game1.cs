@@ -28,6 +28,8 @@ namespace GlowBabyGlow
         Texture2D loadingTexture;
         float loadingTimer = 0;
 
+        World tutorial = new World();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -63,9 +65,20 @@ namespace GlowBabyGlow
             loadingThread.Join();
 
             LineBatch.Init(graphics.GraphicsDevice);
-            Input.Init(world);
+
             //world.Init();
             MenuSystem.Init(this);
+            tutorial.Init("tutorial");
+            tutorial.Automate = false;
+
+            if (Config.tutorial)
+            {
+                Input.Init(tutorial);
+            }
+            else
+            {
+                Input.Init(world);
+            }
             
             base.Initialize();
         }
@@ -115,20 +128,25 @@ namespace GlowBabyGlow
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
             Input.Update();
-            if (!inMenu)
+
+            if (Config.tutorial)
             {
-                world.Update(gameTime.ElapsedGameTime.Milliseconds);
+                tutorial.Update(gameTime.ElapsedGameTime.Milliseconds);
             }
             else
             {
-                world = MenuSystem.GetCurrentLevel();
-                MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
+                if (!inMenu)
+                { 
+                    world.Update(gameTime.ElapsedGameTime.Milliseconds);
+                }
+                else
+                {
+                    world = MenuSystem.GetCurrentLevel();
+                    MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
+                }
             }
+
             Input.LateUpdate();
             // TODO: Add your update logic here
 
@@ -160,6 +178,15 @@ namespace GlowBabyGlow
 
                     spriteBatch.End();
 
+                }
+
+                if (Config.tutorial)
+                {
+                    spriteBatch.Begin();
+
+                    tutorial.Draw(spriteBatch);
+
+                    spriteBatch.End();
                 }
             }
             else

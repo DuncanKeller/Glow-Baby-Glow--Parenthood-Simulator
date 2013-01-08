@@ -162,15 +162,6 @@ namespace GlowBabyGlow
 
         #endregion
 
-        public void TestRemove(Player p)
-        {
-            //if (MenuSystem.gameType == GameType.vsSurvival ||
-            //    MenuSystem.gameType == GameType.theif)
-            //{
-            //    babies.Remove(p);
-            //    players.Remove(p);
-            //}
-        }
 
         public void AddPlayers()
         {

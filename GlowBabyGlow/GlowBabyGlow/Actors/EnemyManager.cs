@@ -16,6 +16,7 @@ namespace GlowBabyGlow
         float timer;
         float enemyTime = 3; // seconds
         int spawnDistance = 175;
+        int maxEnemies = 30;
 
         public EnemyManager(World w)
         {
@@ -51,9 +52,12 @@ namespace GlowBabyGlow
             {
                 if (world.Backdrop.Stage != "tutorial")
                 {
-                    timer = 0;
-                    Spawn();
-                    enemyTime -= 0.02f;
+                    if (enemies.Count < maxEnemies)
+                    {
+                        timer = 0;
+                        Spawn();
+                        enemyTime -= 0.02f;
+                    }
                 }
             }
 
@@ -134,6 +138,11 @@ namespace GlowBabyGlow
                     {
                         Enemy e = null;
                         int enemyPorb = Config.rand.Next(100);
+
+                        if (Config.tutorial)
+                        {
+                            enemyPorb = -1;
+                        }
 
                         if (enemyPorb < 3)
                         {

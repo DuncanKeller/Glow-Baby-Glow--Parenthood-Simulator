@@ -19,7 +19,7 @@ namespace GlowBabyGlow
         static float cueTime = 1.5f;
         static string text = "";
         static string text2 = "";
-        static GFont font = new GFont(TextureManager.font, 4, 10);
+        static GFont font = new GFont(TextureManager.smallFont, 5, 10);
         
         static float wave = 0;
         static float arrowTimer = 0;
@@ -27,6 +27,7 @@ namespace GlowBabyGlow
         static float amplitude = 15;
 
         static bool done = false;
+        static float doneTimer = 0;
 
         public static bool Done
         {
@@ -52,6 +53,16 @@ namespace GlowBabyGlow
             {
                 p.BabyLife = p.MaxBabyLife / 2;
             }
+
+            if (done)
+            {
+                doneTimer += dt / 1000;
+            }
+
+            if (doneTimer > 2.2f)
+            {
+                Config.tutorial = false;
+            }
             
             if (cueCounter)
             {
@@ -62,20 +73,31 @@ namespace GlowBabyGlow
                     {
                         destination.X = Config.screenW / 17;
                         destination.Y = (Config.screenH / 4) + (Config.screenH / 10);
-                        text = "";
+                        text = "welcome to glow, baby, glow!";
                     }
                     else if (counter == 1)
                     {
                         Enemy e = new Enemy(new Point(
                         Config.screenW / 3, (Config.screenH / 2) - Tile.Size), w);
                         w.EnemyManager.Add(e);
-                        text = "shoot the vagrant";
+                        text = "shoot that nasty looking thing over there";
+                        text2 = "using ";
+                        if (Input.keys)
+                        {
+                            text2 += "shift";
+                        }
+                        else
+                        {
+                            text2 += "#";
+                        }
                     }
                     else if (counter == 2)
                     {
                         destination.X = Config.screenW / 2 - (Config.screenW / 30);
                         destination.Y = Config.screenH - (Config.screenH / 5);
-                        text = "";
+                        text = "so far so good";
+                        text2 = "hey, go stand over there";
+                       
                     }
                     else if (counter == 3)
                     {
@@ -91,29 +113,57 @@ namespace GlowBabyGlow
                             0, p.Index, w);
                         b.Velocity = new Vector2(0, 0);
                         p.Baby = b;
-                        text = "catch the baby";
+                        text = "catch the baby!";
+                        text2 = "";
                     }
                     else if (counter == 4)
                     {
-                        text = "shake the baby";
+                        text = "rock the baby by holding ";
+                        if (Input.keys)
+                        {
+                            text += "shift";
+                            text2 += "and mashing left and right";
+                        }
+                        else
+                        {
+                            text += "#";
+                            text2 += "and rotating the control stick $";
+                        }
                     }
                     else if (counter == 5)
                     {
-                        destination.X = Config.screenW / 17;
+                        destination.X = Config.screenW / 2;
                         destination.Y = (Config.screenH / 4) + (Config.screenH / 10);
-                        text = "dont drop the baby";
+                        text = "oh yeah, whatever you do-";
+                        text2 = "dont drop the baby!!!";
                     }
                     else if (counter == 6)
+                    {
+                        destination.X = Config.screenW / 17;
+                        destination.Y = (Config.screenH / 4) + (Config.screenH / 10);
+                        text = "you can give the baby a little toss-";
+                        if (Input.keys)
+                        {
+                            text2 = "hold " + "space" + ", aim, and release!";
+                        }
+                        else
+                        {
+                            text2 = "hold " + "@" + ", aim, and release!";
+                        }
+                    }
+                    else if (counter == 7)
                     {
                         for (int i = 0; i < 5; i++)
                         {
                             w.EnemyManager.Spawn();
                         }
-                        text = "kill";
+                        text = "take care of these guys";
+                        text2 = "coins will give you points!";
                     }
-                    else if (counter == 7)
+                    else if (counter == 8)
                     {
-                        text = "";
+                        text = "good job, man";
+                        text2 = "you can figure the rest out yourself";
                         destination.X =  (Config.screenW / 20);
                         destination.Y = Config.screenH - (Config.screenH / 5);
                     }
@@ -171,12 +221,19 @@ namespace GlowBabyGlow
                 }
                 else if (counter == 7)
                 {
-                    if (w.EnemyManager.Enemies.Count == 0)
+                    if (p.HitRect.Intersects(destination))
                     {
                         cueCounter = true;
                     }
                 }
                 else if (counter == 8)
+                {
+                    if (w.EnemyManager.Enemies.Count == 0)
+                    {
+                        cueCounter = true;
+                    }
+                }
+                else if (counter == 9)
                 {
                     if (p.HitRect.Intersects(destination))
                     {
@@ -189,7 +246,9 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
-            font.Draw(sb, new Vector2(10, 10), text, Color.White);
+            font.Draw(sb, new Vector2(10, 10), text, Color.GhostWhite, true);
+            font.Draw(sb, new Vector2(10, 20 + (font.Size.Y / 2)), text2, Color.GhostWhite, true);
+
             int width = 60;
             int height = 80;
             Rectangle arrowRect = new Rectangle(destination.Center.X - (width / 2), destination.Top - height + (int)wave,
@@ -198,7 +257,8 @@ namespace GlowBabyGlow
             if (counter == 1 ||
                 counter == 3 ||
                 counter == 6 ||
-                counter == 8)
+                counter == 7 ||
+                counter == 9)
             {
                 sb.Draw(TextureManager.arrow, arrowRect, Color.White);
                 //sb.Draw(TextureManager.blankTexture, destination, new Color(100, 0, 0, 100));

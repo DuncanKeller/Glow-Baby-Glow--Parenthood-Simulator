@@ -28,8 +28,7 @@ namespace GlowBabyGlow
         static bool xbox = false;
         static StorageContainer storageContainer;
 
-        public static bool poop = true; // delete this
-
+        public static bool tutorial = false;
 
         public static void Init()
         {
@@ -103,11 +102,16 @@ namespace GlowBabyGlow
                 StorageContainer container = device.EndOpenContainer(containerResult);
                 containerResult.AsyncWaitHandle.Close();
                 storageContainer = container;
+
                 if (container.FileExists(filename))
                 {
                     Stream stream = container.OpenFile(filename, FileMode.Open);
                     BinaryReader br = new BinaryReader(stream);
                     Load(br);
+                }
+                else
+                {
+                    tutorial = true;
                 }
             }
         }
@@ -144,6 +148,10 @@ namespace GlowBabyGlow
             {
                 BinaryReader br = new BinaryReader(File.OpenRead(filename));
                 Load(br);
+            }
+            else
+            {
+                tutorial = true;
             }
         }
     }
