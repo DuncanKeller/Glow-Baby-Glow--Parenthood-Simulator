@@ -7,13 +7,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GlowBabyGlow
 {
+    enum DeathType
+    {
+        drop,
+        life,
+        zombie,
+        none,
+        shoot
+    }
+
     static class GameOver
     {
+        public static DeathType death;
         static World world;
         static Rectangle rect;
         static float position;
         static float velocity = 0;
         static GFont font;
+        static GFont smallfont;
         static bool initialized = false;
         static float startTimer;
 
@@ -42,6 +53,7 @@ namespace GlowBabyGlow
             startTimer = 1.5f;
             initialized = true;
             font = new GFont(TextureManager.font, 4, 10);
+            smallfont = new GFont(TextureManager.smallFont, 5, 10);
             position = -Config.screenH;
             rect = new Rectangle(0, -Config.screenH, Config.screenW, Config.screenH);
             world = w;
@@ -161,6 +173,24 @@ namespace GlowBabyGlow
                     (Config.screenW / 2) - (((font.Size.X / 2) * scoreText.Length) / 2),
                     (Config.screenH / 2) - (Config.screenH / 6) + position + GFont.height);
                 font.Draw(sb, scorePos, scoreText, new Color(254, 254, 254), true);
+
+                string text = "";
+                switch (death)
+                {
+                    case DeathType.drop:
+                        text = "you dropped the baby! what a bad parent";
+                        break;
+                    case DeathType.life:
+                        text = "the baby died! you should have rocked it more";
+                        break;
+                    case DeathType.shoot:
+                        text = "what have you done!!!";
+                        break;
+                }
+
+                Vector2 textPos = new Vector2((Config.screenW / 2) - (text.Length * (smallfont.Size.X / 2)),
+                    Config.screenH - (smallfont.Size.X / 2));
+                smallfont.Draw(sb, textPos, text, Color.GhostWhite, true);
             }
             else
             {

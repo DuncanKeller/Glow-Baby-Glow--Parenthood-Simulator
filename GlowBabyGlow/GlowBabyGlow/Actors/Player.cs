@@ -325,6 +325,7 @@ namespace GlowBabyGlow
                     lives = 0;
                     w.Explode();
                     BabyExplode();
+                    GameOver.death = DeathType.life;
                 }
 
                 if (holdingBaby)

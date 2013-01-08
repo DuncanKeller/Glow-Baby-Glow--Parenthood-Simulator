@@ -122,7 +122,7 @@ namespace GlowBabyGlow
                 if (HitRect.Intersects(t.Rect))
                 {    
                     w.Explode();
-                    
+                    GameOver.death = DeathType.drop;
                     splodin = true;
                 }
             }
@@ -132,6 +132,8 @@ namespace GlowBabyGlow
                 if (HitRect.Intersects(b.Rect))
                 {
                     splode = true;
+                    GameOver.death = DeathType.drop;
+                    break;
                 }
             }
             if (splode)
