@@ -132,7 +132,7 @@ namespace GlowBabyGlow
                 if (HitRect.Intersects(b.Rect))
                 {
                     splode = true;
-                    GameOver.death = DeathType.drop;
+                    GameOver.death = DeathType.shoot;
                     break;
                 }
             }

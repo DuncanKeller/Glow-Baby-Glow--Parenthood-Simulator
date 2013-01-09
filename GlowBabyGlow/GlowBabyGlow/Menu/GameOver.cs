@@ -181,15 +181,17 @@ namespace GlowBabyGlow
                         text = "you dropped the baby! what a bad parent";
                         break;
                     case DeathType.life:
-                        text = "the baby died! you should have rocked it more";
+                        text = "you should have rocked the baby more";
                         break;
                     case DeathType.shoot:
                         text = "what have you done!!!";
                         break;
                 }
 
-                Vector2 textPos = new Vector2((Config.screenW / 2) - (text.Length * (smallfont.Size.X / 2)),
-                    Config.screenH - (smallfont.Size.X / 2));
+                Vector2 textPos = new Vector2((Config.screenW / 2) - ((text.Length * (smallfont.Size.X / 2)) / 2),
+                    10 + position);
+                Vector2 textPos2 = new Vector2((Config.screenW / 2) - ((text.Length * (smallfont.Size.X / 2)) / 2),
+                   Config.screenH - (smallfont.Size.X / 2) + pos.Y - 10);
                 smallfont.Draw(sb, textPos, text, Color.GhostWhite, true);
             }
             else
