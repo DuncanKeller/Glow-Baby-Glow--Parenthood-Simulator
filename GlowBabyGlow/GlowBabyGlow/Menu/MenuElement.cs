@@ -67,7 +67,7 @@ namespace GlowBabyGlow
         public void SetToDescr()
         {
             descriptionflag = true;
-            font.SetTexture(TextureManager.smallFont);
+            font = new GFont(TextureManager.smallFont, 5, 10);
         }
 
         public virtual void ChangePosition(Vector2 newPos)

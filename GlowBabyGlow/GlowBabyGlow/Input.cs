@@ -262,8 +262,8 @@ namespace GlowBabyGlow
                                 {
                                     if (world.Players[i].Baby == null)
                                     {
-                                        float x = GetThumbs(i).X;
-                                        float y = GetThumbs(i).Y;
+                                        float x = GetThumbs(world.Players[i].Index).X;
+                                        float y = GetThumbs(world.Players[i].Index).Y;
                                         float angle = 0;
                                         if (keys)
                                         {
