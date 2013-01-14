@@ -37,7 +37,7 @@ namespace GlowBabyGlow
         float babyLife;
         float babyDecay = 8.5f;
         float keyshakePower = 5;
-        float joyshakePower = 2;
+        float joyshakePower = 1.3f;
         SoundEffectInstance shakeSound;
         SoundEffectInstance crySound;
         float explodeTime = -1;
@@ -660,11 +660,18 @@ namespace GlowBabyGlow
 
         public void Shake(float angle)
         {
-            if (!ReadyToThrow)
+            if (!ReadyToThrow && !onLadder)
             {
                 shaking = true;
                 float dAngle = angle - prevAngle;
                 testAnim.Play("shake");
+
+
+                shakeSpeed = Math.Abs(dAngle * 40);
+
+                if (shakeSpeed > 100)
+                { shakeSpeed = 100; }
+
                 testAnim.SetSpeed(dAngle * 120);
                 prevAngle = angle;
 

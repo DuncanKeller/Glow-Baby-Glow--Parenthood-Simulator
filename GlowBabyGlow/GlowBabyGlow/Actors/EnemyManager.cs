@@ -15,12 +15,17 @@ namespace GlowBabyGlow
         List<Enemy> toAdd = new List<Enemy>();
         float timer;
         float enemyTime = 3; // seconds
-        int spawnDistance = 175;
+        int spawnDistance = (int)(300 * Config.screenR);
         int maxEnemies = 30;
+        int level = 0;
+        float levelTimer;
+        float levelTime = 15;
+        List<float> levels = new List<float>();
 
         public EnemyManager(World w)
         {
             world = w;
+            AddLevels();
         }
 
         public List<Enemy> Enemies
@@ -43,12 +48,49 @@ namespace GlowBabyGlow
             toAdd.Add(e);
         }
 
+        public void AddLevels()
+        {
+            levels.Add(3);
+            levels.Add(2);
+            levels.Add(1.5f);
+            levels.Add(1.5f);
+            levels.Add(1);
+            levels.Add(1);
+            levels.Add(1);
+            levels.Add(1);
+            levels.Add(.8f);
+            levels.Add(.8f);
+            levels.Add(.8f);
+            levels.Add(.8f);
+            levels.Add(.8f);
+            levels.Add(.8f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.6f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+            levels.Add(.5f);
+        }
+
         public void Update(float dt)
         {
             //enemyTime -= (dt / 1000) * 0.05f;
             timer += dt / 1000;
+            levelTimer += dt / 1000;
 
-            if (timer > enemyTime)
+            if (timer > levels[level])
             {
                 if (world.Backdrop.Stage != "tutorial")
                 {
@@ -58,6 +100,15 @@ namespace GlowBabyGlow
                         Spawn();
                         enemyTime -= 0.02f;
                     }
+                }
+            }
+
+            if (level < levels.Count - 1)
+            {
+                if (levelTimer >= levelTime)
+                {
+                    levelTimer = 0;
+                    level++;
                 }
             }
 

@@ -50,7 +50,7 @@ namespace GlowBabyGlow
         public static void Init(World w)
         {
             newScore = false;
-            startTimer = 1.5f;
+            startTimer = 1.0f;
             initialized = true;
             font = new GFont(TextureManager.font, 4, 10);
             smallfont = new GFont(TextureManager.smallFont, 5, 10);

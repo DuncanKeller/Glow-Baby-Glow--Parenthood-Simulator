@@ -55,6 +55,12 @@ namespace GlowBabyGlow
                        angle, Vector2.Zero, new Vector2(length, 3),
                        SpriteEffects.None, Layer);
         }
+        /*
+          float y = (float)Math.Pow( (((i * specialInc) - (maxLength / 2) )) * a, 2);
+
+                    points.Add(new Vector2(x + pos.X,
+                        y + pos.Y - (float)Math.Pow((specialInc * (numPoints - 1) * a) / 2, 2) ));
+         */
 
         public static void DrawArc(SpriteBatch sb, float l, Vector2 pos, Color c)
         {
@@ -64,7 +70,7 @@ namespace GlowBabyGlow
                 int numPoints = 50;
                 float maxLength = 360 * Config.screenR;
                 float length = maxLength * l;
-                float a = -.195f * Config.screenR;
+                float a = 0.31f * Config.screenR;
                 List<Vector2> points = new List<Vector2>();
 
                 float specialInc = maxLength / numPoints;
@@ -73,10 +79,10 @@ namespace GlowBabyGlow
                 {
                     float increment = length / numPoints;
                     float x = increment * i;
-                    float y = (float)Math.Pow(((x) - (length / 2)) * a, 2);
-                    y = (float)Math.Pow(((i * specialInc) - (maxLength / 2)) * a, 2);
+                    float y = (float)Math.Pow(((i - (numPoints / 2))), 2) * a;
+
                     points.Add(new Vector2(x + pos.X,
-                        y + pos.Y - (float)Math.Pow((specialInc * (numPoints - 1) * a) / 2, 2)));
+                        y + pos.Y - (float)Math.Pow(((numPoints - 1)) / 2, 2) * a));
                 }
 
                 int max = numPoints - (numPoints / 4);
