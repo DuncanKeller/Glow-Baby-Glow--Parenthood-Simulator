@@ -23,6 +23,7 @@ namespace GlowBabyGlow
         World world;
         Viewport vp;
 
+        bool readyToUnlock = false;
         bool unlocked = false;
         bool recentlyUnlocked = false;
         float unlockTimer = 0.5f;
@@ -38,6 +39,12 @@ namespace GlowBabyGlow
         public bool Unlocked
         {
             get { return unlocked; }
+        }
+
+        public bool ReadyToUnlock
+        {
+            get { return readyToUnlock; }
+            set { readyToUnlock = value; }
         }
 
         public LevelElement(string text, Texture2D texture, Vector2 pos, bool selectable, Menu m, MenuAction a, string levelname) : 
@@ -87,7 +94,6 @@ namespace GlowBabyGlow
             return false;
         }
 
-
         public override void Update(float dt)
         {
             topLeft = Vector2.Lerp(topLeft, topLeftDest, 0.10f);
@@ -118,6 +124,18 @@ namespace GlowBabyGlow
             }
 
         }
+
+        public bool CanUnlock()
+        {
+            if (!unlocked)
+            {
+                if (Config.highScore[levelThatUnlocks[levelname]] >= neededScore)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         
         public override void ChangePosition(Vector2 newPos)
         {
@@ -138,6 +156,7 @@ namespace GlowBabyGlow
                     {
                         unlocked = true;
                         recentlyUnlocked = true;
+                        readyToUnlock = false;
                     }
                 }
             }
@@ -153,6 +172,16 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
+            if (readyToUnlock && !unlocked)
+            {
+                int newW = (int)(TextureManager.newLevelUnlock.Width * Config.screenR);
+                int newH = (int)(TextureManager.newLevelUnlock.Height * Config.screenR);
+                sb.Draw(TextureManager.newLevelUnlock, new Rectangle(
+                    (int)(topLeftDest.X + (smallWidth / 2) - (newW / 2)) + (int)m.Position.X,
+                    (int)(topLeftDest.Y + (smallHeight / 2) - (newH / 2)) + (int)m.Position.Y,
+                    newW, newH), Color.White);
+            }
+
             Rectangle drawRect = new Rectangle((int)(topLeft.X + m.Position.X), 
                 (int)(topLeft.Y + m.Position.Y),
                 (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
@@ -194,6 +223,7 @@ namespace GlowBabyGlow
                                          Matrix.CreateTranslation(new Vector3(sw,
                                             sh, 0)));
 
+
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 drawRect.X - 2, drawRect.Y - 2, drawRect.Width + 4, 4), Color.Black);
             sb.Draw(TextureManager.blankTexture, new Rectangle(
@@ -217,6 +247,7 @@ namespace GlowBabyGlow
             }
             else if (recentlyUnlocked)
             {
+
                 float factor = drawRect.Width / (largeWidth * 2.0f);
                 int w = (int)(TextureManager.padlockClosed.Width * factor);
                 int h = (int)(TextureManager.padlockClosed.Height * factor);

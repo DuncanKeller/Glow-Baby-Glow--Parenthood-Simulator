@@ -88,6 +88,17 @@ namespace GlowBabyGlow
         {
             base.Update(dt);
 
+            foreach (MenuElement e in elements)
+            {
+                if (e is LevelElement)
+                {
+                    if ((e as LevelElement).CanUnlock())
+                    {
+                        (e as LevelElement).ReadyToUnlock = true;
+                    }
+                }
+            }
+
             boatPos += (dt / 1000) * 20 * (boatMoveRight ? 1 : -1);
 
             if (boatPos > Config.screenW + Config.screenW / 20 ||
@@ -175,8 +186,6 @@ namespace GlowBabyGlow
                     (int)boatPos + (int)pos.X,
                     (Config.screenH - h - (Config.screenH / 70)) + (int)pos.Y,
                     w, h), Color.White);
-
-              
             }
 
             DrawElements(sb, g);

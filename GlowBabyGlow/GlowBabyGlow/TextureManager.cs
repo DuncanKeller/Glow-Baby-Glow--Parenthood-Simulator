@@ -41,6 +41,7 @@ namespace GlowBabyGlow
 
         public static Texture2D padlockClosed;
         public static Texture2D padlockOpen;
+        public static Texture2D newLevelUnlock;
 
         public static Texture2D tile;
         public static Texture2D hatch;
@@ -131,6 +132,7 @@ namespace GlowBabyGlow
             curtain = c.Load<Texture2D>("Menu\\curtain");
             finger = c.Load<Texture2D>("Menu\\finger");
             menuArrow = c.Load <Texture2D>("Menu\\menu-arrow");
+            newLevelUnlock = c.Load<Texture2D>("Menu\\newLevel");
 
             face = c.Load<Texture2D>("Hud\\face");
             faceBum = c.Load<Texture2D>("Hud\\face-bum");

@@ -112,5 +112,6 @@ Content\blank.xnb
 Content\circle.xnb
 Content\fuzz.xnb
 Content\Backdrops\dirt.xnb
+Content\Menu\newLevel.xnb
 Animation.cs
 Animator.cs
