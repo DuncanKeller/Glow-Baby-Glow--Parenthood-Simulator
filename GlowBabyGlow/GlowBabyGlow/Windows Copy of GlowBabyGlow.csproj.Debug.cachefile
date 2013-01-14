@@ -111,5 +111,6 @@ Content\Menu\loadingCircle.xnb
 Content\blank.xnb
 Content\circle.xnb
 Content\fuzz.xnb
+Content\Backdrops\dirt.xnb
 Animation.cs
 Animator.cs

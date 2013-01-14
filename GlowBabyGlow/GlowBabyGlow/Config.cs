@@ -41,6 +41,11 @@ namespace GlowBabyGlow
             get { return 1920.0f / 1080.0f; }
         }
 
+        public static float UnlockScore
+        {
+            get { return 5; }
+        }
+
         public static void Init()
         {
             playerColors.Add(Color.Green);

@@ -25,7 +25,7 @@ namespace GlowBabyGlow
             : base(g)
         {
             pos = new Vector2(0, Config.screenH * 3);
-            backdrop = TextureManager.blankTexture;
+            backdrop = TextureManager.bDirt;
             finger = TextureManager.finger;
 
             elements.Add(new MenuElement("resolution", null, GetPos(20, 5),
@@ -240,6 +240,9 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
+            sb.Draw(backdrop, new Rectangle((int)pos.X, (int)pos.Y, Config.screenW, Config.screenH), Color.White);
+
+            base.Draw(sb, g);
 
             int w = (int)(finger.Width * Config.screenR);
             int h = (int)(finger.Height * Config.screenR);
@@ -273,7 +276,7 @@ namespace GlowBabyGlow
 
             sb.Draw(TextureManager.finger, r, Color.White);
 
-            base.Draw(sb, g);
+           
         }
     }
 }

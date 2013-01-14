@@ -80,6 +80,7 @@ namespace GlowBabyGlow
         public static Texture2D[] parxAirport = new Texture2D[6];
         public static Texture2D[] parxJungle = new Texture2D[6];
         public static Texture2D paperBoat;
+        public static Texture2D bDirt;
 
         public static Texture2D ladder;
         public static Texture2D coin;
@@ -177,6 +178,7 @@ namespace GlowBabyGlow
             bParkWildernessLeft = c.Load<Texture2D>("Backdrops\\wilderness-left");
             bParkWildernessRight = c.Load<Texture2D>("Backdrops\\wilderness-right");
             paperBoat = c.Load<Texture2D>("Backdrops\\paper-boat");
+            bDirt = c.Load<Texture2D>("Backdrops\\dirt");
             bAlley = c.Load<Texture2D>("Backdrops\\alley");
             bAirport = c.Load<Texture2D>("Backdrops\\airport");
             bCity = c.Load<Texture2D>("Backdrops\\city");

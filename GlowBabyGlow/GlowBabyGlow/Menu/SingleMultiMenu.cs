@@ -69,19 +69,22 @@ namespace GlowBabyGlow
         {
             base.Draw(sb, g);
 
-            string s = "settings";
-            Vector2 fontPos = new Vector2((Config.screenW / 2) - ((s.Length * (font.Size.X / 2)) / 2) + pos.X,
-                ((Config.screenH / 3) + ((Config.screenH / 6) * 2)) + pos.Y);
-            font.Draw(sb, fontPos, s, Color.Black, true);
+            if (Config.includeOptions)
+            {
+                string s = "settings";
+                Vector2 fontPos = new Vector2((Config.screenW / 2) - ((s.Length * (font.Size.X / 2)) / 2) + pos.X,
+                    ((Config.screenH / 3) + ((Config.screenH / 6) * 2)) + pos.Y);
+                font.Draw(sb, fontPos, s, Color.Black, true);
 
-            sb.Draw(TextureManager.menuArrow,
-             new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height * Config.screenR) / 2)) + pos.X),
-                 (int)(fontPos.Y + pos.Y + bottomOffset + (font.Size.Y / 2) + (int)amplitude + 5),
-                 (int)(TextureManager.menuArrow.Width * Config.screenR),
-                 (int)(TextureManager.menuArrow.Height * Config.screenR)),
-                 new Rectangle(0, 0, TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
-                 Color.Black, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
-
+                sb.Draw(TextureManager.menuArrow,
+                 new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height * Config.screenR) / 2)) + pos.X),
+                     (int)(fontPos.Y + bottomOffset + (font.Size.Y / 2) + (int)amplitude + 5),
+                     (int)(TextureManager.menuArrow.Width * Config.screenR),
+                     (int)(TextureManager.menuArrow.Height * Config.screenR)),
+                     new Rectangle(0, 0, TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
+                     Color.Black, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
+            }
+            
             sb.Draw(TextureManager.menuArrow,
                 new Rectangle((int)(elements[0].Position.X + ((elements[0].Text.Length + 1) * GFont.width) + rightOffset + pos.X),
                     (int)(elements[0].Position.Y + pos.Y),
