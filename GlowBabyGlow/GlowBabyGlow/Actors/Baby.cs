@@ -142,7 +142,6 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
-
             if (splodin)
             {
                 if (w.ExplodeTimer < 1)

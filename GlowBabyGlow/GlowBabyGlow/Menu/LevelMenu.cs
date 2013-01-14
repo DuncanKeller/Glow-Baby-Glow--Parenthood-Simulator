@@ -133,22 +133,31 @@ namespace GlowBabyGlow
                 }
             }
             else if (Input.HoldingSecondary(Input.defaultIndex) &&
-               !Input.HoldingSecondaryPrev(Input.defaultIndex))
+               !Input.HoldingSecondaryPrev(Input.defaultIndex) ||
+                multi && elements[4].Selected &&
+                Input.GetThumbs(Input.defaultIndex).X > 0.5f &&
+                Input.GetPrevThumbs(Input.defaultIndex).X <= 0.5f ||
+                !multi && elements[0].Selected &&
+                Input.GetThumbs(Input.defaultIndex).X < -0.5f &&
+                Input.GetPrevThumbs(Input.defaultIndex).X >= -0.5f)
             {
-                if (multi)
+                if (!locked)
                 {
-                    if (MenuSystem.lastScreenVersus)
+                    if (multi)
                     {
-                        MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "versus");
+                        if (MenuSystem.lastScreenVersus)
+                        {
+                            MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "versus");
+                        }
+                        else
+                        {
+                            MenuSystem.SwitchMenu(new Vector2(-Config.screenW * 2, 0), "coop");
+                        }
                     }
                     else
                     {
-                        MenuSystem.SwitchMenu(new Vector2(-Config.screenW * 2, 0), "coop");
+                        MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "single-multi");
                     }
-                }
-                else
-                {
-                    MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "single-multi");
                 }
             }
         }
@@ -161,13 +170,13 @@ namespace GlowBabyGlow
             int h = (int)(TextureManager.paperBoat.Height * Config.screenR);
             if (!multi)
             {
-                sb.Begin();
+                
                 sb.Draw(TextureManager.paperBoat, new Rectangle(
                     (int)boatPos + (int)pos.X,
                     (Config.screenH - h - (Config.screenH / 70)) + (int)pos.Y,
                     w, h), Color.White);
 
-                sb.End();
+              
             }
 
             DrawElements(sb, g);

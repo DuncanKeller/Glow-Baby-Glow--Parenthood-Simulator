@@ -40,6 +40,7 @@ namespace GlowBabyGlow
         float joyshakePower = 2;
         SoundEffectInstance shakeSound;
         SoundEffectInstance crySound;
+        float explodeTime = -1;
 
         bool alive = true;
         float respawnTimer = 0;
@@ -196,6 +197,7 @@ namespace GlowBabyGlow
             hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
             hitOffset = new Point(rect.Width / 4, 0);
             babyLife = maxBabyLife;
+
             switch(index){
                 case 0:
                     testAnim = new Animator(TextureManager.testRun, 13, 6);
@@ -213,8 +215,10 @@ namespace GlowBabyGlow
                     testAnim = new Animator(TextureManager.testRun, 13, 6);
                     break;
             }
+
             testAnim.AddAnimation("run", 0, 17, 16.5f, true);
             testAnim.AddAnimation("idle", 18, 0, 0, true);
+            testAnim.AddAnimation("throw", 19, 0, 0, true);
             testAnim.AddAnimation("jump", 24, 3, 15, true, 26);
             testAnim.AddAnimation("fall", 42, 3, 24, true, 44);
             testAnim.AddAnimation("shoot", 30, 10, 24, true);
@@ -249,7 +253,11 @@ namespace GlowBabyGlow
                     spawnBaby = false;
                 }
             }
-            
+
+            if (MenuSystem.gameType == GameType.thief)
+            {
+                babyLife = maxBabyLife / 2;
+            }
         }
 
         public void Direct(int pos)
@@ -261,16 +269,38 @@ namespace GlowBabyGlow
 
         public void BabyExplode()
         {
-            lives = 0;
-            Die();
-            if (MenuSystem.gameType == GameType.thief)
+            // sets some kind of value to kill after a few frames
+            // so you have time to see the death circle
+            if (explodeTime < 0)
             {
-                w.SpawnBaby();
+                explodeTime = 0;
             }
+            //lives = 0;
+            //Die();
+            //if (MenuSystem.gameType == GameType.thief)
+            //{
+            //    w.SpawnBaby();
+            //}
         }
 
         public override void Update(float dt)
         {
+            if (explodeTime >= 0)
+            {
+                explodeTime += dt / 1000;
+            }
+
+            if (explodeTime > 0.05f)
+            {
+                lives = 0;
+                Die();
+                if (MenuSystem.gameType == GameType.thief)
+                {
+                    w.SpawnBaby();
+                }
+                explodeTime = -1;
+            }
+
             if (alive)
             {
                 if (holdingBaby &&
@@ -378,15 +408,19 @@ namespace GlowBabyGlow
 
                 if (!shaking)
                 {
-                    if (babyLife > 0)
+                    if (holdingBaby ||
+                        (!holdingBaby && Baby != null))
                     {
-                        if (Powerup is Pacifier)
+                        if (babyLife > 0)
                         {
-                            babyLife -= (dt / 1000) * (babyDecay / 2.5f);
-                        }
-                        else
-                        {
-                            babyLife -= (dt / 1000) * babyDecay;
+                            if (Powerup is Pacifier)
+                            {
+                                babyLife -= (dt / 1000) * (babyDecay / 2.5f);
+                            }
+                            else
+                            {
+                                babyLife -= (dt / 1000) * babyDecay;
+                            }
                         }
                     }
                     shakeSound.Stop();
@@ -399,7 +433,15 @@ namespace GlowBabyGlow
                         {
                             shakeSound.Play();
                             shakeSound.Volume = ((shakeSpeed / 100.0f) * .7f) + .3f;
+                            if (shakeSpeed == 0)
+                            { shakeSound.Volume = 0; }
                         }
+                    }
+                    else
+                    {
+                        shakeSound.Volume = ((shakeSpeed / 100.0f) * .7f) + .3f;
+                        if (shakeSpeed == 0)
+                        { shakeSound.Volume = 0; }
                     }
                 }
 
@@ -485,7 +527,7 @@ namespace GlowBabyGlow
                             }
                         }
                         crySound = SoundManager.cry[i].CreateInstance();
-                        crySound.Volume = .5f;
+                        crySound.Volume = .25f;
                         crySound.Play();
                     }
                 }
@@ -587,7 +629,7 @@ namespace GlowBabyGlow
 
         public void KeyShake(float key)
         {
-            if (!ReadyToThrow)
+            if (!ReadyToThrow && !onLadder) 
             {
                 shakeSpeed += 25;
                 if (shakeSpeed > 100)
@@ -600,7 +642,7 @@ namespace GlowBabyGlow
 
         public void StartShake()
         {
-            if (!ReadyToThrow)
+            if (!ReadyToThrow && !onLadder)
             {
                 testAnim.Play("shake");
                 shaking = true;
@@ -919,12 +961,21 @@ namespace GlowBabyGlow
                 }
                 else
                 {
-                    if (testAnim.CurrentAnimation != "idle" &&
-                        testAnim.CurrentAnimation != "jump" &&
+                    if (testAnim.CurrentAnimation != "jump" &&
                         testAnim.CurrentAnimation != "shoot" &&
                         testAnim.CurrentAnimation != "fall" &&
                         testAnim.CurrentAnimation != "shake")
-                    { testAnim.Play("idle"); }
+                    {
+                        if (Input.HoldingPrimary(index) &&
+                            holdingBaby)
+                        {
+                            testAnim.Play("throw");
+                        }
+                        else
+                        {
+                            testAnim.Play("idle");
+                        }
+                    }
                 }
             }
 
@@ -990,6 +1041,7 @@ namespace GlowBabyGlow
                             {
                                 Baby temp = Baby;
                                 Baby = b.Value;
+                                babyLife = Baby.Life;
                                 w.Babies[b.Key] = temp;
                                 break;
                             }
@@ -1017,46 +1069,49 @@ namespace GlowBabyGlow
             // ladders
             if (!onLadder)
             {
-                automateDownLadder = false;
-                automateUpLadder = false;
-                //if (Input.GetThumbs(index).Left.Y > 0.2)
-
-                foreach (Ladder l in ladders)
+                if (!Shaking)
                 {
-                    if (l.LadderAbove(hitRect))
+                    automateDownLadder = false;
+                    automateUpLadder = false;
+                    //if (Input.GetThumbs(index).Left.Y > 0.2)
+
+                    foreach (Ladder l in ladders)
                     {
-                        if (!onLadder && !Shaking)
+                        if (l.LadderAbove(hitRect))
                         {
-                            if (Input.GetThumbs(index).Y > ladderThumbSensitivity)
+                            if (!onLadder && !Shaking)
                             {
-                                onLadder = true;
-                                velocity.X = 0;
-                                velocity.Y = 0;
-                                testAnim.Play("climb");
+                                if (Input.GetThumbs(index).Y > ladderThumbSensitivity)
+                                {
+                                    onLadder = true;
+                                    velocity.X = 0;
+                                    velocity.Y = 0;
+                                    testAnim.Play("climb");
+                                }
+                                ladderSnapX = l.Rect.Center.X;
+                                automateUpLadder = true;
                             }
-                            ladderSnapX = l.Rect.Center.X;
-                            automateUpLadder = true;
                         }
                     }
-                }
 
-                //else if (Input.GetThumbs(index).Left.Y < -0.2)
+                    //else if (Input.GetThumbs(index).Left.Y < -0.2)
 
-                foreach (Ladder l in ladders)
-                {
-                    if (l.LadderBelow(hitRect))
+                    foreach (Ladder l in ladders)
                     {
-                        if (!onLadder && !Shaking)
+                        if (l.LadderBelow(hitRect))
                         {
-                            if (Input.GetThumbs(index).Y < -ladderThumbSensitivity)
+                            if (!onLadder && !Shaking)
                             {
-                                onLadder = true;
-                                velocity.X = 0;
-                                velocity.Y = 0;
-                                testAnim.Play("climb");
+                                if (Input.GetThumbs(index).Y < -ladderThumbSensitivity)
+                                {
+                                    onLadder = true;
+                                    velocity.X = 0;
+                                    velocity.Y = 0;
+                                    testAnim.Play("climb");
+                                }
+                                ladderSnapX = l.Rect.Center.X;
+                                automateDownLadder = true;
                             }
-                            ladderSnapX = l.Rect.Center.X;
-                            automateDownLadder = true;
                         }
                     }
                 }
@@ -1263,6 +1318,12 @@ namespace GlowBabyGlow
                         {
                             LineBatch.DrawCircle(sb, new Vector2(hitRect.Center.X, hitRect.Center.Y),
                                 (int)(babyLife * 2 * Config.screenR), c);
+
+                            if (ReadyToThrow)
+                            {
+                                LineBatch.DrawArc(sb, Input.GetThumbs(index).X, 
+                                    new Vector2(hitRect.Center.X, hitRect.Center.Y), Color.Black);
+                            }
                         }
                     }
                 }

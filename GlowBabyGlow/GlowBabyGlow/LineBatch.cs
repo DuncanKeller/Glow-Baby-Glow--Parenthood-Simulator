@@ -56,6 +56,70 @@ namespace GlowBabyGlow
                        SpriteEffects.None, Layer);
         }
 
+        public static void DrawArc(SpriteBatch sb, float l, Vector2 pos, Color c)
+        {
+            if (l != 0)
+            {
+                // y = ax2 + bx + c
+                int numPoints = 50;
+                float maxLength = 360 * Config.screenR;
+                float length = maxLength * l;
+                float a = -.195f * Config.screenR;
+                List<Vector2> points = new List<Vector2>();
+
+                float specialInc = maxLength / numPoints;
+
+                for (int i = 0; i < numPoints; i++)
+                {
+                    float increment = length / numPoints;
+                    float x = increment * i;
+                    float y = (float)Math.Pow(((x) - (length / 2)) * a, 2);
+                    y = (float)Math.Pow(((i * specialInc) - (maxLength / 2)) * a, 2);
+                    points.Add(new Vector2(x + pos.X,
+                        y + pos.Y - (float)Math.Pow((specialInc * (numPoints - 1) * a) / 2, 2)));
+                }
+
+                int max = numPoints - (numPoints / 4);
+                for (int i = 0; i < max - 1; i++)
+                {
+                    int i2 = i + 1;
+                    if (i2 > max - 1)
+                    { i2 = 0; }
+
+                    LineBatch.DrawLine(sb, c, points[i], points[i2]);
+                }
+
+                float slope = (points[max - 2].Y - points[max - 3].Y) /
+                     (points[max - 2].X - points[max - 3].X);
+                float slope2 = (slope - (float)(Math.PI / 2)) - 0.4f;
+                float slope3 = (slope - (float)(Math.PI / 2)) + 0.4f;
+
+                Vector2 lAngle = new Vector2(((float)Math.Cos(slope2) * (40 * Config.screenR)) + points[max - 2].X,
+                    ((float)Math.Sin(slope2) * (40 * Config.screenR)) + points[max - 2].Y);
+                Vector2 rAngle = new Vector2(((float)Math.Cos(slope3) * (40 * Config.screenR)) + points[max - 2].X,
+                    ((float)Math.Sin(slope3) * (40 * Config.screenR)) + points[max - 2].Y);
+
+                int s = (int)(50 * Config.screenR);
+                SpriteEffects se = length > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically;
+
+                sb.Draw(TextureManager.throwArrow, new Rectangle((int)points[max - 1].X, (int)points[max - 1].Y, s, s),
+                    new Rectangle(0, 0, TextureManager.throwArrow.Width, TextureManager.throwArrow.Height),
+                    Color.Black, (float)(((Math.PI / 4) )),
+                    new Vector2(TextureManager.throwArrow.Width / 2, TextureManager.throwArrow.Height / 2),
+                    SpriteEffects.None, 0);
+            }
+            else
+            {
+                LineBatch.DrawLine(sb, Color.Black, new Vector2(pos.X, pos.Y), new Vector2(pos.X, pos.Y - 175 * Config.screenR));
+                int s = (int)(50 * Config.screenR);
+                sb.Draw(TextureManager.throwArrow, new Rectangle((int)pos.X, (int)(pos.Y - (175 * Config.screenR)), s, s),
+                    new Rectangle(0, 0, TextureManager.throwArrow.Width, TextureManager.throwArrow.Height),
+                    Color.Black, (float)(Math.PI / 4) * 5,
+                    new Vector2(TextureManager.throwArrow.Width / 2, TextureManager.throwArrow.Height / 2),
+                    SpriteEffects.None, 0);
+            }
+        }
+
         public static void DrawCircle(SpriteBatch sb, Vector2 pos, int radius, Color c)
         {
             List<Vector2> points = new List<Vector2>();

@@ -77,10 +77,8 @@ namespace GlowBabyGlow
 
         public virtual void Draw(SpriteBatch sb, GraphicsDevice g)
         {
-            sb.Begin();
             sb.Draw(backdrop, new Rectangle((int)pos.X, (int)pos.Y, Config.screenW, Config.screenH), c);
-            sb.End();
-
+ 
             foreach (MenuElement element in elements)
             {
                 element.Draw(sb, g);

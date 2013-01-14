@@ -17,6 +17,11 @@ namespace GlowBabyGlow
         public static GameType gameType = GameType.single;
         public static bool lastScreenVersus = false;
 
+        public static Menu CurrentMenu
+        {
+            get { return currentMenu; }
+        }
+
         public static int[] Players()
         {
             if (menus.ContainsKey("multi"))

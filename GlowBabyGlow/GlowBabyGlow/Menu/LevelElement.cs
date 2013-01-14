@@ -156,6 +156,8 @@ namespace GlowBabyGlow
             Rectangle drawRect = new Rectangle((int)(topLeft.X + m.Position.X), 
                 (int)(topLeft.Y + m.Position.Y),
                 (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
+            int sw = (Config.realW - Config.screenW) / 2;
+            int sh = (Config.realH - Config.screenH) / 2;
 
             if (drawRect.Right > Config.screenW ||
                 drawRect.X < 0 || drawRect.Y < 0 ||
@@ -166,8 +168,11 @@ namespace GlowBabyGlow
 
             world.Cam.Zoom = (float)drawRect.Width / (float)Config.screenW;
 
-            vp.Bounds = drawRect;
+            vp.Bounds = new Rectangle(drawRect.X + sw, drawRect.Y + sh, 
+                drawRect.Width, drawRect.Height);
             g.Viewport = vp;
+
+            sb.End();
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                DepthStencilState.Default, RasterizerState.CullNone, null,
@@ -181,7 +186,13 @@ namespace GlowBabyGlow
             g.Viewport = temp;
 
             // outisde of viewport
-            sb.Begin();
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                    DepthStencilState.Default, RasterizerState.CullNone, null,
+                    Matrix.CreateTranslation(new Vector3(0, 0, 0)) *
+                                         Matrix.CreateRotationZ(0) *
+                                         Matrix.CreateScale(new Vector3(1, 1, 1)) *
+                                         Matrix.CreateTranslation(new Vector3(sw,
+                                            sh, 0)));
 
             sb.Draw(TextureManager.blankTexture, new Rectangle(
                 drawRect.X - 2, drawRect.Y - 2, drawRect.Width + 4, 4), Color.Black);
@@ -259,8 +270,6 @@ namespace GlowBabyGlow
                     smallfont.Draw(sb, pos, score, Color.Black, true);
                 }
             }
-
-            sb.End();
         }
     }
 }

@@ -109,7 +109,7 @@ namespace GlowBabyGlow
             bool tileCollideRight = false;
             bool floorBelow = false;
             int floorPos = velocity.X > 0 ? rect.Width / 2 : -rect.Width / 2;
-            Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, 1, 1);
+            Rectangle checkFloor = new Rectangle((int)rect.Center.X + floorPos, rect.Bottom + 5, rect.Width / 2, 1);
 
             // air collision, landing, walls, etc
             foreach (Tile t in tiles)
@@ -177,15 +177,15 @@ namespace GlowBabyGlow
                 }
             }
 
-            if (fall)
-            {
-                inAir = true;
-            }
-            if (!floorBelow)
+            if (!floorBelow && !inAir)
             {
                 // prevent falling off ledges
                 velocity.X = -velocity.X;
                 idealVelocity.X = -idealVelocity.X;
+            }
+            if (fall)
+            {
+                inAir = true;
             }
 
             wallRight = tileCollideRight;

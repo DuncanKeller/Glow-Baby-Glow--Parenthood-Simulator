@@ -246,6 +246,17 @@ namespace GlowBabyGlow
 
         public static void Draw(SpriteBatch sb)
         {
+            if (text != "")
+            {
+                if (text2 != "")
+                {
+                    sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, font.Size.Y / 2), new Color(0, 0, 0, 100));
+                }
+                else
+                {
+                    sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, font.Size.Y), new Color(0, 0, 0, 100));
+                }
+            }
             font.Draw(sb, new Vector2(10, 10), text, Color.GhostWhite, true);
             font.Draw(sb, new Vector2(10, 20 + (font.Size.Y / 2)), text2, Color.GhostWhite, true);
 

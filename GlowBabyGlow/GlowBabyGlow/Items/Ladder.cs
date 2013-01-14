@@ -23,12 +23,14 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect) 
         {
+            rect.Height += 1;
             //sb.Draw(TextureManager.ladder, new Rectangle(rect.X - 2, rect.Y - 2, rect.Width, rect.Height), new Color(0, 0, 0, 100));
             sb.Draw(TextureManager.ladder, rect, Color.White);
             Rectangle wrapLeft = new Rectangle(rect.X - Config.screenW, rect.Y, rect.Width, rect.Height);
             Rectangle wrapRight = new Rectangle(rect.X + Config.screenW, rect.Y, rect.Width, rect.Height);
             sb.Draw(TextureManager.ladder, wrapLeft, Color.White);
             sb.Draw(TextureManager.ladder, wrapRight, Color.White);
+            rect.Height -= 1;
         }
 
         public bool LadderBelow(Rectangle r)

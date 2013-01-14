@@ -15,6 +15,10 @@ namespace GlowBabyGlow
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    /// 
+
+    delegate void LoadAction();
+
      public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
@@ -22,10 +26,11 @@ namespace GlowBabyGlow
         World world = new World();
         bool inMenu = true;
         Thread loadingThread;
-        Thread loadingScreenThread;
 
         Texture2D blankTexture;
         Texture2D loadingTexture;
+        Texture2D loadingText;
+        Texture2D loadingIcon;
         float loadingTimer = 0;
 
         World tutorial = new World();
@@ -47,23 +52,35 @@ namespace GlowBabyGlow
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             graphics.PreferredBackBufferWidth = Config.screenW;
-            graphics.PreferredBackBufferHeight = Config.screenH;
+            graphics.PreferredBackBufferHeight = Config.realH;
             graphics.IsFullScreen = Config.fullScrn;
             graphics.ApplyChanges();
             blankTexture = Content.Load<Texture2D>("blank");
             loadingTexture = Content.Load<Texture2D>("Menu\\loading");
+            loadingText = Content.Load<Texture2D>("Menu\\loadingText");
+            loadingIcon = Content.Load<Texture2D>("Menu\\loadingIcon");
             TextureManager.Init(Content);
             SoundManager.Init(Content);
             Config.Init();
 
-            loadingScreenThread = new Thread(DrawLoadingScreen);
-            loadingScreenThread.Start();
-            loadingThread = new Thread(TextureManager.LoadContent);
+            //loadingScreenThread = new Thread(DrawLoadingScreen);
+            //loadingScreenThread.Start();
+            loadingThread = new Thread(DoLoad);
             loadingThread.Start();
             
 
-            loadingThread.Join();
+            //loadingThread.Join();
 
+          
+        }
+
+        public void DoLoad()
+        {
+            TextureManager.LoadContent(FinishLoad);
+        }
+
+        public void FinishLoad()
+        {
             LineBatch.Init(graphics.GraphicsDevice);
 
             //world.Init();
@@ -79,7 +96,7 @@ namespace GlowBabyGlow
             {
                 Input.Init(world);
             }
-            
+
             base.Initialize();
         }
 
@@ -128,28 +145,30 @@ namespace GlowBabyGlow
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            Input.Update();
+            if (TextureManager.loaded)
+            {
+                Input.Update();
 
-            if (Config.tutorial)
-            {
-                tutorial.Update(gameTime.ElapsedGameTime.Milliseconds);
-            }
-            else
-            {
-                if (!inMenu)
-                { 
-                    world.Update(gameTime.ElapsedGameTime.Milliseconds);
+                if (Config.tutorial)
+                {
+                    tutorial.Update(gameTime.ElapsedGameTime.Milliseconds);
                 }
                 else
                 {
-                    world = MenuSystem.GetCurrentLevel();
-                    MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
+                    if (!inMenu)
+                    {
+                        world.Update(gameTime.ElapsedGameTime.Milliseconds);
+                    }
+                    else
+                    {
+                        world = MenuSystem.GetCurrentLevel();
+                        MenuSystem.Update(gameTime.ElapsedGameTime.Milliseconds);
+                    }
                 }
+
+                Input.LateUpdate();
+                // TODO: Add your update logic here
             }
-
-            Input.LateUpdate();
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -162,11 +181,23 @@ namespace GlowBabyGlow
             if (TextureManager.loaded)
             {
                 GraphicsDevice.Clear(new Color(158, 252, 254));
+                int w = (Config.realW - Config.screenW) / 2;
+                int h = (Config.realH - Config.screenH) / 2;
 
                 // menu draw
                 if (inMenu)
                 {
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                    DepthStencilState.Default, RasterizerState.CullNone, null,
+                    Matrix.CreateTranslation(new Vector3(0, 0, 0)) *
+                                         Matrix.CreateRotationZ(0) *
+                                         Matrix.CreateScale(new Vector3(1, 1, 1)) *
+                                         Matrix.CreateTranslation(new Vector3(w,
+                                            h, 0)));
+
                     MenuSystem.Draw(spriteBatch, graphics.GraphicsDevice);
+
+                    spriteBatch.End();
                 }
                 else
                 {
@@ -182,18 +213,34 @@ namespace GlowBabyGlow
 
                 if (Config.tutorial)
                 {
-                    spriteBatch.Begin();
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                 DepthStencilState.Default, RasterizerState.CullNone, null,
+                 Matrix.CreateTranslation(new Vector3(0, 0, 0)) *
+                                      Matrix.CreateRotationZ(0) *
+                                      Matrix.CreateScale(new Vector3(1, 1, 1)) *
+                                      Matrix.CreateTranslation(new Vector3(w,
+                                         h, 0)));
 
                     tutorial.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }
+
+                  spriteBatch.Begin();
+
+                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.realW, h), Color.Black);
+                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, Config.realH - h, Config.realW, h), Color.Black);
+
+                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, w, Config.realH), Color.Black);
+                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(Config.realW - w, 0, w, Config.realH), Color.Black);
+
+                spriteBatch.End();
+          
             }
             else
             {
                 DrawLoadingScreen();
             }
-          
             base.Draw(gameTime);
         }
 
@@ -203,7 +250,7 @@ namespace GlowBabyGlow
             {
                 GraphicsDevice.Clear(new Color(158, 252, 254));
 
-                loadingTimer += 0.01f;
+                loadingTimer += 0.05f;
                 spriteBatch.Begin();
                 spriteBatch.Draw(blankTexture,
                     new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
@@ -213,7 +260,17 @@ namespace GlowBabyGlow
                 spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer,
                     new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
 
-                spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(100, 100, 100, 100), Color.Wheat);
+                spriteBatch.Draw(loadingText, new Rectangle(0, 0, 
+                    (int)(loadingText.Width * Config.screenR), (int)(loadingText.Height * Config.screenR)), Color.White);
+
+                int w = (int)(loadingIcon.Width / 2);
+                int h = (int)(loadingIcon.Height / 2);
+
+
+                spriteBatch.Draw(loadingIcon, new Rectangle(dest.Center.X - (w / 2) - (dest.Width / 2),
+                    dest.Center.Y - (h / 2) - (dest.Height / 2), w, h),
+                    Color.White);
+
                 spriteBatch.End();
             }
         }

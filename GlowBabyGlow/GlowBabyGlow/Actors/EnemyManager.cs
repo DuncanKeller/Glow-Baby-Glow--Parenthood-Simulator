@@ -114,8 +114,6 @@ namespace GlowBabyGlow
                         {
                             colliding = true;
                         }
-                            
-                        
                     }
                 }
 
@@ -141,7 +139,7 @@ namespace GlowBabyGlow
 
                         if (Config.tutorial)
                         {
-                            enemyPorb = -1;
+                            enemyPorb = 100;
                         }
 
                         if (enemyPorb < 3)

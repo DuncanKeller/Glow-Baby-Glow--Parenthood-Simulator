@@ -119,15 +119,17 @@ namespace GlowBabyGlow
             }
 
             word = word.ToLower();
-
-            for (int i = 0; i < word.Length; i++)
+            if (!small)
             {
-                Rectangle rect = new Rectangle(
-                    (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
-                    (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
-                    fontSheet.Width / columns, fontSheet.Height / rows);
-                sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (w * i) - offset, (int)pos.Y + offset, w, h), 
-                    rect, new Color(0,0,0,50));
+                for (int i = 0; i < word.Length; i++)
+                {
+                    Rectangle rect = new Rectangle(
+                        (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
+                        (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),
+                        fontSheet.Width / columns, fontSheet.Height / rows);
+                    sb.Draw(fontSheet, new Rectangle((int)pos.X + (spacing * i) + (w * i) - offset, (int)pos.Y + offset, w, h),
+                        rect, new Color(0, 0, 0, 50));
+                }
             }
            
             for (int i = 0; i < word.Length; i++)

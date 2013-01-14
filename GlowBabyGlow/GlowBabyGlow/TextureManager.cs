@@ -11,6 +11,8 @@ namespace GlowBabyGlow
     {
         public static bool loaded = false;
         static ContentManager c;
+        static LoadAction finishLoad;
+
         public static Texture2D blankTexture;
         public static Texture2D testRun;
         public static Texture2D testBaby;
@@ -24,10 +26,12 @@ namespace GlowBabyGlow
         public static Texture2D bumBaby;
         public static Texture2D pedo;
         public static Texture2D pedoBaby;
+        public static Texture2D throwArrow;
 
         public static Texture2D titleScreen;
         public static Texture2D pauseBorder;
         public static Texture2D curtain;
+        public static Texture2D menuArrow;
 
         public static Texture2D face;
         public static Texture2D faceBum;
@@ -98,12 +102,14 @@ namespace GlowBabyGlow
             c = content;
         }
 
-        public static void LoadContent()
+        public static void LoadContent(LoadAction a)
         {
+            finishLoad = a;
+
             // characters
             blankTexture = c.Load<Texture2D>("blank");
-            testRun = c.Load<Texture2D>("runsheet");
-            testBaby = c.Load<Texture2D>("runsheet-baby");
+            testRun = c.Load<Texture2D>("Actors\\runsheet");
+            testBaby = c.Load<Texture2D>("Actors\\runsheet-baby");
             baby = c.Load<Texture2D>("Actors\\baby");
             babyGlow = c.Load<Texture2D>("Actors\\glow");
             blackCircle = c.Load<Texture2D>("circle");
@@ -114,6 +120,7 @@ namespace GlowBabyGlow
             bumBaby = c.Load<Texture2D>("Actors\\sprite-bum-baby");
             pedo = c.Load<Texture2D>("Actors\\sprite-pedo");
             pedoBaby = c.Load<Texture2D>("Actors\\sprite-pedo-baby");
+            throwArrow = c.Load<Texture2D>("Actors\\throwArrow");
 
             //menu
             titleScreen = c.Load<Texture2D>("Menu\\title-screen");
@@ -122,6 +129,7 @@ namespace GlowBabyGlow
             pauseBorder = c.Load<Texture2D>("Menu\\border");
             curtain = c.Load<Texture2D>("Menu\\curtain");
             finger = c.Load<Texture2D>("Menu\\finger");
+            menuArrow = c.Load <Texture2D>("Menu\\menu-arrow");
 
             face = c.Load<Texture2D>("Hud\\face");
             faceBum = c.Load<Texture2D>("Hud\\face-bum");
@@ -152,7 +160,7 @@ namespace GlowBabyGlow
             pupIconSpeedshoes = c.Load<Texture2D>("Powerups\\sprintshoes");
             pupIconSpringshoes = c.Load<Texture2D>("Powerups\\springshoes");
             pupIconArrow = c.Load<Texture2D>("Powerups\\pup-arrow");
-            pupIconPacifier = c.Load<Texture2D>("Powerups\\springshoes");
+            pupIconPacifier = c.Load<Texture2D>("Powerups\\pacifier");
 
             // enemies
             zombieSheet = c.Load<Texture2D>("Actors\\zombie-sheet");
@@ -211,6 +219,8 @@ namespace GlowBabyGlow
             smallFont = c.Load<Texture2D>("Fonts\\small-font");
 
             SoundManager.LoadContent();
+
+            finishLoad();
 
             loaded = true;
         }

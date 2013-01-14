@@ -121,7 +121,8 @@ namespace GlowBabyGlow
             base.Update(dt);
             elements[0].Position = new Vector2((Config.screenW / 2) - 
                 ((GFont.width * "press start".Length) / 2), elements[0].Position.Y);
-            if (Input.HoldingPrimary(0) )
+            if (Input.HoldingPrimary(Input.defaultIndex) ||
+                Input.StartPressed())
             {
                 MenuSystem.SwitchMenu(new Vector2(0, -Config.screenH * 2),"single-multi");
             }
@@ -148,12 +149,12 @@ namespace GlowBabyGlow
         {
             base.Draw(sb, g);
 
-            sb.Begin();
+           
             foreach (Letter l in row1)
             { l.Draw(sb, pos.X, pos.Y); }
 
             pm.Draw(sb);
-            sb.End();
+           
         }
     }
 }

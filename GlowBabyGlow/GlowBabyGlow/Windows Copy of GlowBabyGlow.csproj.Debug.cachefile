@@ -1,6 +1,4 @@
 Content\blank.xnb
-Content\runsheet.xnb
-Content\runsheet-baby.xnb
 Content\Tiles\tile.xnb
 Content\Objects\ladder.xnb
 Content\Objects\coin.xnb
@@ -105,5 +103,12 @@ Content\Sound\cry6.xnb
 Content\Sound\cry7.xnb
 Content\Actors\zombie-sheet-fast.xnb
 Content\Actors\zombie-sheet-fat.xnb
+Content\Actors\runsheet-baby.xnb
+Content\Actors\runsheet.xnb
+Content\Actors\throwArrow.xnb
+Content\Powerups\pacifier.xnb
+Content\Menu\menu-arrow.xnb
+Content\Menu\loadingText.xnb
+Content\Menu\loadingIcon.xnb
 Animation.cs
 Animator.cs

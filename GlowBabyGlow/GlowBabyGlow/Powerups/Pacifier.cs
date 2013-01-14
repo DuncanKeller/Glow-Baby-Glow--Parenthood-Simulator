@@ -12,7 +12,7 @@ namespace GlowBabyGlow
         public Pacifier(int x, int y, World w)
             : base(x, y, w)
         {
-            texture = TextureManager.blackCircle;
+            texture = TextureManager.pupIconPacifier;
             icon = TextureManager.pupIconPacifier;
             description = "shake break";
             color = Color.LightBlue;

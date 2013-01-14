@@ -84,14 +84,56 @@ namespace GlowBabyGlow
             return gamepad[index].Triggers;
         }
 
+        public static bool StartPressed()
+        {
+            if (keys)
+            {
+                if (keyboard.IsKeyDown(Keys.Enter)
+                    && prevkeyboard.IsKeyUp(Keys.Enter))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (gamepad[defaultIndex].IsButtonDown(Buttons.Start) &&
+                    prevgamepad[defaultIndex].IsButtonUp(Buttons.Start))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool ExitPressed()
+        {
+            if (keys)
+            {
+                if (keyboard.IsKeyDown(Keys.Escape)
+                    && prevkeyboard.IsKeyUp(Keys.Escape))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (gamepad[defaultIndex].IsButtonDown(Buttons.Back) &&
+                    prevgamepad[defaultIndex].IsButtonUp(Buttons.Back))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool PausePressed()
         {
             if (keys)
             {
-                if (keyboard.IsKeyDown(Keys.Escape) ||
+                if (keyboard.IsKeyDown(Keys.Enter) ||
                    keyboard.IsKeyDown(Keys.P))
                 {
-                    if (prevkeyboard.IsKeyUp(Keys.Escape) &&
+                    if (prevkeyboard.IsKeyUp(Keys.Enter) &&
                         prevkeyboard.IsKeyUp(Keys.P))
                     {
                         return true;
@@ -185,7 +227,8 @@ namespace GlowBabyGlow
             }
             else
             {
-                return gamepad[index].Buttons.X == ButtonState.Pressed;
+                return gamepad[index].Buttons.X == ButtonState.Pressed ||
+                    gamepad[index].Buttons.B == ButtonState.Pressed;
             }
         }
 
@@ -201,7 +244,8 @@ namespace GlowBabyGlow
             }
             else
             {
-                return prevgamepad[index].Buttons.X == ButtonState.Pressed;
+                return prevgamepad[index].Buttons.X == ButtonState.Pressed ||
+                    prevgamepad[index].Buttons.B == ButtonState.Pressed;
             }
         }
 #endregion
@@ -308,7 +352,14 @@ namespace GlowBabyGlow
             }
             else
             {
-
+                if (ExitPressed())
+                {
+                    GameOver.Reset();
+                    world.Reset();
+                    world.Init(world.LevelName);
+                    MenuSystem.Reset();
+                    world.Paused = false;
+                }
             }
         }
 

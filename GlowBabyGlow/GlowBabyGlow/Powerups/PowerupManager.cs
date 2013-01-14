@@ -151,8 +151,6 @@ namespace GlowBabyGlow
                         {
                             colliding = true;
                         }
-
-
                     }
                 }
 

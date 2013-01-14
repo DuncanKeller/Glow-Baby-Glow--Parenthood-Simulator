@@ -12,10 +12,12 @@ namespace GlowBabyGlow
 {
     class Config
     {
-        //public static int screenW = 1366;
-        //public static int screenH = 768;
-        public static int screenW = (int)(1920  / 2);
-        public static int screenH = (int)(1080 / 2);
+        public static int screenW = 1366;
+        public static int screenH = 768;
+        //public static int screenW = (int)(1920  / 2);
+        //public static int screenH = (int)(1080 / 2);
+        public static int realW = 1366;
+        public static int realH = 768;
         public static float screenR;
         public static bool fullScrn = false;
         public static float fontRatio = 1;
@@ -38,7 +40,7 @@ namespace GlowBabyGlow
             playerColors.Add(Color.Yellow);
 
             screenR = screenW / 1920.0f;
-            if (screenW <= 960)
+            //if (screenW <= 960)
             {
                 fontRatio = screenR;
             }

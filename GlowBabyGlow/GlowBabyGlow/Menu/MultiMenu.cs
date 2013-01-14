@@ -92,7 +92,8 @@ namespace GlowBabyGlow
                 }
                 // remove player
                 if (Input.HoldingSecondary(i) &&
-                    !Input.HoldingSecondaryPrev(i))
+                    !Input.HoldingSecondaryPrev(i) ||
+                    Input.GetThumbs(i).X > 0.5f)
                 {
                     if (playerinfo.ContainsKey(i))
                     {
@@ -102,7 +103,7 @@ namespace GlowBabyGlow
                     }
                     else
                     {
-                        if (playerinfo.Count == 0)
+                        if (playertabPos.Count == 0)
                         {
                             MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "single-multi");
                         }
@@ -136,12 +137,12 @@ namespace GlowBabyGlow
             int alpha = 180;
             int alpha2 = 120;
 
-            sb.Begin();
-
-            
-            foreach (int i in players.Keys)
+            if (MenuSystem.CurrentMenu is MultiMenu)
             {
-                players[i].Draw(sb, pos);
+                foreach (int i in players.Keys)
+                {
+                    players[i].Draw(sb, pos);
+                }
             }
 
             int count = 0;
@@ -215,7 +216,6 @@ namespace GlowBabyGlow
                 count++;
              }
 
-            sb.End();
         }
     }
 }

@@ -92,7 +92,6 @@ namespace GlowBabyGlow
 
         public void RealDraw(SpriteBatch sb, GraphicsDevice g, Color c)
         {
-            sb.Begin();
 
             int s = selected ? 100 : 0;
             if (texture != null)
@@ -107,7 +106,7 @@ namespace GlowBabyGlow
             {
                 font.Draw(sb, pos + m.Position, text, c);
             }
-            sb.End();
+       
         }
     }
 }

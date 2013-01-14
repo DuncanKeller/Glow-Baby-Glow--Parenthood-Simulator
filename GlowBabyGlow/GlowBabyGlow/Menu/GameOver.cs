@@ -15,7 +15,7 @@ namespace GlowBabyGlow
         none,
         shoot
     }
-
+    
     static class GameOver
     {
         public static DeathType death;
@@ -121,6 +121,7 @@ namespace GlowBabyGlow
             velocity = 0;
             CheckHighScore();
             Input.spaceBarPreventativeMeasureFlag = false;
+            //MenuSystem.Reset();
         }
 
         public static void Update(float dt)
@@ -188,10 +189,30 @@ namespace GlowBabyGlow
                         break;
                 }
 
+                string playAgain = "";
+                string quit = "";
+
+                if (Input.keys &&
+                    MenuSystem.gameType != GameType.thief &&
+                    MenuSystem.gameType != GameType.vsSurvival)
+                {
+                    playAgain = "space: play again";
+                    quit = "shift: quit";
+                }
+                else
+                {
+                    playAgain = "@: play again";
+                    quit = "#: quit";
+                }
+
                 Vector2 textPos = new Vector2((Config.screenW / 2) - ((text.Length * (smallfont.Size.X / 2)) / 2),
                     10 + position);
-                Vector2 textPos2 = new Vector2((Config.screenW / 2) - ((text.Length * (smallfont.Size.X / 2)) / 2),
-                   Config.screenH - (smallfont.Size.X / 2) + pos.Y - 10);
+                Vector2 textPosleft = new Vector2(10,
+                   Config.screenH - (smallfont.Size.X / 2) + position - 10);
+                Vector2 textPosRight = new Vector2((Config.screenW - ((quit.Length * (smallfont.Size.X / 2)))) - 10,
+                   Config.screenH - (smallfont.Size.X / 2) + position - 10);
+                smallfont.Draw(sb, textPosleft, playAgain, Color.Green, true);
+                smallfont.Draw(sb, textPosRight, quit, Color.Red, true);
                 smallfont.Draw(sb, textPos, text, Color.GhostWhite, true);
             }
             else

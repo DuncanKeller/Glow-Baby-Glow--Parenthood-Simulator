@@ -162,7 +162,6 @@ namespace GlowBabyGlow
 
         #endregion
 
-
         public void AddPlayers()
         {
             int[] index = MenuSystem.Players();
@@ -405,6 +404,7 @@ namespace GlowBabyGlow
             {
                 int index = Config.rand.Next(candidates.Count);
                 candidates[index].HoldingBaby = true;
+                candidates[index].BabyLife = candidates[index].MaxBabyLife / 2;
             }
         }
 

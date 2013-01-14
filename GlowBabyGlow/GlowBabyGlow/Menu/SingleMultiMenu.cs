@@ -9,6 +9,12 @@ namespace GlowBabyGlow
 {
     class SingleMultiMenu : Menu
     {
+        float leftOffset;
+        float rightOffset;
+        float timer;
+        float amplitude = 10 * Config.screenR;
+        float speed = 5;
+
         public SingleMultiMenu(Game1 g)
             : base(g)
         {
@@ -18,6 +24,7 @@ namespace GlowBabyGlow
                 0, Config.screenH / 3), true, this, delegate() { }));
             elements.Add(new MenuElement("multiplayer", null, new Vector2(
                 0, (Config.screenH / 3) + (Config.screenH / 6) ), true, this, delegate() { }));
+
             c = Color.White;
             destination = pos;
             elements[0].Selected = true;
@@ -26,6 +33,9 @@ namespace GlowBabyGlow
         public override void Update(float dt)
         {
             base.Update(dt);
+            timer += (dt / 1000) * speed;
+            leftOffset = (float)Math.Sin(timer) * amplitude;
+            rightOffset = -(float)Math.Sin(timer) * amplitude;
 
             foreach (MenuElement e in elements)
             {
@@ -48,6 +58,21 @@ namespace GlowBabyGlow
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
             base.Draw(sb, g);
+
+            sb.Draw(TextureManager.menuArrow,
+                new Rectangle((int)(elements[0].Position.X + ((elements[0].Text.Length + 1) * GFont.width) + rightOffset + pos.X),
+                    (int)(elements[0].Position.Y + pos.Y),
+                    (int)(TextureManager.menuArrow.Width * Config.screenR),
+                    (int)(TextureManager.menuArrow.Height * Config.screenR)),
+                    Color.White);
+
+            sb.Draw(TextureManager.menuArrow,
+                new Rectangle((int)(elements[1].Position.X + (-GFont.width) + leftOffset + pos.X),
+                    (int)(elements[1].Position.Y + pos.Y),
+                    (int)(TextureManager.menuArrow.Width * Config.screenR),
+                    (int)(TextureManager.menuArrow.Height * Config.screenR)),
+                    new Rectangle(0,0,TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
+                    Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
         }
     }
 }

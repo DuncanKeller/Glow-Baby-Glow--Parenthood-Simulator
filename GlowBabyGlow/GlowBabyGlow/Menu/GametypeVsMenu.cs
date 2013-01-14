@@ -143,7 +143,6 @@ namespace GlowBabyGlow
 
             description.Draw(sb, g);
 
-            sb.Begin();
             sb.Draw(TextureManager.finger, new Rectangle(
                 (int)(gameTypes[index].Position.X + pos.X) + (int)(fingerOffset) - (int)(TextureManager.finger.Width * Config.screenR),
                 (int)(gameTypes[index].Position.Y + pos.Y) + (TextureManager.finger.Height / 2),
@@ -152,7 +151,6 @@ namespace GlowBabyGlow
                 Color.White, /* rot */ 0,
                 new Vector2(TextureManager.finger.Width / 6, TextureManager.finger.Height / 2),
                 SpriteEffects.None, 0);
-            sb.End();
         }
 
         public void DrawRegion(SpriteBatch sb, float x, float y, float w, float h, Color c)
