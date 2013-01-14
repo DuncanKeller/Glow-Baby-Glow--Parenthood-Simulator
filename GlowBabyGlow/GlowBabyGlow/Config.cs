@@ -12,18 +12,22 @@ namespace GlowBabyGlow
 {
     class Config
     {
-        //public static int screenW = 1366;
-        //public static int screenH = 768;
-        public static int screenW = (int)(1920  / 1);
-        public static int screenH = (int)(1080 / 1);
-        public static int realW = 1920 / 1;
-        public static int realH = 1080 / 1;
+        public static int screenW = 1366;
+        public static int screenH = 768;
+        //public static int screenW = (int)(1920  / 1);
+        //public static int screenH = (int)(1080 / 1);
+        public static bool includeOptions = true;
+        public static int realW = 1366 / 1;
+        public static int realH = 768 / 1;
         public static float screenR;
         public static bool fullScrn = false;
         public static float fontRatio = 1;
         public static Random rand = new Random();
         public static Dictionary<string, int> highScore = new Dictionary<string, int>();
         public static List<Color> playerColors = new List<Color>();
+
+        public static int newWidth = 0;
+        public static int newHeight = 0;
         
         static IAsyncResult result;
         static string filename = "save.dat";
@@ -32,6 +36,11 @@ namespace GlowBabyGlow
 
         public static bool tutorial = false;
 
+        public static float Aspect
+        {
+            get { return 1920.0f / 1080.0f; }
+        }
+
         public static void Init()
         {
             playerColors.Add(Color.Green);
@@ -39,10 +48,10 @@ namespace GlowBabyGlow
             playerColors.Add(Color.Blue);
             playerColors.Add(Color.Yellow);
 
-            screenR = screenW / 1920.0f;
+            
             //if (screenW <= 960)
             {
-                fontRatio = screenR;
+               
             }
 
             highScore.Add("alley", 0);
@@ -64,6 +73,12 @@ namespace GlowBabyGlow
             {
                 PCLoad();
             }
+
+           
+            screenW = realW;
+            screenH = (int)(realW / Aspect);
+            screenR = screenW / 1920.0f;
+            fontRatio = screenR;
         }
 
         public static void InitiateSave()
@@ -92,6 +107,21 @@ namespace GlowBabyGlow
             bw.Write(highScore["jungle"]);
             bw.Write(highScore["city"]);
             bw.Write(highScore["powerplant"]);
+
+            if (newWidth != 0)
+            {
+                bw.Write(newWidth);
+                bw.Write(newHeight);
+            }
+            else
+            {
+                bw.Write(realW);
+                bw.Write(realH);
+            }
+
+            bw.Write(fullScrn);
+            bw.Write(SoundManager.musicOn);
+            bw.Write(SoundManager.soundOn);
         }
 
         public static void XboxLoadCallback(IAsyncResult result)
@@ -137,6 +167,12 @@ namespace GlowBabyGlow
                 highScore["jungle"] = br.ReadInt32();
                 highScore["city"] = br.ReadInt32();
                 highScore["powerplant"] = br.ReadInt32();
+                realW = br.ReadInt32();
+                realH = br.ReadInt32();
+                fullScrn = br.ReadBoolean();
+                SoundManager.musicOn = br.ReadBoolean();
+                SoundManager.soundOn = br.ReadBoolean();
+
             }
             catch(Exception e)
             {

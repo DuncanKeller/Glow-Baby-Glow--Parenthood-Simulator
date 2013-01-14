@@ -11,9 +11,11 @@ namespace GlowBabyGlow
     {
         float leftOffset;
         float rightOffset;
+        float bottomOffset;
         float timer;
         float amplitude = 10 * Config.screenR;
         float speed = 5;
+        GFont font;
 
         public SingleMultiMenu(Game1 g)
             : base(g)
@@ -25,6 +27,7 @@ namespace GlowBabyGlow
             elements.Add(new MenuElement("multiplayer", null, new Vector2(
                 0, (Config.screenH / 3) + (Config.screenH / 6) ), true, this, delegate() { }));
 
+            font = new GFont(TextureManager.font, 4, 10);
             c = Color.White;
             destination = pos;
             elements[0].Selected = true;
@@ -35,6 +38,7 @@ namespace GlowBabyGlow
             base.Update(dt);
             timer += (dt / 1000) * speed;
             leftOffset = (float)Math.Sin(timer) * amplitude;
+            bottomOffset = (float)Math.Sin(timer) * amplitude;
             rightOffset = -(float)Math.Sin(timer) * amplitude;
 
             foreach (MenuElement e in elements)
@@ -43,21 +47,40 @@ namespace GlowBabyGlow
                     ((GFont.width * e.Text.Length) / 2), e.Position.Y));
             }
 
-            if (Input.GetThumbs(Input.defaultIndex).X > 0.2 &&
-                Input.GetPrevThumbs(Input.defaultIndex).X <= 0.2)
+            if (Input.GetThumbs(Input.defaultIndex).X > 0.4 &&
+                Input.GetPrevThumbs(Input.defaultIndex).X <= 0.4)
             {
                 MenuSystem.SwitchMenu(new Vector2(-Config.screenW, 0), "level");
             }
-            else if (Input.GetThumbs(Input.defaultIndex).X < -0.2 &&
-                Input.GetPrevThumbs(Input.defaultIndex).X >= -0.2)
+            else if (Input.GetThumbs(Input.defaultIndex).X < -0.4 &&
+                Input.GetPrevThumbs(Input.defaultIndex).X >= -0.4)
             {
                 MenuSystem.SwitchMenu(new Vector2(Config.screenW, 0), "multi");
+            }
+            else if (Input.GetThumbs(Input.defaultIndex).Y < -0.4 &&
+                Input.GetPrevThumbs(Input.defaultIndex).Y >= -0.4 &&
+                Config.includeOptions)
+            {
+                MenuSystem.SwitchMenu(new Vector2(0, -Config.screenH), "options");
             }
         }
 
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
             base.Draw(sb, g);
+
+            string s = "settings";
+            Vector2 fontPos = new Vector2((Config.screenW / 2) - ((s.Length * (font.Size.X / 2)) / 2) + pos.X,
+                ((Config.screenH / 3) + ((Config.screenH / 6) * 2)) + pos.Y);
+            font.Draw(sb, fontPos, s, Color.Black, true);
+
+            sb.Draw(TextureManager.menuArrow,
+             new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height * Config.screenR) / 2)) + pos.X),
+                 (int)(fontPos.Y + pos.Y + bottomOffset + (font.Size.Y / 2) + (int)amplitude + 5),
+                 (int)(TextureManager.menuArrow.Width * Config.screenR),
+                 (int)(TextureManager.menuArrow.Height * Config.screenR)),
+                 new Rectangle(0, 0, TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
+                 Color.Black, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
 
             sb.Draw(TextureManager.menuArrow,
                 new Rectangle((int)(elements[0].Position.X + ((elements[0].Text.Length + 1) * GFont.width) + rightOffset + pos.X),

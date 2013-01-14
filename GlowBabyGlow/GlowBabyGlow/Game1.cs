@@ -31,6 +31,7 @@ namespace GlowBabyGlow
         Texture2D loadingTexture;
         Texture2D loadingText;
         Texture2D loadingIcon;
+        Texture2D loadingCircle;
         float loadingTimer = 0;
 
         World tutorial = new World();
@@ -50,6 +51,7 @@ namespace GlowBabyGlow
         protected override void Initialize()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Config.Init();
 
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.realH;
@@ -59,9 +61,10 @@ namespace GlowBabyGlow
             loadingTexture = Content.Load<Texture2D>("Menu\\loading");
             loadingText = Content.Load<Texture2D>("Menu\\loadingText");
             loadingIcon = Content.Load<Texture2D>("Menu\\loadingIcon");
+            loadingCircle = Content.Load<Texture2D>("Menu\\loadingCircle");
             TextureManager.Init(Content);
             SoundManager.Init(Content);
-            Config.Init();
+            
 
             //loadingScreenThread = new Thread(DrawLoadingScreen);
             //loadingScreenThread.Start();
@@ -72,6 +75,15 @@ namespace GlowBabyGlow
             //loadingThread.Join();
 
           
+        }
+
+        public void SetRes()
+        {
+            graphics.PreferredBackBufferWidth = Config.realW;
+            graphics.PreferredBackBufferHeight = Config.realH;
+            graphics.IsFullScreen = Config.fullScrn;
+
+            graphics.ApplyChanges();
         }
 
         public void DoLoad()
@@ -254,10 +266,13 @@ namespace GlowBabyGlow
                 spriteBatch.Begin();
                 spriteBatch.Draw(blankTexture,
                     new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
-                int size = Config.screenW / 10;
+                int size = Config.screenW / 8;
                 Rectangle dest = new Rectangle(Config.screenW - size - 20, Config.screenH - size - 20, size, size);
                 Rectangle src = new Rectangle(0, 0, loadingTexture.Width, loadingTexture.Height);
-                spriteBatch.Draw(loadingTexture, dest, src, Color.White, loadingTimer,
+                spriteBatch.Draw(loadingTexture, dest, src, Color.White, 0,
+                    new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
+
+                spriteBatch.Draw(loadingCircle, dest, src, Color.White, loadingTimer,
                     new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);
 
                 spriteBatch.Draw(loadingText, new Rectangle(0, 0, 
@@ -265,7 +280,6 @@ namespace GlowBabyGlow
 
                 int w = (int)(loadingIcon.Width / 2);
                 int h = (int)(loadingIcon.Height / 2);
-
 
                 spriteBatch.Draw(loadingIcon, new Rectangle(dest.Center.X - (w / 2) - (dest.Width / 2),
                     dest.Center.Y - (h / 2) - (dest.Height / 2), w, h),

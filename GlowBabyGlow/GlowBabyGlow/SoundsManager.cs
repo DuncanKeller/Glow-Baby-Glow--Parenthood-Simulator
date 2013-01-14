@@ -11,6 +11,9 @@ namespace GlowBabyGlow
     {
         static ContentManager c;
 
+        public static bool soundOn = true;
+        public static bool musicOn = true;
+
         public static SoundEffect shake;
         public static SoundEffect gun;
         public static SoundEffect spring;

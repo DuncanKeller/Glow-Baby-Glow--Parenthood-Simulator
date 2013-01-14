@@ -22,6 +22,8 @@ namespace GlowBabyGlow
         bool selected = false;
         MenuAction action;
 
+        public Color color = Color.White;
+
         bool descriptionflag = false;
 
         public string Text
@@ -92,7 +94,8 @@ namespace GlowBabyGlow
 
         public void RealDraw(SpriteBatch sb, GraphicsDevice g, Color c)
         {
-
+            if (color != Color.White)
+            { c = color; }
             int s = selected ? 100 : 0;
             if (texture != null)
             {
