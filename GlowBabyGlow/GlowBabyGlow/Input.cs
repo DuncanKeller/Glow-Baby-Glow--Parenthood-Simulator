@@ -156,6 +156,29 @@ namespace GlowBabyGlow
             return false;
         }
 
+        public static int ConnectedControllers()
+        {
+            int n = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (gamepad[i].IsConnected)
+                {
+                    n++;
+                }
+            }
+
+            if (n > 0)
+            {
+                keys = false;
+            }
+            else
+            {
+                keys = true;
+            }
+
+            return n;
+        }
+
         public static void Init(World w)
         {
             world = w;

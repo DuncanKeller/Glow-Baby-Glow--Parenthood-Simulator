@@ -60,6 +60,8 @@ namespace GlowBabyGlow
         public static Texture2D l_Comma1;
         public static Texture2D l_Comma2;
 
+        public static Dictionary<string, Texture2D> smallLetters = new Dictionary<string, Texture2D>();
+
         public static Texture2D bPark;
         public static Texture2D bParkSky;
         public static Texture2D bParkPond;
@@ -97,6 +99,7 @@ namespace GlowBabyGlow
         public static Texture2D pupIconSpeedshoes;
         public static Texture2D pupIconSpringshoes;
         public static Texture2D pupIconArrow;
+        public static Texture2D pupIconArrowWhite;
         public static Texture2D pupIconPacifier;
 
         public static void Init(ContentManager content)
@@ -163,6 +166,7 @@ namespace GlowBabyGlow
             pupIconSpeedshoes = c.Load<Texture2D>("Powerups\\sprintshoes");
             pupIconSpringshoes = c.Load<Texture2D>("Powerups\\springshoes");
             pupIconArrow = c.Load<Texture2D>("Powerups\\pup-arrow");
+            pupIconArrowWhite = c.Load<Texture2D>("Powerups\\pup-arrow-white");
             pupIconPacifier = c.Load<Texture2D>("Powerups\\pacifier");
 
             // enemies
@@ -217,6 +221,22 @@ namespace GlowBabyGlow
             l_Y = c.Load<Texture2D>("Menu\\Letters\\y");
             l_Comma1 = c.Load<Texture2D>("Menu\\Letters\\comma");
             l_Comma2 = c.Load<Texture2D>("Menu\\Letters\\comma2");
+
+            smallLetters["p"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_p");
+            smallLetters["a"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_a");
+            smallLetters["r"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_r");
+            smallLetters["e"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_e");
+            smallLetters["n"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_n");
+            smallLetters["t"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_t");
+            smallLetters["h"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_h");
+            smallLetters["o"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_o");
+            smallLetters["d"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_d");
+
+            smallLetters["s"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_s");
+            smallLetters["i"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_i");
+            smallLetters["m"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_m");
+            smallLetters["u"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_u");
+            smallLetters["l"] = c.Load<Texture2D>("Menu\\SmallLetters\\s_l");
 
             // fonts
             font = c.Load<Texture2D>("Fonts\\font");

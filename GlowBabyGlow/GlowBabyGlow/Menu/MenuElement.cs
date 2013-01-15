@@ -23,6 +23,7 @@ namespace GlowBabyGlow
         MenuAction action;
 
         public Color color = Color.White;
+        public bool lightColor = false;
 
         bool descriptionflag = false;
 
@@ -107,7 +108,7 @@ namespace GlowBabyGlow
             }
             else
             {
-                font.Draw(sb, pos + m.Position, text, c);
+                font.Draw(sb, pos + m.Position, text, c, false, lightColor);
             }
        
         }

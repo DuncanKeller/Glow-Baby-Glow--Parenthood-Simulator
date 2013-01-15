@@ -74,7 +74,7 @@ namespace GlowBabyGlow
                 string s = "settings";
                 Vector2 fontPos = new Vector2((Config.screenW / 2) - ((s.Length * (font.Size.X / 2)) / 2) + pos.X,
                     ((Config.screenH / 3) + ((Config.screenH / 6) * 2)) + pos.Y);
-                font.Draw(sb, fontPos, s, Color.Black, true);
+                font.Draw(sb, fontPos, s, Color.Gray, true);
 
                 sb.Draw(TextureManager.menuArrow,
                  new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height * Config.screenR) / 2)) + pos.X),
@@ -82,7 +82,7 @@ namespace GlowBabyGlow
                      (int)(TextureManager.menuArrow.Width * Config.screenR),
                      (int)(TextureManager.menuArrow.Height * Config.screenR)),
                      new Rectangle(0, 0, TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
-                     Color.Black, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
+                     Color.White, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
             }
             
             sb.Draw(TextureManager.menuArrow,

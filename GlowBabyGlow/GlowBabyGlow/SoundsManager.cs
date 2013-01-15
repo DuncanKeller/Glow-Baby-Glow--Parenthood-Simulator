@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace GlowBabyGlow
 {
@@ -24,6 +25,13 @@ namespace GlowBabyGlow
         public static void Init(ContentManager content)
         {
             c = content;
+            ConfigureSound();
+        }
+
+        public static void ConfigureSound()
+        {
+            SoundEffect.MasterVolume = soundOn ? 1 : 0;
+            MediaPlayer.Volume = musicOn ? 1 : 0;
         }
 
         public static void LoadContent()

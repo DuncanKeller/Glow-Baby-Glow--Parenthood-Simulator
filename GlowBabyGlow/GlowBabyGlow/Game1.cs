@@ -51,7 +51,7 @@ namespace GlowBabyGlow
         protected override void Initialize()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Config.Init();
+            Config.Init(this);
 
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.realH;
@@ -75,6 +75,31 @@ namespace GlowBabyGlow
             //loadingThread.Join();
 
           
+        }
+
+        public void SetDefaultRes()
+        {
+            int w = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            int h = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
+            if (OptionsMenu.ContainsResolution(w, h))
+            {
+                Config.realW = w;
+                Config.realH = h;
+                Config.screenW = Config.realW;
+                Config.screenH = (int)(Config.realW / Config.Aspect);
+                Config.screenR = Config.screenW / 1920.0f;
+                Config.fontRatio = Config.screenR;
+            }
+            else
+            {
+                Config.realW = 1366;
+                Config.realH = 768;
+                Config.screenW = Config.realW;
+                Config.screenH = (int)(Config.realW / Config.Aspect);
+                Config.screenR = Config.screenW / 1920.0f;
+                Config.fontRatio = Config.screenR;
+            }
         }
 
         public void SetRes()

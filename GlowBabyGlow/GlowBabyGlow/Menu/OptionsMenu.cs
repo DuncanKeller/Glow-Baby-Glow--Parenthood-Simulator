@@ -15,8 +15,8 @@ namespace GlowBabyGlow
         float offset;
         float timer;
         int resIndex = 0;
-        List<int> xres = new List<int>();
-        List<int> yres = new List<int>();
+        static List<int> xres = new List<int>();
+        static List<int> yres = new List<int>();
 
         int oldx;
         int oldy;
@@ -51,6 +51,10 @@ namespace GlowBabyGlow
 
             destination = pos;
             elements[0].Selected = true;
+            elements[0].lightColor = true;
+            elements[2].lightColor = true;
+            elements[4].lightColor = true;
+            elements[6].lightColor = true;
             elements[1].color = new Color(230,230,230);
             elements[3].color = new Color(230, 230, 230);
             elements[5].color = new Color(230, 230, 230);
@@ -61,6 +65,16 @@ namespace GlowBabyGlow
             oldy = Config.realH;
 
             AddResolutions();
+        }
+
+        public static bool ContainsResolution(int w, int h)
+        {
+            for (int i = 0; i < xres.Count; i++)
+            {
+                if (xres[i] == w && yres[i] == h)
+                { return true; }
+            }
+            return false;
         }
 
         void AddResolutions()
@@ -128,8 +142,8 @@ namespace GlowBabyGlow
 
         public override void Update(float dt)
         {
-            timer += dt / 1000;
-            offset = (float)Math.Sin(timer) * 5;
+            timer += (dt / 1000) * 5;
+            offset = (float)Math.Sin(timer) * 7;
             if (Input.GetThumbs(Input.defaultIndex).Y > 0.5 &&
                 Input.GetPrevThumbs(Input.defaultIndex).Y <= 0.5 &&
                 index == 0 ||
@@ -138,6 +152,7 @@ namespace GlowBabyGlow
             {
                 CheckRes();
                 MenuSystem.SwitchMenu(new Vector2(0, Config.screenH), "single-multi");
+                SoundManager.ConfigureSound();
             }
             else if (Input.GetThumbs(Input.defaultIndex).Y > 0.5 &&
                 Input.GetPrevThumbs(Input.defaultIndex).Y <= 0.5)
@@ -226,11 +241,13 @@ namespace GlowBabyGlow
                     {
                         SoundManager.musicOn = !SoundManager.musicOn;
                         elements[5].Text = GetText(SoundManager.musicOn);
+                        SoundManager.ConfigureSound();
                     }
                     else
                     {
                         SoundManager.soundOn = !SoundManager.soundOn;
                         elements[7].Text = GetText(SoundManager.soundOn);
+                        SoundManager.ConfigureSound();
                     }
                 }
             }

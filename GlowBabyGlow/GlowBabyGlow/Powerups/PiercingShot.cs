@@ -13,7 +13,7 @@ namespace GlowBabyGlow
             : base(x, y, w)
         {
             texture = TextureManager.pupIconArrow;
-            icon = TextureManager.pupIconArrow;
+            icon = TextureManager.pupIconArrowWhite;
             description = "piercing";
             color = Color.Yellow;
         }

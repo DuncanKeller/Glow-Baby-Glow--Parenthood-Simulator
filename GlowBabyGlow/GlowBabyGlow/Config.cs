@@ -33,6 +33,7 @@ namespace GlowBabyGlow
         static string filename = "save.dat";
         static bool xbox = false;
         static StorageContainer storageContainer;
+        public static Game1 game;
 
         public static bool tutorial = false;
 
@@ -46,18 +47,15 @@ namespace GlowBabyGlow
             get { return 5; }
         }
 
-        public static void Init()
+        public static void Init(Game1 g)
         {
+            game = g;
+
             playerColors.Add(Color.Green);
             playerColors.Add(Color.Red);
             playerColors.Add(Color.Blue);
             playerColors.Add(Color.Yellow);
 
-            
-            //if (screenW <= 960)
-            {
-               
-            }
 
             highScore.Add("alley", 0);
             highScore.Add("airport", 0);
@@ -73,6 +71,9 @@ namespace GlowBabyGlow
             if (xbox)
             {
                 result = StorageDevice.BeginShowSelector(PlayerIndex.One, new AsyncCallback(XboxLoadCallback), null);
+
+                realW = 1920;
+                realH = 1080;
             }
             else
             {
@@ -182,6 +183,8 @@ namespace GlowBabyGlow
             catch(Exception e)
             {
                 // todo
+                fullScrn = true;
+
             }
         }
 
@@ -195,6 +198,7 @@ namespace GlowBabyGlow
             else
             {
                 tutorial = true;
+                game.SetDefaultRes();
             }
         }
     }

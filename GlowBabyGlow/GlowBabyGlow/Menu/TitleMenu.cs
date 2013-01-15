@@ -45,7 +45,6 @@ namespace GlowBabyGlow
 
                 currentPos.X += veloc.X * dt / 1000;
                 currentPos.Y += veloc.Y * dt / 1000;
-
             }
 
             public void Draw(SpriteBatch sb, float x, float y)
@@ -59,6 +58,8 @@ namespace GlowBabyGlow
         }
 
         List<Letter> row1 = new List<Letter>();
+        int letter1height = 60;
+        int letter2height = 70;
 
         public TitleMenu(Game1 g) : base(g)
         {
@@ -114,6 +115,63 @@ namespace GlowBabyGlow
                 GenPos(), new Vector2(34, 0)));
             row1.Add(new Letter(TextureManager.l_Comma1,
                 GenPos(), new Vector2(42, 13)));
+
+            int left = -10;
+            int right = 105;
+
+            // parenthood
+            row1.Add(new Letter(TextureManager.smallLetters["p"],
+                new Vector2(left, letter1height), LetterPos1(0)));
+            row1.Add(new Letter(TextureManager.smallLetters["a"],
+                new Vector2(left, letter1height), LetterPos1(1)));
+            row1.Add(new Letter(TextureManager.smallLetters["r"],
+                new Vector2(left, letter1height), LetterPos1(2)));
+            row1.Add(new Letter(TextureManager.smallLetters["e"],
+                new Vector2(left, letter1height), LetterPos1(3)));
+            row1.Add(new Letter(TextureManager.smallLetters["n"],
+                new Vector2(left, letter1height), LetterPos1(4)));
+            row1.Add(new Letter(TextureManager.smallLetters["t"],
+                new Vector2(left, letter1height), LetterPos1(5)));
+            row1.Add(new Letter(TextureManager.smallLetters["h"],
+                new Vector2(left, letter1height), LetterPos1(6)));
+            row1.Add(new Letter(TextureManager.smallLetters["o"],
+                new Vector2(left, letter1height), LetterPos1(7)));
+            row1.Add(new Letter(TextureManager.smallLetters["o"],
+                new Vector2(left, letter1height), LetterPos1(8)));
+            row1.Add(new Letter(TextureManager.smallLetters["d"],
+                new Vector2(left, letter1height), LetterPos1(9)));
+
+            row1.Add(new Letter(TextureManager.smallLetters["s"],
+                new Vector2(right, letter2height), LetterPos2(0)));
+            row1.Add(new Letter(TextureManager.smallLetters["i"],
+                new Vector2(right, letter2height), LetterPos2(1)));
+            row1.Add(new Letter(TextureManager.smallLetters["m"],
+                new Vector2(right, letter2height), LetterPos2(2)));
+            row1.Add(new Letter(TextureManager.smallLetters["u"],
+                new Vector2(right, letter2height), LetterPos2(3)));
+            row1.Add(new Letter(TextureManager.smallLetters["l"],
+                new Vector2(right, letter2height), LetterPos2(4)));
+            row1.Add(new Letter(TextureManager.smallLetters["a"],
+                new Vector2(right, letter2height), LetterPos2(5)));
+            row1.Add(new Letter(TextureManager.smallLetters["t"],
+                new Vector2(right, letter2height), LetterPos2(6)));
+            row1.Add(new Letter(TextureManager.smallLetters["o"],
+                new Vector2(right, letter2height), LetterPos2(7)));
+            row1.Add(new Letter(TextureManager.smallLetters["r"],
+                new Vector2(right, letter2height), LetterPos2(8)));
+
+        }
+
+        public Vector2 LetterPos1(int i)
+        {
+            float s = (4.5f * Config.screenR);
+            return new Vector2(10 + (i * s), letter1height);
+        }
+
+        public Vector2 LetterPos2(int i)
+        {
+            float s = (4.5f * Config.screenR);
+            return new Vector2(20 + (i * s), letter2height);
         }
 
         public override void Update(float dt)

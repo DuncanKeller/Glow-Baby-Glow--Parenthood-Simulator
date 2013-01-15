@@ -16,6 +16,7 @@ namespace GlowBabyGlow
         public static int height = (int)(106 * Config.fontRatio);
 
         Color[] colorBank = new Color[255];
+        Color[] lightColorBank = new Color[255];
         Dictionary<char, Point> fontMap = new Dictionary<char, Point>();
 
         public Point Size
@@ -36,6 +37,14 @@ namespace GlowBabyGlow
                 int g = Config.rand.Next(255);
                 int b = Config.rand.Next(255);
                 colorBank[i] = new Color(r, g, b);
+            }
+
+            for (int i = 0; i < 255; i++)
+            {
+                int r = 255 - Config.rand.Next(170);
+                int g = 255 - Config.rand.Next(170);
+                int b = 255 - Config.rand.Next(170);
+                lightColorBank[i] = new Color(r, g, b);
             }
         }
 
@@ -104,7 +113,7 @@ namespace GlowBabyGlow
             fontSheet = t;
         }
 
-        public void Draw(SpriteBatch sb, Vector2 pos, string word, Color c, bool small = false)
+        public void Draw(SpriteBatch sb, Vector2 pos, string word, Color c, bool small = false, bool light = false)
         {
             int offset = 5;
             int spacing = 1;
@@ -135,6 +144,11 @@ namespace GlowBabyGlow
             for (int i = 0; i < word.Length; i++)
             {
                 Color color = c == Color.White ? colorBank[i] : c;
+
+                if (light)
+                {
+                    color = c == Color.White ? lightColorBank[i] : c;
+                }
                 Rectangle rect = new Rectangle(
                     (int)(fontMap[word[i]].X * (fontSheet.Width / columns)),
                     (int)(fontMap[word[i]].Y * (fontSheet.Height / rows)),

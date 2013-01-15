@@ -21,28 +21,56 @@ namespace GlowBabyGlow
             backdrop = TextureManager.bParkBandStand;
             elements.Add(new MenuElement("press a to join", null, new Vector2(
                 0, Config.screenH / 3), true, this, delegate() { }));
+            elements.Add(new MenuElement("", null, new Vector2(
+                0, (Config.screenH / 3) + (Config.screenH / 6)), true, this, delegate() { }));
             c = Color.White;
             destination = pos;
             //elements[0].Selected = true;
-
-            
         }
 
         public int[] GetPlayers()
         {
             int[] info = new int[playerinfo.Count];
 
-            for (int i = 0; i < info.Length; i++)
+            int count = 0;
+            foreach (KeyValuePair<int,int> i in playerinfo)
             {
-                info[i] = playerinfo[i];
+                info[count] = i.Key;
+                count++;
             }
 
             return info;
         }
 
+        public void CheckPlayers()
+        {
+            if (Input.ConnectedControllers() == 4)
+            {
+                elements[0].Text = "";
+                elements[1].Text = "";
+            }
+            else if (Input.ConnectedControllers() >= 2)
+            {
+                elements[0].Text = "press a to join";
+                elements[1].Text = "";
+            }
+            else if (Input.ConnectedControllers() == 1)
+            {
+                elements[0].Text = "connect second";
+                elements[1].Text = "controller";
+            }
+            else
+            {
+                elements[0].Text = "connect controllers";
+                elements[1].Text = "to play";
+            }
+        }
+
         public override void Update(float dt)
         {
             base.Update(dt);
+
+            CheckPlayers();
 
             foreach (MenuElement e in elements)
             {
