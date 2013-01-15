@@ -11,6 +11,7 @@ namespace GlowBabyGlow
     {
         ParticleManager pm = new ParticleManager();
         float timer = 0;
+        float fonttimer = 0;
 
         class Letter
         {
@@ -58,6 +59,7 @@ namespace GlowBabyGlow
         }
 
         List<Letter> row1 = new List<Letter>();
+        List<Letter> row2 = new List<Letter>();
         int letter1height = 60;
         int letter2height = 70;
 
@@ -120,57 +122,57 @@ namespace GlowBabyGlow
             int right = 105;
 
             // parenthood
-            row1.Add(new Letter(TextureManager.smallLetters["p"],
+            row2.Add(new Letter(TextureManager.smallLetters["p"],
                 new Vector2(left, letter1height), LetterPos1(0)));
-            row1.Add(new Letter(TextureManager.smallLetters["a"],
+            row2.Add(new Letter(TextureManager.smallLetters["a"],
                 new Vector2(left, letter1height), LetterPos1(1)));
-            row1.Add(new Letter(TextureManager.smallLetters["r"],
+            row2.Add(new Letter(TextureManager.smallLetters["r"],
                 new Vector2(left, letter1height), LetterPos1(2)));
-            row1.Add(new Letter(TextureManager.smallLetters["e"],
+            row2.Add(new Letter(TextureManager.smallLetters["e"],
                 new Vector2(left, letter1height), LetterPos1(3)));
-            row1.Add(new Letter(TextureManager.smallLetters["n"],
+            row2.Add(new Letter(TextureManager.smallLetters["n"],
                 new Vector2(left, letter1height), LetterPos1(4)));
-            row1.Add(new Letter(TextureManager.smallLetters["t"],
+            row2.Add(new Letter(TextureManager.smallLetters["t"],
                 new Vector2(left, letter1height), LetterPos1(5)));
-            row1.Add(new Letter(TextureManager.smallLetters["h"],
+            row2.Add(new Letter(TextureManager.smallLetters["h"],
                 new Vector2(left, letter1height), LetterPos1(6)));
-            row1.Add(new Letter(TextureManager.smallLetters["o"],
+            row2.Add(new Letter(TextureManager.smallLetters["o"],
                 new Vector2(left, letter1height), LetterPos1(7)));
-            row1.Add(new Letter(TextureManager.smallLetters["o"],
+            row2.Add(new Letter(TextureManager.smallLetters["o"],
                 new Vector2(left, letter1height), LetterPos1(8)));
-            row1.Add(new Letter(TextureManager.smallLetters["d"],
+            row2.Add(new Letter(TextureManager.smallLetters["d"],
                 new Vector2(left, letter1height), LetterPos1(9)));
 
-            row1.Add(new Letter(TextureManager.smallLetters["s"],
+            row2.Add(new Letter(TextureManager.smallLetters["s"],
                 new Vector2(right, letter2height), LetterPos2(0)));
-            row1.Add(new Letter(TextureManager.smallLetters["i"],
+            row2.Add(new Letter(TextureManager.smallLetters["i"],
                 new Vector2(right, letter2height), LetterPos2(1)));
-            row1.Add(new Letter(TextureManager.smallLetters["m"],
+            row2.Add(new Letter(TextureManager.smallLetters["m"],
                 new Vector2(right, letter2height), LetterPos2(2)));
-            row1.Add(new Letter(TextureManager.smallLetters["u"],
+            row2.Add(new Letter(TextureManager.smallLetters["u"],
                 new Vector2(right, letter2height), LetterPos2(3)));
-            row1.Add(new Letter(TextureManager.smallLetters["l"],
+            row2.Add(new Letter(TextureManager.smallLetters["l"],
                 new Vector2(right, letter2height), LetterPos2(4)));
-            row1.Add(new Letter(TextureManager.smallLetters["a"],
+            row2.Add(new Letter(TextureManager.smallLetters["a"],
                 new Vector2(right, letter2height), LetterPos2(5)));
-            row1.Add(new Letter(TextureManager.smallLetters["t"],
+            row2.Add(new Letter(TextureManager.smallLetters["t"],
                 new Vector2(right, letter2height), LetterPos2(6)));
-            row1.Add(new Letter(TextureManager.smallLetters["o"],
+            row2.Add(new Letter(TextureManager.smallLetters["o"],
                 new Vector2(right, letter2height), LetterPos2(7)));
-            row1.Add(new Letter(TextureManager.smallLetters["r"],
+            row2.Add(new Letter(TextureManager.smallLetters["r"],
                 new Vector2(right, letter2height), LetterPos2(8)));
 
         }
 
         public Vector2 LetterPos1(int i)
         {
-            float s = (4.5f * Config.screenR);
+            float s = (4.5f );
             return new Vector2(10 + (i * s), letter1height);
         }
 
         public Vector2 LetterPos2(int i)
         {
-            float s = (4.5f * Config.screenR);
+            float s = (4.5f );
             return new Vector2(20 + (i * s), letter2height);
         }
 
@@ -188,8 +190,15 @@ namespace GlowBabyGlow
             foreach (Letter l in row1)
             { l.Update(dt); }
 
+            if (fonttimer > 1)
+            {
+                foreach (Letter l in row2)
+                { l.Update(dt); }
+            }
+
             pm.Update(dt);
 
+            fonttimer += dt / 1000;
             timer += dt / 1000;
             if (timer > 0.15f)
             {
@@ -207,8 +216,10 @@ namespace GlowBabyGlow
         {
             base.Draw(sb, g);
 
-           
             foreach (Letter l in row1)
+            { l.Draw(sb, pos.X, pos.Y); }
+
+            foreach (Letter l in row2)
             { l.Draw(sb, pos.X, pos.Y); }
 
             pm.Draw(sb);

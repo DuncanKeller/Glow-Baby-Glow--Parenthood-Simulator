@@ -17,6 +17,8 @@ namespace GlowBabyGlow
         bool facingRight = true;
         int score = 0;
         Vector2 spawnPoint = new Vector2();
+        float spawnWidth = 0;
+        float particleTimer = 0;
 
         float jumpStrength = (int)(1000 * Config.screenR);
         float acceleration = (int)(100 * Config.screenR);
@@ -44,7 +46,7 @@ namespace GlowBabyGlow
 
         bool alive = true;
         float respawnTimer = 0;
-        float respawnTime = 1.4f;
+        float respawnTime = 2.4f;
         int lives = 3;
 
         int bullets = 6;
@@ -289,8 +291,21 @@ namespace GlowBabyGlow
             {
                 explodeTime += dt / 1000;
             }
+            if (spawnWidth > 1)
+            {
+                particleTimer += dt / 1000;
+                if (particleTimer > 0.004f)
+                {
+                    Vector2 particle = new Vector2(
+                         (int)(spawnPoint.X - (spawnWidth / 2)) + (Player.width / 2)
+                         + Config.rand.Next((int)spawnWidth),
+                         Config.rand.Next((int)(spawnPoint.Y + (height))));
+                    World.ParticleManager.AddParticle(new SpawnParticle(particle));
+                    particleTimer = 0;
+                }
+            }
 
-            if (explodeTime > 0.05f)
+            if (explodeTime > 0.025f)
             {
                 lives = 0;
                 Die();
@@ -463,6 +478,17 @@ namespace GlowBabyGlow
                 if (respawnTimer <= 0)
                 {
                     Respawn();
+
+                    rect.X = (int)pos.X;
+                    rect.Y = (int)pos.Y;
+                    hitRect.X = rect.X + hitOffset.X;
+                    hitRect.Y = rect.Y + hitOffset.Y;
+
+                    for (int i = 0; i < 40; i++)
+                    {
+                        World.ParticleManager.AddParticle(new SpawnParticle2(new Vector2(
+                            hitRect.Center.X, hitRect.Center.Y)));
+                    }
                 }
             }
 
@@ -554,6 +580,7 @@ namespace GlowBabyGlow
                 {
                     lives--;
                 }
+                spawnWidth = 0;
             }
         }
 
@@ -1064,6 +1091,7 @@ namespace GlowBabyGlow
                     if (e.HitRect.Intersects(hitRect))
                     {
                         Die();
+                        GameOver.death = DeathType.zombie;
                     }
                 }
             }
@@ -1269,6 +1297,34 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
+            // s = d / t
+            int spawnMax = Config.screenW / 8;
+            float timeToLaunch = 0.35f;
+            float speedToLaunch = (spawnPoint.Y + height) / timeToLaunch;
+            if (respawnTimer > 0 && respawnTimer < respawnTime - 0.4f)
+            {
+                spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(spawnMax, 0), 0.1f).X;
+
+                if (respawnTimer < timeToLaunch)
+                {
+                    sb.Draw(TextureManager.blankTexture, new Rectangle(
+                         (int)(spawnPoint.X - (0)),
+                         (int)(speedToLaunch * (timeToLaunch - respawnTimer)),
+                         width, height), Color.White);
+                }
+            }
+            else
+            {
+                spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(0, 0), 0.5f).X;
+            }
+
+            if (spawnMax > 0)
+            {
+                sb.Draw(TextureManager.blankTexture, new Rectangle(
+                      (int)(spawnPoint.X - (spawnWidth / 2)) + (Player.width / 2), 0,
+                      (int)spawnWidth, (int)(spawnPoint.Y + height)),
+                      new Color(255, 255, 75, 100));
+            }
             if (alive)
             {
                 if (currentPowerup is SpeedShoes)
@@ -1333,6 +1389,15 @@ namespace GlowBabyGlow
                             }
                         }
                     }
+                }
+
+                if (reloadTimer > 0)
+                {
+                    int w = (int)((TextureManager.reloading.Width) * Config.screenR);
+                    int h = (int)((TextureManager.reloading.Height) * Config.screenR);
+                    sb.Draw(TextureManager.reloading, new Rectangle(
+                        hitRect.Center.X - (w / 2),
+                        hitRect.Bottom - h, w, h), Color.White);
                 }
             }
 

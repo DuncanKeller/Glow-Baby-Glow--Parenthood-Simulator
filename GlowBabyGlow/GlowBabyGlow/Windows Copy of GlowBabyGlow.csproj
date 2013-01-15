@@ -126,6 +126,8 @@
     <Compile Include="Particles\ParticleManager.cs" />
     <Compile Include="Particles\PowerupParticle.cs" />
     <Compile Include="Particles\SparkParticle.cs" />
+    <Compile Include="Particles\SpawnParticle.cs" />
+    <Compile Include="Particles\SpawnParticle2.cs" />
     <Compile Include="Particles\SpringParticle.cs" />
     <Compile Include="Backdrops\Plane.cs" />
     <Compile Include="Actors\Player.cs" />
