@@ -28,8 +28,8 @@ namespace GlowBabyGlow
         {
             world = w;
             font = new GFont(TextureManager.smallFont, 5, 10);
-            width = TextureManager.pupBackdrop.Width / 2;
-            height = TextureManager.pupBackdrop.Height / 2;
+            width = (int)(TextureManager.pupBackdrop.Width * Config.screenR);
+            height = (int)(TextureManager.pupBackdrop.Height * Config.screenR);
         }
 
         public bool ShowPowerup

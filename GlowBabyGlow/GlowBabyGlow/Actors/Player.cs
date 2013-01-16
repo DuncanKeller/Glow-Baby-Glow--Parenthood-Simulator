@@ -190,10 +190,12 @@ namespace GlowBabyGlow
 
         public Player(Point pos, World w, int i) : base(w)
         {
+            alive = false;
+            respawnTimer = respawnTime;
             spawnPoint = new Vector2(pos.X, pos.Y);
-            this.pos = new Vector2(pos.X, pos.Y);
-            rect = new Rectangle((int)(pos.X * Config.screenR), 
-                (int)(pos.Y * Config.screenR), 
+            this.pos = new Vector2(pos.X, Config.screenH);
+            rect = new Rectangle((int)(pos.X * Config.screenR),
+                (int)(Config.screenH), 
                 width,
                 height);
             hitRect = new Rectangle(rect.X, rect.Y, rect.Width / 2, rect.Height);
@@ -294,7 +296,7 @@ namespace GlowBabyGlow
             if (spawnWidth > 1)
             {
                 particleTimer += dt / 1000;
-                if (particleTimer > 0.004f)
+                if (particleTimer > 0.004f && lives > 0)
                 {
                     Vector2 particle = new Vector2(
                          (int)(spawnPoint.X - (spawnWidth / 2)) + (Player.width / 2)
@@ -484,11 +486,12 @@ namespace GlowBabyGlow
                     hitRect.X = rect.X + hitOffset.X;
                     hitRect.Y = rect.Y + hitOffset.Y;
 
+                    if(lives >0){
                     for (int i = 0; i < 40; i++)
                     {
                         World.ParticleManager.AddParticle(new SpawnParticle2(new Vector2(
                             hitRect.Center.X, hitRect.Center.Y)));
-                    }
+                    }}
                 }
             }
 
@@ -1300,17 +1303,17 @@ namespace GlowBabyGlow
             // s = d / t
             int spawnMax = Config.screenW / 8;
             float timeToLaunch = 0.35f;
-            float speedToLaunch = (spawnPoint.Y + height) / timeToLaunch;
+            float speedToLaunch = (spawnPoint.Y) / timeToLaunch;
             if (respawnTimer > 0 && respawnTimer < respawnTime - 0.4f)
             {
                 spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(spawnMax, 0), 0.1f).X;
 
-                if (respawnTimer < timeToLaunch)
+                if (respawnTimer < timeToLaunch && lives > 0)
                 {
                     sb.Draw(TextureManager.blankTexture, new Rectangle(
                          (int)(spawnPoint.X - (0)),
                          (int)(speedToLaunch * (timeToLaunch - respawnTimer)),
-                         width, height), Color.White);
+                         width / 2, height), Color.White);
                 }
             }
             else
@@ -1318,12 +1321,33 @@ namespace GlowBabyGlow
                 spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(0, 0), 0.5f).X;
             }
 
-            if (spawnMax > 0)
+            if (spawnMax > 0 && lives > 0)
             {
+                Color c = new Color(255, 255, 75, 100);
+
+                if (MenuSystem.gameType != GameType.single)
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            c = new Color(75, 255, 75, 100);
+                            break;
+                        case 1:
+                            c = new Color(255, 75, 75, 100);
+                            break;
+                        case 2:
+                            c = new Color(75, 75, 255, 100);
+                            break;
+                        case 3:
+                            c = new Color(75, 255, 255, 100);
+                            break;
+                    }
+                }
+
                 sb.Draw(TextureManager.blankTexture, new Rectangle(
                       (int)(spawnPoint.X - (spawnWidth / 2)) + (Player.width / 2), 0,
                       (int)spawnWidth, (int)(spawnPoint.Y + height)),
-                      new Color(255, 255, 75, 100));
+                      c);
             }
             if (alive)
             {
@@ -1352,10 +1376,10 @@ namespace GlowBabyGlow
                         c = new Color(50, 0, 0, 20);
                         break;
                     case 2:
-                        c = new Color(0, 50, 50, 20);
+                        c = new Color(0, 0, 50, 20);
                         break;
                     case 3:
-                        c = new Color(0, 0, 50, 20);
+                        c = new Color(0, 50, 50, 20);
                         break;
                 }
 

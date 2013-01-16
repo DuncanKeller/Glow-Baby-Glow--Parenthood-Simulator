@@ -82,7 +82,7 @@ namespace GlowBabyGlow
 
            
             screenW = realW;
-            screenH = (int)(realW / Aspect);
+            screenH = (int)(Math.Round(realW / Aspect));
             screenR = screenW / 1920.0f;
             fontRatio = screenR;
         }

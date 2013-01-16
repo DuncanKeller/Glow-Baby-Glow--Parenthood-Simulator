@@ -184,17 +184,17 @@ namespace GlowBabyGlow
                 // tab
                 sb.Draw(TextureManager.blankTexture,
                     new Rectangle(playerTab.X, playerTab.Y,
-                        playerTab.Width, playerTab.Height / 5),
+                        playerTab.Width, (int)Math.Round(playerTab.Height / 5.0)),
                     new Color(20, 20, 20, alpha2));
 
                 sb.Draw(TextureManager.blankTexture,
-                    new Rectangle(playerTab.X, playerTab.Y + (playerTab.Height / 5),
-                        playerTab.Width, (playerTab.Height / 5) * 2 ),
+                    new Rectangle(playerTab.X, playerTab.Y + (int)(Math.Round(playerTab.Height / 5.0)),
+                        playerTab.Width, (int)(Math.Round(playerTab.Height / 5.0)) * 2 ),
                     new Color(Config.playerColors[i].R, Config.playerColors[i].G, Config.playerColors[i].B, alpha));
 
                 sb.Draw(TextureManager.blankTexture,
-                    new Rectangle(playerTab.X, playerTab.Y + ((playerTab.Height / 5) * 3 ),
-                        playerTab.Width, (playerTab.Height / 5) * 2 ),
+                    new Rectangle(playerTab.X, playerTab.Y + ((int)(Math.Round(playerTab.Height / 5.0)) * 3 ),
+                        playerTab.Width, (int)(Math.Round(playerTab.Height / 5.0)) * 2 ),
                     new Color(20, 20, 20, alpha2));
 
                 sb.Draw(TextureManager.blankTexture,

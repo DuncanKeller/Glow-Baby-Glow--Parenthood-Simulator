@@ -52,7 +52,6 @@ namespace GlowBabyGlow
                         MenuSystem.gameType == GameType.survival)
                     {
                         font.Draw(sb, new Vector2(scorePos, 10), "score:" + world.Players[0].Score, Color.White);
-                        
                     }
                     else
                     {

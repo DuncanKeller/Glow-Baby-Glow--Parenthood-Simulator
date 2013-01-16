@@ -35,6 +35,7 @@ namespace GlowBabyGlow
         float loadingTimer = 0;
 
         World tutorial = new World();
+        int[] letterbox = new int[255];
 
         public Game1()
         {
@@ -71,9 +72,18 @@ namespace GlowBabyGlow
             loadingThread = new Thread(DoLoad);
             loadingThread.Start();
             
-
-            //loadingThread.Join();
-
+            
+            for (int i = 0; i < letterbox.Length; i++)
+            {
+                int n = 0;
+                int old = i > 0 ? letterbox[i - 1] : -1;
+                do
+                {
+                    n = Config.rand.Next(TextureManager.letterbox.Length);
+                }
+                while (n == old);
+                letterbox[i] = n;
+            }
           
         }
 
@@ -87,7 +97,7 @@ namespace GlowBabyGlow
                 Config.realW = w;
                 Config.realH = h;
                 Config.screenW = Config.realW;
-                Config.screenH = (int)(Config.realW / Config.Aspect);
+                Config.screenH = (int)(Math.Round(Config.realW / Config.Aspect));
                 Config.screenR = Config.screenW / 1920.0f;
                 Config.fontRatio = Config.screenR;
             }
@@ -96,7 +106,7 @@ namespace GlowBabyGlow
                 Config.realW = 1366;
                 Config.realH = 768;
                 Config.screenW = Config.realW;
-                Config.screenH = (int)(Config.realW / Config.Aspect);
+                Config.screenH = (int)(Math.Round(Config.realW / Config.Aspect));
                 Config.screenR = Config.screenW / 1920.0f;
                 Config.fontRatio = Config.screenR;
             }
@@ -263,14 +273,64 @@ namespace GlowBabyGlow
                     spriteBatch.End();
                 }
 
-                  spriteBatch.Begin();
+                spriteBatch.Begin();
 
-                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.realW, h), Color.Black);
-                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, Config.realH - h, Config.realW, h), Color.Black);
+                if (h > 0)
+                {
+                    int n = 0;
+                    int s = h / ((50 / h) + 1);
 
-                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, w, Config.realH), Color.Black);
-                  spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(Config.realW - w, 0, w, Config.realH), Color.Black);
+                    for (int x = 0; x < Config.realW; x += s)
+                    {
+                        for (int y = 0; y < h; y += s)
+                        {
+                            spriteBatch.Draw(TextureManager.letterbox[letterbox[n]],
+                                new Rectangle(x, y, s, s), Color.White);
+                            n++;
+                        }
+                    }
+                    for (int x = 0; x < Config.realW; x += s)
+                    {
+                        for (int y = Config.realH - h; y < Config.realH; y += s)
+                        {
+                            spriteBatch.Draw(TextureManager.letterbox[letterbox[n]],
+                                new Rectangle(x, y, s, s), Color.White);
+                            n++;
+                        }
+                    }
 
+                    //spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.realW, h), Color.Black);
+                    //spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, Config.realH - h, Config.realW, h), Color.Black);
+                }
+                else if (w > 0)
+                {
+                    int n = 0;
+                    int s = w / ((50 / w) + 1);
+
+                    for (int x = 0; x < w; x += s)
+                    {
+                        for (int y = 0; y < Config.realH; y += s)
+                        {
+                            spriteBatch.Draw(TextureManager.letterbox[letterbox[n]],
+                                new Rectangle(x, y, s, s), Color.White);
+                            n++;
+                        }
+                    }
+                    for (int x = Config.realW - w; x < Config.realW; x += s)
+                    {
+                        for (int y = 0; y < Config.realH; y += s)
+                        {
+                            spriteBatch.Draw(TextureManager.letterbox[letterbox[n]],
+                                new Rectangle(x, y, s, s), Color.White);
+                            n++;
+                        }
+                    }
+
+                    // spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(0, 0, w, Config.realH), Color.Black);
+                    // spriteBatch.Draw(TextureManager.blankTexture, new Rectangle(Config.realW - w, 0, w, Config.realH), Color.Black);
+                }
+
+               
                 spriteBatch.End();
           
             }
@@ -290,9 +350,9 @@ namespace GlowBabyGlow
                 loadingTimer += 0.05f;
                 spriteBatch.Begin();
                 spriteBatch.Draw(blankTexture,
-                    new Rectangle(0, 0, Config.screenW, Config.screenH), Color.Black);
+                    new Rectangle(0, 0, Config.realW, Config.realH), Color.Black);
                 int size = Config.screenW / 8;
-                Rectangle dest = new Rectangle(Config.screenW - size - 20, Config.screenH - size - 20, size, size);
+                Rectangle dest = new Rectangle(Config.realW - size - 20, Config.realH - size - 20, size, size);
                 Rectangle src = new Rectangle(0, 0, loadingTexture.Width, loadingTexture.Height);
                 spriteBatch.Draw(loadingTexture, dest, src, Color.White, 0,
                     new Vector2(src.Center.X, src.Center.Y), SpriteEffects.None, 0);

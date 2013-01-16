@@ -307,14 +307,10 @@ namespace GlowBabyGlow
                             {
                                 if (!world.Players[i].Shaking)
                                 {
-                                    if (HoldingPrimaryPrev(world.Players[i].Index) && spaceBarPreventativeMeasureFlag)
+                                    if (HoldingPrimaryPrev(world.Players[i].Index))
                                     {
                                         world.Players[i].Throw();
 
-                                    }
-                                    else if (HoldingPrimaryPrev(world.Players[i].Index))
-                                    {
-                                        spaceBarPreventativeMeasureFlag = true;
                                     }
                                     world.Players[i].ReadyToThrow = false;
                                 }

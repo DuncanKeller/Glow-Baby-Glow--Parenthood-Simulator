@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Duncanimation;
 
 namespace GlowBabyGlow
 {
@@ -12,10 +13,13 @@ namespace GlowBabyGlow
         float leftOffset;
         float rightOffset;
         float bottomOffset;
+        float kiteOffset;
         float timer;
+        float kiteTimer;
         float amplitude = 10 * Config.screenR;
         float speed = 5;
         GFont font;
+        Animator kite;
 
         public SingleMultiMenu(Game1 g)
             : base(g)
@@ -26,6 +30,10 @@ namespace GlowBabyGlow
                 0, Config.screenH / 3), true, this, delegate() { }));
             elements.Add(new MenuElement("multiplayer", null, new Vector2(
                 0, (Config.screenH / 3) + (Config.screenH / 6) ), true, this, delegate() { }));
+
+            kite = new Animator(TextureManager.kite, 1, 5);
+            kite.AddAnimation("default", 0, 4, 10, true);
+            kite.Play("default");
 
             font = new GFont(TextureManager.font, 4, 10);
             c = Color.White;
@@ -40,6 +48,9 @@ namespace GlowBabyGlow
             leftOffset = (float)Math.Sin(timer) * amplitude;
             bottomOffset = (float)Math.Sin(timer) * amplitude;
             rightOffset = -(float)Math.Sin(timer) * amplitude;
+            kiteTimer += (dt / 1000) * 0.3f;
+            kiteOffset = (float)-Math.Sin(kiteTimer) * 100 * Config.screenR;
+            kite.Update(dt);
 
             foreach (MenuElement e in elements)
             {
@@ -67,7 +78,27 @@ namespace GlowBabyGlow
 
         public override void Draw(SpriteBatch sb, GraphicsDevice g)
         {
+           
             base.Draw(sb, g);
+
+            kite.Draw(sb, new Rectangle(
+               Config.screenW - (Config.screenW / 8) + (int)pos.X, (int)pos.Y + (Config.screenH / 2) + (int)kiteOffset,
+               (int)((TextureManager.kite.Width / 5) * Config.screenR),
+                (int)(TextureManager.kite.Height * Config.screenR)),
+                Color.White, 0, Vector2.Zero, SpriteEffects.None);
+
+            LineBatch.DrawLineSkinny(sb, Color.Black, new Vector2(
+                ((Config.screenW / 100) * 83.5f) + pos.X,
+                ((Config.screenH / 100) * 93) + pos.Y), new Vector2(
+                    Config.screenW - (Config.screenW / 8) + (int)pos.X + 
+                    ((int)((TextureManager.kite.Width / 7.0f) * Config.screenR)),
+                    (int)pos.Y + (Config.screenH / 2) + (int)kiteOffset + 
+                    (int)(((TextureManager.kite.Height / 2) - (TextureManager.kite.Height / 6)) * Config.screenR)));
+
+            foreach (MenuElement e in elements)
+            {
+                e.Draw(sb, g);
+            }
 
             if (Config.includeOptions)
             {
@@ -77,10 +108,10 @@ namespace GlowBabyGlow
                 font.Draw(sb, fontPos, s, Color.Gray, true);
 
                 sb.Draw(TextureManager.menuArrow,
-                 new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height * Config.screenR) / 2)) + pos.X),
+                 new Rectangle((int)(((Config.screenW / 2) + ((TextureManager.menuArrow.Height / 2 * Config.screenR) / 2)) + pos.X),
                      (int)(fontPos.Y + bottomOffset + (font.Size.Y / 2) + (int)amplitude + 5),
-                     (int)(TextureManager.menuArrow.Width * Config.screenR),
-                     (int)(TextureManager.menuArrow.Height * Config.screenR)),
+                     (int)(TextureManager.menuArrow.Width / 2 * Config.screenR),
+                     (int)(TextureManager.menuArrow.Height / 2 * Config.screenR)),
                      new Rectangle(0, 0, TextureManager.menuArrow.Width, TextureManager.menuArrow.Height),
                      Color.White, (float)Math.PI / 2, Vector2.Zero, SpriteEffects.None, 0);
             }

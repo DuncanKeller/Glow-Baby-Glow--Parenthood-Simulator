@@ -13,6 +13,8 @@ namespace GlowBabyGlow
         static ContentManager c;
         static LoadAction finishLoad;
 
+        public static Texture2D[] letterbox = new Texture2D[5];
+
         public static Texture2D blankTexture;
         public static Texture2D testRun;
         public static Texture2D testBaby;
@@ -63,6 +65,7 @@ namespace GlowBabyGlow
 
         public static Dictionary<string, Texture2D> smallLetters = new Dictionary<string, Texture2D>();
 
+        public static Texture2D kite;
         public static Texture2D bPark;
         public static Texture2D bParkSky;
         public static Texture2D bParkPond;
@@ -91,6 +94,7 @@ namespace GlowBabyGlow
         public static Texture2D zombieSheet;
         public static Texture2D zombieSpeedy;
         public static Texture2D zombieFat;
+        public static Texture2D zombieLarge;
         public static Texture2D arrow;
 
         public static Texture2D font;
@@ -111,6 +115,12 @@ namespace GlowBabyGlow
         public static void LoadContent(LoadAction a)
         {
             finishLoad = a;
+
+            letterbox[0] = c.Load<Texture2D>("Tiles\\letterbox1");
+            letterbox[1] = c.Load<Texture2D>("Tiles\\letterbox2");
+            letterbox[2] = c.Load<Texture2D>("Tiles\\letterbox3");
+            letterbox[3] = c.Load<Texture2D>("Tiles\\letterbox4");
+            letterbox[4] = c.Load<Texture2D>("Tiles\\letterbox5");
 
             // characters
             blankTexture = c.Load<Texture2D>("blank");
@@ -175,6 +185,7 @@ namespace GlowBabyGlow
             zombieSheet = c.Load<Texture2D>("Actors\\zombie-sheet");
             zombieFat = c.Load<Texture2D>("Actors\\zombie-sheet-fat");
             zombieSpeedy = c.Load<Texture2D>("Actors\\zombie-sheet-fast");
+            zombieLarge = c.Load<Texture2D>("Actors\\zombie-sheet-large");
 
             // backdrops
             bTutorial = c.Load<Texture2D>("Backdrops\\tutorial");
@@ -202,6 +213,7 @@ namespace GlowBabyGlow
             darkClouds[2] = c.Load<Texture2D>("Backdrops\\darkcloud3");
             airplane = c.Load<Texture2D>("Backdrops\\plane");
             smallPlane = c.Load<Texture2D>("Backdrops\\small-plane");
+            kite = c.Load<Texture2D>("Backdrops\\kite");
             //jungleGround = c.Load<Texture2D>("Backdrops\\Jungle\\ground");
             //for (int i = 0; i < 4; i++)
             //{

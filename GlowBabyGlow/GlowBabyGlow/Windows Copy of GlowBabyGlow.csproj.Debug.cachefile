@@ -129,5 +129,12 @@ Content\Menu\SmallLetters\s_s.xnb
 Content\Menu\SmallLetters\s_t.xnb
 Content\Menu\SmallLetters\s_u.xnb
 Content\Actors\reloading.xnb
+Content\Tiles\letterbox1.xnb
+Content\Tiles\letterbox2.xnb
+Content\Tiles\letterbox3.xnb
+Content\Tiles\letterbox4.xnb
+Content\Tiles\letterbox5.xnb
+Content\Actors\zombie-sheet-large.xnb
+Content\Backdrops\kite.xnb
 Animation.cs
 Animator.cs
