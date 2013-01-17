@@ -76,6 +76,14 @@ namespace GlowBabyGlow
         {
             if (!alreadyHit.Contains(b))
             {
+                if (!b.Player.Automate
+                    && b.Player.Powerup is PiercingShot)
+                {
+                    SoundEffectInstance sfx = SoundManager.slice.CreateInstance();
+                    sfx.Volume = 0.5f;
+                    sfx.Play();
+                }
+
                 health--;
                 velocity.X += b.Velocity.X / 3.5f;
 

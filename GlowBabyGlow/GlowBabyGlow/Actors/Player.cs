@@ -42,6 +42,7 @@ namespace GlowBabyGlow
         float joyshakePower = 1.3f;
         SoundEffectInstance shakeSound;
         SoundEffectInstance crySound;
+        SoundEffectInstance ladderSound;
         float explodeTime = -1;
 
         bool alive = true;
@@ -233,6 +234,7 @@ namespace GlowBabyGlow
 
             runSound = SoundManager.run.CreateInstance();
             shakeSound = SoundManager.shake.CreateInstance();
+            ladderSound = SoundManager.ladder.CreateInstance();
 
             //test
             if (currentPowerup != null)
@@ -559,8 +561,12 @@ namespace GlowBabyGlow
                                 crySound.Stop();
                             }
                         }
+                        SoundEffectInstance swoosh = SoundManager.swoosh.CreateInstance();
+                        swoosh.Volume = .8f;
+                        swoosh.Play();
+
                         crySound = SoundManager.cry[i].CreateInstance();
-                        crySound.Volume = .25f;
+                        crySound.Volume = .1f;
                         crySound.Play();
                     }
                 }
@@ -636,8 +642,11 @@ namespace GlowBabyGlow
                 World.CoinManager.ClearCoins();
                 World.ParticleManager.ClearParticles();
                 World.BulletManager.ClearBullets();
-                SoundEffectInstance spawnSound = SoundManager.spawn2.CreateInstance();
-                spawnSound.Play();
+                if (!automate)
+                {
+                    SoundEffectInstance spawnSound = SoundManager.spawn2.CreateInstance();
+                    spawnSound.Play();
+                }
             }
         }
 
@@ -661,10 +670,12 @@ namespace GlowBabyGlow
                 {
                     testAnim.Play("shoot");
                 }
-
-                SoundEffectInstance gunSound = SoundManager.gun.CreateInstance();
-                gunSound.Pitch = (float)(Config.rand.NextDouble() / 2.0f) - .5f;
-                gunSound.Play();
+                if (!automate)
+                {
+                    SoundEffectInstance gunSound = SoundManager.gun.CreateInstance();
+                    gunSound.Pitch = (float)(Config.rand.NextDouble() / 2.0f) - .5f;
+                    gunSound.Play();
+                }
                 if (!automate)
                 {
                     if (bullets == 0)
@@ -939,6 +950,15 @@ namespace GlowBabyGlow
                     new Vector2(pos.X, 0),
                     new Vector2(ladderSnapX - (width/2), 0),
                     0.2f).X;
+
+                if (ladderSound.State != SoundState.Playing &&
+                    Math.Abs(velocity.Y) > 3 && !automate)
+                {
+                    ladderSound.Pitch = (float)Config.rand.NextDouble() - 0.5f;
+                    ladderSound.Volume = 0.1f;
+                    ladderSound.Play();
+                }
+
                 if (automate)
                 {
                     if (automateUpLadder)
@@ -982,9 +1002,12 @@ namespace GlowBabyGlow
                 {
                     if (Math.Abs(velocity.X) > 10 && !InAir)
                     {
-                        if (runSound.State != SoundState.Playing)
+                        if (!automate)
                         {
-                            runSound.Play();
+                            if (runSound.State != SoundState.Playing)
+                            {
+                                runSound.Play();
+                            }
                         }
                     }
                     else
@@ -1077,9 +1100,11 @@ namespace GlowBabyGlow
                             coin.Rect.Center.X, coin.Rect.Center.Y));
                         World.ParticleManager.AddParticle(gp);
                     }
-
-                    SoundEffectInstance coinSound = SoundManager.coin.CreateInstance();
-                    coinSound.Play();
+                    if (!automate)
+                    {
+                        SoundEffectInstance coinSound = SoundManager.coin.CreateInstance();
+                        coinSound.Play();
+                    }
                 }
             }
         }
@@ -1099,6 +1124,13 @@ namespace GlowBabyGlow
                         {
                             Baby = null;
                             holdingBaby = true;
+
+                            if (!automate)
+                            {
+                                SoundEffectInstance babysfx = SoundManager.catchBaby.CreateInstance();
+                                babysfx.Pitch = (float)Config.rand.NextDouble() - 0.5f;
+                                babysfx.Play();
+                            }
                         }
                     }
                 }
@@ -1116,6 +1148,14 @@ namespace GlowBabyGlow
                                 Baby = b.Value;
                                 babyLife = Baby.Life;
                                 w.Babies[b.Key] = temp;
+
+                                if (!automate)
+                                {
+                                    SoundEffectInstance babysfx = SoundManager.catchBaby.CreateInstance();
+                                    babysfx.Pitch = (float)Config.rand.NextDouble() - 0.5f;
+                                    babysfx.Play();
+                                }
+
                                 break;
                             }
                         }
@@ -1374,7 +1414,10 @@ namespace GlowBabyGlow
                 }
                 else if (lives > 0)
                 {
-                    SoundManager.Play(SoundManager.iSpawn);
+                    if (!automate)
+                    {
+                        SoundManager.Play(SoundManager.iSpawn);
+                    }
                 }
             }
             else

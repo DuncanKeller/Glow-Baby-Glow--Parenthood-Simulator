@@ -29,6 +29,9 @@ namespace GlowBabyGlow
         public static SoundEffect[] cry = new SoundEffect[8];
         public static SoundEffect explosion1;
         public static SoundEffect explosion2;
+        public static SoundEffect ladder;
+        public static SoundEffect catchBaby;
+        public static SoundEffect slice;
 
         public static SoundEffectInstance iSpawn;
         public static SoundEffectInstance iExplode;
@@ -77,6 +80,9 @@ namespace GlowBabyGlow
             coin = c.Load<SoundEffect>("Sound\\coin");
             explosion1 = c.Load<SoundEffect>("Sound\\explode1");
             explosion2 = c.Load<SoundEffect>("Sound\\explode2");
+            ladder = c.Load<SoundEffect>("Sound\\ladder");
+            catchBaby = c.Load<SoundEffect>("Sound\\smack");
+            slice = c.Load<SoundEffect>("Sound\\slice");
 
             LoadInstances();
         }

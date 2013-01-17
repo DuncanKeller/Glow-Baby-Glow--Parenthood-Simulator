@@ -60,10 +60,20 @@ namespace GlowBabyGlow
         {
             levels.Add(3);
             levels.Add(2.5f);
+            levels.Add(2.5f);
+            levels.Add(2);
             levels.Add(2);
             levels.Add(2);
             levels.Add(1.5f);
             levels.Add(1.5f);
+            levels.Add(1.5f);
+            levels.Add(1.5f);
+            levels.Add(1.5f);
+            levels.Add(1.5f);
+            levels.Add(1);
+            levels.Add(1);
+            levels.Add(1);
+            levels.Add(1);
             levels.Add(1);
             levels.Add(1);
             levels.Add(1);

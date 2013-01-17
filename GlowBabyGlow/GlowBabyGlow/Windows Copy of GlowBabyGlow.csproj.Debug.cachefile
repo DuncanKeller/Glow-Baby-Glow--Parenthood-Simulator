@@ -1,11 +1,9 @@
-Content\blank.xnb
 Content\Tiles\tile.xnb
 Content\Objects\ladder.xnb
 Content\Objects\coin.xnb
 Content\Actors\zombie-sheet.xnb
 Content\Actors\baby.xnb
 Content\Actors\glow.xnb
-Content\circle.xnb
 Content\Backdrops\cloud1.xnb
 Content\Backdrops\cloud2.xnb
 Content\Backdrops\cloud3.xnb
@@ -65,7 +63,6 @@ Content\Menu\Letters\l.xnb
 Content\Menu\Letters\o.xnb
 Content\Menu\Letters\w.xnb
 Content\Menu\Letters\y.xnb
-Content\fuzz.xnb
 Content\Hud\xbox-1.xnb
 Content\Hud\xbox-2.xnb
 Content\Hud\xbox-3.xnb
@@ -88,8 +85,8 @@ Content\Actors\sprite-bum-baby.xnb
 Content\Actors\sprite-bum.xnb
 Content\Actors\sprite-pedo-baby.xnb
 Content\Actors\sprite-pedo.xnb
-Content\Sound\shake.xnb
 Content\Sound\gun.xnb
+Content\Sound\shake.xnb
 Content\Sound\spring.xnb
 Content\Sound\run.xnb
 Content\Sound\reload.xnb
@@ -111,8 +108,12 @@ Content\Menu\menu-arrow.xnb
 Content\Menu\loadingText.xnb
 Content\Menu\loadingIcon.xnb
 Content\Menu\loadingCircle.xnb
+Content\blank.xnb
+Content\circle.xnb
+Content\fuzz.xnb
 Content\Backdrops\dirt.xnb
 Content\Menu\newLevel.xnb
+Content\Powerups\pup-arrow-white.xnb
 Content\Menu\SmallLetters\s_a.xnb
 Content\Menu\SmallLetters\s_d.xnb
 Content\Menu\SmallLetters\s_e.xnb
@@ -127,7 +128,6 @@ Content\Menu\SmallLetters\s_r.xnb
 Content\Menu\SmallLetters\s_s.xnb
 Content\Menu\SmallLetters\s_t.xnb
 Content\Menu\SmallLetters\s_u.xnb
-Content\Powerups\pup-arrow-white.xnb
 Content\Actors\reloading.xnb
 Content\Tiles\letterbox1.xnb
 Content\Tiles\letterbox2.xnb
@@ -136,10 +136,10 @@ Content\Tiles\letterbox4.xnb
 Content\Tiles\letterbox5.xnb
 Content\Actors\zombie-sheet-large.xnb
 Content\Backdrops\kite.xnb
+Content\Actors\player-dead-bum.xnb
 Content\Actors\player-dead-pedo.xnb
 Content\Actors\player-dead-santa.xnb
 Content\Actors\player-dead.xnb
-Content\Actors\player-dead-bum.xnb
 Content\Sound\zombie-death.xnb
 Content\Sound\spawn.xnb
 Content\Sound\spawn2.xnb
@@ -147,5 +147,8 @@ Content\Sound\coin.xnb
 Content\Sound\swoosh.xnb
 Content\Sound\explode1.xnb
 Content\Sound\explode2.xnb
+Content\Sound\ladder.xnb
+Content\Sound\smack.xnb
+Content\Sound\slice.xnb
 Animation.cs
 Animator.cs
