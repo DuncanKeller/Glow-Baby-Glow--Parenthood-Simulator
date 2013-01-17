@@ -13,7 +13,7 @@ namespace GlowBabyGlow
         protected Rectangle rect;
         protected Animator testAnim;
 
-        bool sploded = false;
+        protected bool sploded = false;
         Vector2 explodeVelocity = new Vector2();
         Vector2 newPos = new Vector2();
 
@@ -27,12 +27,15 @@ namespace GlowBabyGlow
         {
             if (!sploded)
             {
-                newPos.X = rect.X;
-                newPos.Y = rect.Y;
-                sploded = true;
-                explodeVelocity = new Vector2(0, 0);
-                explodeVelocity.X += (float)(Config.rand.NextDouble() * 500) - 250;
-                explodeVelocity.Y += (float)(Config.rand.NextDouble() * 500) - 500;
+                if (!(this is Enemy))
+                {
+                    newPos.X = rect.X;
+                    newPos.Y = rect.Y;
+                    sploded = true;
+                    explodeVelocity = new Vector2(0, 0);
+                    explodeVelocity.X += (float)(Config.rand.NextDouble() * 500) - 250;
+                    explodeVelocity.Y += (float)(Config.rand.NextDouble() * 500) - 500;
+                }
             }
         }
 

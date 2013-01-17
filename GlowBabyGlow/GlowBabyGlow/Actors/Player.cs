@@ -46,7 +46,7 @@ namespace GlowBabyGlow
 
         bool alive = true;
         float respawnTimer = 0;
-        float respawnTime = 2.4f;
+        float respawnTime = 3.4f;
         int lives = 3;
 
         int bullets = 6;
@@ -242,7 +242,8 @@ namespace GlowBabyGlow
             index = i;
 
             if (MenuSystem.gameType == GameType.vsSurvival ||
-                MenuSystem.gameType == GameType.survival)
+                MenuSystem.gameType == GameType.survival ||
+                MenuSystem.gameType == GameType.hotPotato)
             {
                 lives = 1;
             }
@@ -262,6 +263,8 @@ namespace GlowBabyGlow
             {
                 babyLife = maxBabyLife / 2;
             }
+
+            respawnTimer -= 1.4f;
         }
 
         public void Direct(int pos)
@@ -311,7 +314,8 @@ namespace GlowBabyGlow
             {
                 lives = 0;
                 Die();
-                if (MenuSystem.gameType == GameType.thief)
+                if (MenuSystem.gameType == GameType.thief ||
+                    MenuSystem.gameType == GameType.hotPotato)
                 {
                     w.SpawnBaby();
                 }
@@ -579,7 +583,7 @@ namespace GlowBabyGlow
                 babyLife = maxBabyLife;
                 Baby = null;
                 pos.Y = Config.screenH + 200;
-                if (MenuSystem.gameType != GameType.thief)
+                //if (MenuSystem.gameType != GameType.thief)
                 {
                     lives--;
                 }
@@ -590,7 +594,32 @@ namespace GlowBabyGlow
         public override void Explode()
         {
             lives = 0;
-            base.Explode();
+
+            if (!sploded)
+            {
+                Texture2D t = null;
+
+                switch (index)
+                {
+                    case 0:
+                        t = TextureManager.playerDead;
+                        break;
+                    case 1:
+                        t = TextureManager.playerDeadSanta;
+                        break;
+                    case 2:
+                        t = TextureManager.playerDeadBum;
+                        break;
+                    default:
+                        t = TextureManager.playerDeadPedo;
+                        break;
+                }
+
+                w.ParticleManager.AddParticle(new PlayerDeathParticle(new Vector2(
+                    hitRect.Center.X, hitRect.Center.Y), t));
+
+                base.Explode();
+            }
         }
 
         public void Respawn()
@@ -603,10 +632,12 @@ namespace GlowBabyGlow
                 velocity = Vector2.Zero;
                 ResetPos();
                 alive = true;
-                World.EnemyManager.ClearEnemies();
+                World.EnemyManager.KillEnemies();
                 World.CoinManager.ClearCoins();
                 World.ParticleManager.ClearParticles();
                 World.BulletManager.ClearBullets();
+                SoundEffectInstance spawnSound = SoundManager.spawn2.CreateInstance();
+                spawnSound.Play();
             }
         }
 
@@ -1046,6 +1077,9 @@ namespace GlowBabyGlow
                             coin.Rect.Center.X, coin.Rect.Center.Y));
                         World.ParticleManager.AddParticle(gp);
                     }
+
+                    SoundEffectInstance coinSound = SoundManager.coin.CreateInstance();
+                    coinSound.Play();
                 }
             }
         }
@@ -1058,12 +1092,14 @@ namespace GlowBabyGlow
                 if (Baby != null)
                 {
                     Baby.Collision(ref tiles);
-
-                    if (Baby.Rect.Intersects(rect)
-                        && Baby.ReadyToCatch)
+                    if (Baby != null)
                     {
-                        Baby = null;
-                        holdingBaby = true;
+                        if (Baby.Rect.Intersects(rect)
+                            && Baby.ReadyToCatch)
+                        {
+                            Baby = null;
+                            holdingBaby = true;
+                        }
                     }
                 }
                 
@@ -1095,6 +1131,26 @@ namespace GlowBabyGlow
                     {
                         Die();
                         GameOver.death = DeathType.zombie;
+                        Texture2D t;
+
+                        switch (index)
+                        {
+                            case 0:
+                                t = TextureManager.playerDead;
+                                break;
+                            case 1:
+                                t = TextureManager.playerDeadSanta;
+                                break;
+                            case 2:
+                                t = TextureManager.playerDeadBum;
+                                break;
+                            default:
+                                t = TextureManager.playerDeadPedo;
+                                break;
+                        }
+
+                        w.ParticleManager.AddParticle(new PlayerDeathParticle(new Vector2(
+                            hitRect.Center.X, hitRect.Center.Y), t));
                     }
                 }
             }
@@ -1301,12 +1357,12 @@ namespace GlowBabyGlow
         public override void Draw(SpriteBatch sb, SpriteEffects effect)
         {
             // s = d / t
-            int spawnMax = Config.screenW / 8;
+            int spawnMax = Config.screenW / 15;
             float timeToLaunch = 0.35f;
             float speedToLaunch = (spawnPoint.Y) / timeToLaunch;
-            if (respawnTimer > 0 && respawnTimer < respawnTime - 0.4f)
+            if (respawnTimer > 0 && respawnTimer < respawnTime - 2f)
             {
-                spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(spawnMax, 0), 0.1f).X;
+                spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(spawnMax, 0), 0.2f).X;
 
                 if (respawnTimer < timeToLaunch && lives > 0)
                 {
@@ -1314,6 +1370,11 @@ namespace GlowBabyGlow
                          (int)(spawnPoint.X - (0)),
                          (int)(speedToLaunch * (timeToLaunch - respawnTimer)),
                          width / 2, height), Color.White);
+                   
+                }
+                else if (lives > 0)
+                {
+                    SoundManager.Play(SoundManager.iSpawn);
                 }
             }
             else
@@ -1321,25 +1382,26 @@ namespace GlowBabyGlow
                 spawnWidth = Vector2.Lerp(new Vector2(spawnWidth, 0), new Vector2(0, 0), 0.5f).X;
             }
 
+            int a = 10;
             if (spawnMax > 0 && lives > 0)
             {
-                Color c = new Color(255, 255, 75, 100);
+                Color c = new Color(200, 200, 75, a);
 
                 if (MenuSystem.gameType != GameType.single)
                 {
                     switch (index)
                     {
                         case 0:
-                            c = new Color(75, 255, 75, 100);
+                            c = new Color(75, 200, 75, a);
                             break;
                         case 1:
-                            c = new Color(255, 75, 75, 100);
+                            c = new Color(200, 75, 75, a);
                             break;
                         case 2:
-                            c = new Color(75, 75, 255, 100);
+                            c = new Color(75, 75, 200, a);
                             break;
                         case 3:
-                            c = new Color(75, 255, 255, 100);
+                            c = new Color(75, 200, 200, a);
                             break;
                     }
                 }

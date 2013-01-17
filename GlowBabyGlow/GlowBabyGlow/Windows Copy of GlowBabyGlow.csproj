@@ -124,6 +124,7 @@
     <Compile Include="Particles\ItemParticle.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleManager.cs" />
+    <Compile Include="Particles\PlayerDeathParticle.cs" />
     <Compile Include="Particles\PowerupParticle.cs" />
     <Compile Include="Particles\SparkParticle.cs" />
     <Compile Include="Particles\SpawnParticle.cs" />

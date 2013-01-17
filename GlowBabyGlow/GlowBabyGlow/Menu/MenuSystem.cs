@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GlowBabyGlow
 {
@@ -139,6 +140,11 @@ namespace GlowBabyGlow
                     m.Value.ChangePos(v);
                 }
                 inputTimer = 0.35f;
+
+                SoundEffectInstance swoosh = SoundManager.swoosh.CreateInstance();
+                swoosh.Pitch = 0.6f;
+                swoosh.Volume = 0.3f;
+                swoosh.Play();
             }
         }
 

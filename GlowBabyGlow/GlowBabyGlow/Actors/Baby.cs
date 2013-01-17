@@ -119,7 +119,7 @@ namespace GlowBabyGlow
                     }
                 }
 
-                if (HitRect.Intersects(t.Rect))
+                if (HitRect.Intersects(t.Rect) && GameOver.death != DeathType.shoot)
                 {    
                     w.Explode();
                     GameOver.death = DeathType.drop;

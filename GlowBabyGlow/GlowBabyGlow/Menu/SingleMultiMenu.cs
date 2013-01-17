@@ -88,12 +88,30 @@ namespace GlowBabyGlow
                 Color.White, 0, Vector2.Zero, SpriteEffects.None);
 
             LineBatch.DrawLineSkinny(sb, Color.Black, new Vector2(
-                ((Config.screenW / 100) * 83.5f) + pos.X,
-                ((Config.screenH / 100) * 93) + pos.Y), new Vector2(
+                ((Config.screenW / 100.0f) * 81.9f) + pos.X,
+                ((Config.screenH / 100.0f) * 88.1f) + pos.Y), new Vector2(
                     Config.screenW - (Config.screenW / 8) + (int)pos.X + 
-                    ((int)((TextureManager.kite.Width / 7.0f) * Config.screenR)),
+                    ((int)((TextureManager.kite.Width / 6.9f) * Config.screenR)),
                     (int)pos.Y + (Config.screenH / 2) + (int)kiteOffset + 
                     (int)(((TextureManager.kite.Height / 2) - (TextureManager.kite.Height / 6)) * Config.screenR)));
+
+            LineBatch.DrawLineSkinny(sb, Color.Black, new Vector2(
+              ((Config.screenW / 100.0f) * 79.9f) + pos.X,
+              ((Config.screenH / 100.0f) * 87.6f) + pos.Y), new Vector2(
+              ((Config.screenW / 100.0f) * 82.0f) + pos.X,
+              ((Config.screenH / 100.0f) * 88.1f) + pos.Y));
+
+            LineBatch.DrawLineSkinny(sb, Color.Black, new Vector2(
+              ((Config.screenW / 100.0f) * 79.9f) + pos.X,
+              ((Config.screenH / 100.0f) * 87.0f) + pos.Y), new Vector2(
+              ((Config.screenW / 100.0f) * 80.6f) + pos.X,
+              ((Config.screenH / 100.0f) * 86.1f) + pos.Y));
+
+            LineBatch.DrawLineSkinny(sb, Color.Black, new Vector2(
+              ((Config.screenW / 100.0f) * 79.1f) + pos.X,
+              ((Config.screenH / 100.0f) * 85.7f) + pos.Y), new Vector2(
+              ((Config.screenW / 100.0f) * 80.2f) + pos.X,
+              ((Config.screenH / 100.0f) * 85.8f) + pos.Y));
 
             foreach (MenuElement e in elements)
             {

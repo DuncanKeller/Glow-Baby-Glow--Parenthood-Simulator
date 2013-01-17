@@ -66,7 +66,9 @@ namespace GlowBabyGlow
         {
             if (world != null)
             {
-                if (MenuSystem.gameType == GameType.single)
+                if (MenuSystem.gameType == GameType.single ||
+                    MenuSystem.gameType == GameType.survival ||
+                    MenuSystem.gameType == GameType.hotPotato)
                 {
                     score = world.Players[0].Score;
 
@@ -76,6 +78,7 @@ namespace GlowBabyGlow
                         newScore = true;
                     }
                 }
+                
             }
         }
 
@@ -121,6 +124,7 @@ namespace GlowBabyGlow
             velocity = 0;
             CheckHighScore();
             Input.spaceBarPreventativeMeasureFlag = false;
+            death = DeathType.none;
             //MenuSystem.Reset();
         }
 
@@ -182,10 +186,13 @@ namespace GlowBabyGlow
                         text = "you dropped the baby! what a bad parent";
                         break;
                     case DeathType.life:
-                        text = "you should have rocked the baby more";
+                        text = "dont forget to shake the baby!";
                         break;
                     case DeathType.shoot:
                         text = "what have you done!!!";
+                        break;
+                    case DeathType.zombie:
+                        text = "you got trounced!";
                         break;
                 }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using Duncanimation;
 
 namespace GlowBabyGlow
@@ -45,6 +46,11 @@ namespace GlowBabyGlow
             pos.Y -= height;
         }
 
+        public override void Explode()
+        {
+            //base.Explode();
+        }
+
         public override void Update(float dt)
         {
             base.Update(dt);
@@ -81,14 +87,27 @@ namespace GlowBabyGlow
                         BloodParticle bp = new BloodParticle(b.Pos, dir);
                         w.ParticleManager.AddParticle(bp);
                     }
+
                 }
                 else
                 {
+                    SoundEffectInstance sfx = SoundManager.enemyDeath.CreateInstance();
+                    if (this is BossEnemy)
+                    {
+                        sfx.Pitch = -1f;
+                    }
+                    else
+                    {
+                        sfx.Pitch = (float)(Config.rand.NextDouble() / 3.0f) - (1 / 3.0f);
+                    }
+                    sfx.Volume = .5f;
+
+                    sfx.Play();
+
                     Die(b);
                 }
                 alreadyHit.Add(b);
             }
-            
         }
 
         public void Die(Bullet b)
@@ -100,6 +119,8 @@ namespace GlowBabyGlow
                 DeathParticle dp = new DeathParticle(center);
                 w.ParticleManager.AddParticle(dp);
             }
+
+            health = 0;
         }
 
         public void Collision(ref List<Tile> tiles, ref List<Ladder> ladders)

@@ -38,6 +38,14 @@ namespace GlowBabyGlow
             enemies.Clear();
         }
 
+        public void KillEnemies()
+        {
+            foreach (Enemy e in enemies)
+            {
+                e.Die(null);
+            }
+        }
+
         public void Remove(Enemy e)
         {
             toRemove.Add(e);

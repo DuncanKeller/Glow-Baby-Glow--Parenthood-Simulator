@@ -53,6 +53,7 @@ namespace GlowBabyGlow
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Config.Init(this);
+            graphics.SynchronizeWithVerticalRetrace = true;
 
             graphics.PreferredBackBufferWidth = Config.screenW;
             graphics.PreferredBackBufferHeight = Config.realH;

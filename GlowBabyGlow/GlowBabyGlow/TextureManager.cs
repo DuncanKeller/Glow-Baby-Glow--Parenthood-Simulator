@@ -30,6 +30,10 @@ namespace GlowBabyGlow
         public static Texture2D pedoBaby;
         public static Texture2D throwArrow;
         public static Texture2D reloading;
+        public static Texture2D playerDead;
+        public static Texture2D playerDeadSanta;
+        public static Texture2D playerDeadBum;
+        public static Texture2D playerDeadPedo;
 
         public static Texture2D titleScreen;
         public static Texture2D pauseBorder;
@@ -138,6 +142,11 @@ namespace GlowBabyGlow
             pedoBaby = c.Load<Texture2D>("Actors\\sprite-pedo-baby");
             throwArrow = c.Load<Texture2D>("Actors\\throwArrow");
             reloading = c.Load<Texture2D>("Actors\\reloading");
+
+            playerDead = c.Load<Texture2D>("Actors\\player-dead");
+            playerDeadSanta = c.Load<Texture2D>("Actors\\player-dead-santa");
+            playerDeadBum = c.Load<Texture2D>("Actors\\player-dead-bum");
+            playerDeadPedo = c.Load<Texture2D>("Actors\\player-dead-pedo");
 
             //menu
             titleScreen = c.Load<Texture2D>("Menu\\title-screen");

@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GlowBabyGlow
 {
@@ -348,7 +349,7 @@ namespace GlowBabyGlow
             explodeTime = 0;
             exploded = false;
             dtMod = 0;
-            enemies.ClearEnemies();
+            enemies.KillEnemies();
             bullets.ClearBullets();
             coins.ClearCoins();
             ladders.Clear();
@@ -369,6 +370,12 @@ namespace GlowBabyGlow
             }
             else if (explodeTime < 5)
             {
+                if (explodeTime < 2)
+                {
+                    SoundManager.Play(SoundManager.iExplode);
+                }
+                
+
                 if (dtMod < dt)
                 {
                     dtMod += dt / 20;
@@ -410,6 +417,12 @@ namespace GlowBabyGlow
 
         public void Explode()
         {
+            if (!exploded)
+            {
+                SoundEffectInstance splodesfx1 = SoundManager.explosion1.CreateInstance();
+                splodesfx1.Play();
+            }
+
             exploded = true;
             if (MenuSystem.gameType != GameType.vsSurvival &&
                 MenuSystem.gameType != GameType.thief)
@@ -427,8 +440,8 @@ namespace GlowBabyGlow
                     (l as Entity).Explode();
                 }
                 powerups.ClearPowerups();
-                particles.ClearParticles();
-                enemies.ClearEnemies();
+                //particles.ClearParticles();
+                enemies.KillEnemies();
                 bullets.ClearBullets();
                 coins.ClearCoins();
             }
