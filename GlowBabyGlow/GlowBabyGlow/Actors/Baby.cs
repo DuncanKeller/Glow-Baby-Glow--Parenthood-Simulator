@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GlowBabyGlow
 {
@@ -106,6 +107,15 @@ namespace GlowBabyGlow
 
         public void Collision(ref List<Tile> tiles)
         {
+            if (pos.Y > Config.screenH - 50 && !splodin)
+            {
+                w.Players[0].Score += 1000;
+                w.Explode();
+                splodin = true;
+                SoundEffectInstance sfx = SoundManager.banshee.CreateInstance();
+                sfx.Play();
+            }
+
             closestTile = float.MaxValue;
             foreach (Tile t in tiles)
             {

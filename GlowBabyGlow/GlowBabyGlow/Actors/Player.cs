@@ -647,6 +647,11 @@ namespace GlowBabyGlow
                     SoundEffectInstance spawnSound = SoundManager.spawn2.CreateInstance();
                     spawnSound.Play();
                 }
+                if (World.LevelName == "tutorial")
+                {
+                    Baby = null;
+                    holdingBaby = false;
+                }
             }
         }
 

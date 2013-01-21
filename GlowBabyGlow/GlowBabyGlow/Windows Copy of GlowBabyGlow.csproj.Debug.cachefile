@@ -150,5 +150,6 @@ Content\Sound\explode2.xnb
 Content\Sound\ladder.xnb
 Content\Sound\smack.xnb
 Content\Sound\slice.xnb
+Content\Sound\banshee.xnb
 Animation.cs
 Animator.cs

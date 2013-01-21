@@ -118,16 +118,14 @@ namespace GlowBabyGlow
                     }
                     else if (counter == 4)
                     {
-                        text = "rock the baby by holding ";
+                        text = "keep the baby alive by rocking it";
                         if (Input.keys)
                         {
-                            text += "shift";
-                            text2 += "and mashing left and right";
+                            text2 = "hold shift, mash left and right";
                         }
                         else
                         {
-                            text += "#";
-                            text2 += "and rotating the control stick $";
+                            text2 = "hold #, spin the control stick $";
                         }
                     }
                     else if (counter == 5)
@@ -248,7 +246,7 @@ namespace GlowBabyGlow
         {
             if (text != "")
             {
-                if (text2 != "")
+                if (text2 == "")
                 {
                     sb.Draw(TextureManager.blankTexture, new Rectangle(0, 0, Config.screenW, font.Size.Y / 2), new Color(0, 0, 0, 100));
                 }

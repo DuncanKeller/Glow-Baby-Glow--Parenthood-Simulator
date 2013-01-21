@@ -78,7 +78,6 @@ namespace GlowBabyGlow
                         newScore = true;
                     }
                 }
-                
             }
         }
 
@@ -90,7 +89,6 @@ namespace GlowBabyGlow
             int highscore = -1;
             Player winner = null;
 
-            bool tie = false;
             List<Player> otherWinners = new List<Player>();
 
             foreach (Player p in world.Players)
@@ -103,7 +101,6 @@ namespace GlowBabyGlow
                 else if (p.Score == highscore)
                 {
                     otherWinners.Add(p);
-                    tie = true;
                 }
                 scores.Add(p.Index, p.Score);
             }

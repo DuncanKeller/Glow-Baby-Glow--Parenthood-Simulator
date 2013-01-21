@@ -32,6 +32,7 @@ namespace GlowBabyGlow
         public static SoundEffect ladder;
         public static SoundEffect catchBaby;
         public static SoundEffect slice;
+        public static SoundEffect banshee;
 
         public static SoundEffectInstance iSpawn;
         public static SoundEffectInstance iExplode;
@@ -83,6 +84,7 @@ namespace GlowBabyGlow
             ladder = c.Load<SoundEffect>("Sound\\ladder");
             catchBaby = c.Load<SoundEffect>("Sound\\smack");
             slice = c.Load<SoundEffect>("Sound\\slice");
+            banshee = c.Load<SoundEffect>("Sound\\banshee");
 
             LoadInstances();
         }
